@@ -542,11 +542,18 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 /* ---------------- feature folder-cards ---------------- */
 .feature-grid{perspective:1400px;display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:46px;margin-top:52px}
 /* section 2 runs as two rooms — a header introduces each group of cards */
-.fgroup-head{margin-top:58px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.fgroup-head{margin-top:58px}
 .fgroup-head h3{font-family:var(--font-display);font-weight:500;font-size:24px;letter-spacing:-.02em}
-.fgroup-head p{color:var(--muted);font-size:16px}
+.fgroup-head p{color:var(--muted);font-size:16px;margin-top:6px}
 .fgroup-head + .feature-grid{margin-top:26px}
 .fg-half .fcard,.fg-half .fcard:nth-child(1),.fg-half .fcard:nth-child(2){grid-column:span 3}
+.fg-desk .fcard,.fg-desk .fcard:nth-child(1),.fg-desk .fcard:nth-child(2){grid-column:span 2}
+.fg-desk .fcard:last-child{
+  grid-column:1/-1;display:grid;grid-template-columns:1.05fr 1fr;
+  column-gap:32px;row-gap:8px;align-content:start;
+}
+.fg-desk .fcard:last-child > *{grid-column:1}
+.fg-desk .fcard:last-child .fcard-visual{grid-column:2;grid-row:1/span 3;margin-top:0}
 .fcard{
   scroll-margin-top:130px;   /* deep links land clear of the fixed nav */
   grid-column:span 2;
@@ -594,6 +601,8 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 @media (max-width:960px){
   .feature-grid{grid-template-columns:1fr;gap:34px}
   .fg-half .fcard,.fg-half .fcard:nth-child(1),.fg-half .fcard:nth-child(2){grid-column:span 1}
+  .fg-desk .fcard,.fg-desk .fcard:nth-child(1),.fg-desk .fcard:nth-child(2),
+  .fg-desk .fcard:last-child{grid-column:span 1;display:flex;flex-direction:column}
   .fcard,.fcard:nth-child(1),.fcard:nth-child(2){grid-column:span 1}
 }
 
@@ -629,6 +638,32 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 .bar-row .bar i{display:block;height:100%;border-radius:99px;background:var(--emerald);width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
 .bar-row u{text-decoration:none;font-weight:500;color:var(--emerald);width:34px;text-align:right}
 .lib-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+/* note thumbnails read as paper, not swatches — ruled, grid, dots, diagram */
+.lib-grid .np{position:relative;overflow:hidden}
+.np-ruled{background:
+  repeating-linear-gradient(0deg, transparent 0 7px, color-mix(in srgb,var(--emerald) 30%, transparent) 7px 8px),
+  color-mix(in srgb,var(--emerald) 12%, var(--surface))}
+.np-ruled.np-alt{background:
+  repeating-linear-gradient(0deg, transparent 0 7px, color-mix(in srgb,var(--orange) 34%, transparent) 7px 8px),
+  color-mix(in srgb,var(--orange) 13%, var(--surface))}
+.np-grid{background:
+  repeating-linear-gradient(0deg, transparent 0 8px, color-mix(in srgb,var(--violet) 26%, transparent) 8px 9px),
+  repeating-linear-gradient(90deg, transparent 0 8px, color-mix(in srgb,var(--violet) 26%, transparent) 8px 9px),
+  color-mix(in srgb,var(--violet) 10%, var(--surface))}
+.np-grid.np-alt{background:
+  repeating-linear-gradient(0deg, transparent 0 8px, color-mix(in srgb,var(--emerald) 28%, transparent) 8px 9px),
+  repeating-linear-gradient(90deg, transparent 0 8px, color-mix(in srgb,var(--emerald) 28%, transparent) 8px 9px),
+  color-mix(in srgb,var(--emerald) 10%, var(--surface))}
+.np-dots{background:
+  radial-gradient(color-mix(in srgb,var(--orange) 45%, transparent) 1.2px, transparent 1.6px),
+  color-mix(in srgb,var(--yellow) 18%, var(--surface));
+  background-size:9px 9px, auto}
+.np-diagram{background:
+  radial-gradient(circle at 62% 40%, transparent 9px, color-mix(in srgb,var(--violet) 55%, transparent) 9px 10.5px, transparent 10.5px),
+  linear-gradient(115deg, transparent 46%, color-mix(in srgb,var(--violet) 45%, transparent) 46% 47.5%, transparent 47.5%),
+  linear-gradient(65deg, transparent 46%, color-mix(in srgb,var(--violet) 45%, transparent) 46% 47.5%, transparent 47.5%),
+  color-mix(in srgb,var(--violet) 9%, var(--surface))}
+.lib-grid figcaption i{font-style:normal;color:var(--muted);font-size:.85em;float:right}
 .lib-grid figure{border:1px solid var(--line-soft);border-radius:9px;overflow:hidden;background:var(--bg-soft)}
 .lib-grid figure div{height:44px;background:color-mix(in srgb,var(--emerald) 16%, var(--surface))}
 .lib-grid figure:nth-child(2) div{background:color-mix(in srgb,var(--orange) 22%, var(--surface))}

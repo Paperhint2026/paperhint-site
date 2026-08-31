@@ -336,13 +336,13 @@ h1.display em{
 /* the band: colour is TEXT-RELATIVE — the ribbon strokes in currentColor,
    inherited from the display-text ink, so path and type always agree */
 .hero-ribbon{
+  --band:var(--ink);--band-echo:var(--emerald);--band-text:var(--bg);--band-kw:var(--yellow);
   position:absolute;top:88px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden;
-  color:var(--ink); /* same token the H1 sets its ink with */
 }
-[data-theme="dark"] .hero-ribbon{color:var(--surface)}
+[data-theme="dark"] .hero-ribbon{--band:var(--surface);--band-text:var(--ink)}
 .hero-ribbon svg{display:block;max-width:100%}
-.ribbon-line{fill:none;stroke:currentColor;stroke-width:42;stroke-linecap:round;stroke-linejoin:round}
-.ribbon-echo{fill:none;stroke:var(--emerald);stroke-width:42;stroke-linecap:round;stroke-linejoin:round;transform:translate(11px,15px);opacity:.9}
+.ribbon-line{fill:none;stroke:var(--band);stroke-width:42;stroke-linecap:round;stroke-linejoin:round}
+.ribbon-echo{fill:none;stroke:var(--band-echo);stroke-width:42;stroke-linecap:round;stroke-linejoin:round;transform:translate(11px,15px);opacity:.9}
 [data-theme="dark"] .ribbon-echo{opacity:.45}
 @media (prefers-reduced-motion: no-preference){
   .ribbon-line,.ribbon-echo{stroke-dasharray:var(--len,5000);stroke-dashoffset:var(--len,5000);animation:ribbonDraw 2s .2s cubic-bezier(.35,.75,.25,1) forwards}
@@ -361,8 +361,8 @@ h1.display em{
 }
 [data-theme="dark"] .bowl-band{stroke:var(--surface)}
 [data-theme="dark"] .bowl-band-echo{stroke:var(--emerald);opacity:.75}
-.bowl-marquee{font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:.045em;fill:var(--bg);dominant-baseline:middle;opacity:1}
-[data-theme="dark"] .bowl-marquee{fill:var(--ink)}
+.bowl-marquee{font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:.045em;fill:var(--band-text,var(--bg));dominant-baseline:middle;opacity:1}
+
 .bowl-marquee tspan.bserif{font-family:var(--font-serif);font-style:italic;font-size:19px;fill:var(--yellow)}
 /* fluid copy: only painted inside the cursor window, displaced by turbulence */
 .bowl-fluid{pointer-events:none}
@@ -776,9 +776,11 @@ footer .wrap{position:relative;z-index:2}
 .letter .cr-gang-solo img{width:min(520px,100%);height:auto;display:block;filter:drop-shadow(0 6px 12px rgba(16,32,26,.12))}
 [data-plx]{will-change:transform}
 
-/* ---------------- contact: the greeter ---------------- */
-.mail-mascot{display:block;width:190px;margin:8px 0 18px}
-.mail-mascot img{width:100%;height:auto;display:block;filter:drop-shadow(0 4px 8px rgba(16,32,26,.18))}
+/* ---------------- contact: the greeter lives in the email card ---------------- */
+.c-direct{position:relative;padding-right:150px}
+.c-direct .mail-mascot{position:absolute;right:14px;bottom:10px;width:118px;margin:0}
+.c-direct .mail-mascot img{width:100%;height:auto;display:block;filter:drop-shadow(0 4px 8px rgba(16,32,26,.18))}
+@media (max-width:960px){.c-direct{padding-right:130px}}
 
 /* ---------------- 404 ---------------- */
 .notfound{min-height:100vh;display:flex;align-items:center;padding:120px 0 60px}
@@ -835,6 +837,12 @@ footer .wrap{position:relative;z-index:2}
 .faq summary::after{content:"+";font-family:var(--font-display);font-size:22px;color:var(--emerald);transition:.3s}
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq details p{padding:0 24px 20px;color:var(--ink-soft);font-size:14.5px;max-width:65ch}
+
+/* ---------------- contact: the twirl behind the form ---------------- */
+.contact-twirl{position:absolute;inset:0;top:0;overflow:visible;z-index:0}
+.contact-twirl svg{overflow:visible}
+.contact-grid{position:relative;z-index:2}
+@media (max-width:960px){.contact-twirl{display:none}}
 
 /* ---------------- contact ---------------- */
 .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:start;margin-top:60px}

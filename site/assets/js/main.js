@@ -491,6 +491,9 @@
   function bandBox(wrap) {
     var box = wrap.getBoundingClientRect();
     var W = Math.round(box.width);
+    if (wrap.getAttribute('data-shape') === 'twirl') {
+      return { W: W, H: Math.max(420, Math.round(box.height)) };
+    }
     /* the under-sweep has to pass below the last line of the lockup */
     var anchor = document.querySelector('.hero-note') || document.querySelector('.hero-capture');
     if (!anchor) {
@@ -514,6 +517,18 @@
            ' C ' + X(0.932) + ' ' + Y(0.46) + ', ' + X(0.80) + ' ' + Y(0.47) + ', ' + X(0.818) + ' ' + Y(0.60) +
            ' C ' + X(0.836) + ' ' + Y(0.72) + ', ' + X(0.955) + ' ' + Y(0.69) + ', ' + X(1.005) + ' ' + Y(0.50) +
            ' C ' + X(1.03) + ' ' + Y(0.41) + ', ' + X(1.035) + ' ' + Y(0.34) + ', ' + X(1.045) + ' ' + Y(0.24);
+  }
+
+  /* a double-curl living in the right half — for corners and margins */
+  function twirlPath(W, H) {
+    function X(n) { return (n * W).toFixed(1); }
+    function Y(n) { return (n * H).toFixed(1); }
+    return 'M ' + X(0.82) + ' ' + Y(-0.06) +
+           ' C ' + X(0.64) + ' ' + Y(0.10), + '' +
+           '' + X(0.58) + ' ' + Y(0.26) + ', ' + X(0.70) + ' ' + Y(0.36) +
+           ' C ' + X(0.84) + ' ' + Y(0.47) + ', ' + X(1.00) + ' ' + Y(0.40) + ', ' + X(0.95) + ' ' + Y(0.29) +
+           ' C ' + X(0.90) + ' ' + Y(0.19) + ', ' + X(0.73) + ' ' + Y(0.25) + ', ' + X(0.75) + ' ' + Y(0.43) +
+           ' C ' + X(0.77) + ' ' + Y(0.60) + ', ' + X(0.88) + ' ' + Y(0.72) + ', ' + X(1.04) + ' ' + Y(0.86);
   }
 
   function sweepPath(W, H) {
@@ -544,6 +559,7 @@
     var bands = svg ? svg.querySelectorAll('.ribbon-line, .ribbon-echo, .bowl-band, .bowl-band-echo') : [];
     if (!svg || !tp || !path) return null;
 
+    var shape = wrap.getAttribute('data-shape');
     var compact = function () { return innerWidth < 960; };
     var speed = parseFloat(tp.getAttribute('data-speed')) || 24;
     var words = [], total = 0, unitLen = 0, baseSize = 18;
@@ -552,7 +568,10 @@
       var g = bandBox(wrap);
       if (!g.W) return false;                       /* hidden — nothing to draw */
       var H, d;
-      if (compact()) {
+      if (shape === 'twirl') {
+        H = g.H;
+        d = twirlPath(g.W, H);
+      } else if (compact()) {
         /* phones: the band lives BELOW the lockup, never across it */
         var hero = wrap.parentNode;
         var anchor = document.querySelector('.hero-note');

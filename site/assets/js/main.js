@@ -1136,8 +1136,8 @@
       cta: 'See it on your own answer sheets',
       items: [
         ['Teaching notes, prepared with you', 'Ask the copilot for notes you can actually teach with, or paste your own; keep them private or share to everyone on your school\u2019s email.'],
-        ['Papers and homework for your syllabus', 'Question papers with blueprint and answer key, drafted for your syllabus \u2014 your notes and subject books tune them. Homework notifies parents on assignment.'],
-        ['Answer sheets, marked for you', 'Photograph them with the app; every answer is checked against its question and scored on your rubric \u2014 you review and approve.']
+        ['Homework that reaches home', 'Drafted for what you taught today \u2014 and parents are notified the moment it\u2019s assigned.'],
+        ['The exam, set and marked', 'Question papers with blueprint and answer key, drafted for your syllabus \u2014 then every answer sheet photographed and scored on your rubric. You review and approve.']
       ]
     },
     admins: {

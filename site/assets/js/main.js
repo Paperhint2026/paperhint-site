@@ -525,11 +525,14 @@
        down through the right column and out the bottom — never across the
        left text side */
     function X(n) { return (n * W).toFixed(1); }
-    function Y(n) { return (n * H).toFixed(1); }
-    return 'M ' + X(1.06) + ' ' + Y(0.02) +
-           ' C ' + X(0.92) + ' ' + Y(0.055) + ', ' + X(0.79) + ' ' + Y(0.095) + ', ' + X(0.825) + ' ' + Y(0.165) +
-           ' C ' + X(0.865) + ' ' + Y(0.235) + ', ' + X(1.00) + ' ' + Y(0.215) + ', ' + X(0.985) + ' ' + Y(0.145) +
-           ' C ' + X(0.972) + ' ' + Y(0.085) + ', ' + X(0.80) + ' ' + Y(0.145) + ', ' + X(0.735) + ' ' + Y(0.30) +
+    /* padded vertically: the curl keeps a clear gap from the stage edges
+       whatever the stage height (banner ~380px or a full page ~1400px) */
+    var PAD = Math.min(80, H * 0.12);
+    function Y(n) { return (PAD + n * (H - PAD * 1.6)).toFixed(1); }
+    return 'M ' + X(1.06) + ' ' + Y(0.015) +
+           ' C ' + X(0.92) + ' ' + Y(0.045) + ', ' + X(0.785) + ' ' + Y(0.08) + ', ' + X(0.825) + ' ' + Y(0.16) +
+           ' C ' + X(0.872) + ' ' + Y(0.25) + ', ' + X(1.008) + ' ' + Y(0.215) + ', ' + X(0.985) + ' ' + Y(0.11) +
+           ' C ' + X(0.966) + ' ' + Y(0.03) + ', ' + X(0.788) + ' ' + Y(0.07) + ', ' + X(0.732) + ' ' + Y(0.29) +
            ' C ' + X(0.655) + ' ' + Y(0.47) + ', ' + X(0.70) + ' ' + Y(0.64) + ', ' + X(0.785) + ' ' + Y(0.78) +
            ' C ' + X(0.855) + ' ' + Y(0.90) + ', ' + X(0.815) + ' ' + Y(0.99) + ', ' + X(0.74) + ' ' + Y(1.08);
   }

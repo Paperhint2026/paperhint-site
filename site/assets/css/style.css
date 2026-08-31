@@ -846,6 +846,8 @@ footer .wrap{position:relative;z-index:2}
 
 /* ---------------- contact: the twirl behind the form ---------------- */
 .contact-twirl{position:absolute;left:0;right:0;top:-330px;bottom:-120px;height:auto;overflow:visible;z-index:0}
+.contact-twirl .ribbon-line,.contact-twirl .ribbon-echo{stroke-width:36}
+.contact-twirl .ribbon-echo{transform:translate(9px,12px)}
 .contact-twirl svg{overflow:visible}
 .contact-grid{position:relative;z-index:2}
 .contact-sec{z-index:1}

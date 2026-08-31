@@ -71,6 +71,20 @@ advanced, productively.
      generation).
    - Primary admin modules: teacher management · classroom management ·
      section management · student management · subject management.
+   - **Auxiliary intelligence for admins**: conveniences like timetable
+     recreation, classroom configuration and **classroom migration** —
+     promote a batch (e.g. 50 students) to the next grade/class in one
+     move, absorb a fresh batch cleanly.
+
+## Personas (founder-set)
+
+- The product is built for **two primary personas: teachers and admins**.
+- Students, parents (and possibly a principal view, undecided) sit in
+  between — positioned to USE certain data, not primary operators.
+- The goal in one line: teacher productivity + admin productivity →
+  the whole school's activity gets faster.
+- Future: more school-adjacent capabilities once partnering with schools
+  and building on top — direction only.
 
 ## Supporting modules ("fruitful for the school")
 

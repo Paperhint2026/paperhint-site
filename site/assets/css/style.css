@@ -541,6 +541,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 /* light catches the paper as it tilts — a warm glint, visible on ivory */
 .fcard::after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  z-index:-1;   /* the glint lives behind the card's content, never over text */
   background:radial-gradient(440px circle at var(--mx,50%) var(--my,50%),
     rgba(255,216,77,.07), rgba(255,216,77,0) 58%);
   opacity:var(--sheen,0);transition:opacity .35s ease;

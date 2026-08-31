@@ -52,7 +52,13 @@ advanced, productively.
      scan & upload it (the product reads it in), OR manage it manually
      in-app (drop / increase).
 
-8. **Admin / School portal** (people & structure management)
+8. **Teacher's Copilot**
+   - A chat interface for teachers: communicate with it, prepare notes,
+     and work through teaching tasks conversationally.
+   - Includes a small note creator — write or paste notes directly, which
+     land in the teacher's library.
+
+9. **Admin / School portal** (people & structure management)
    - Admins create and manage the school's structure: **classes,
      sections, students, teachers** — the administrative people-management
      layer ("model base management").
@@ -68,10 +74,14 @@ advanced, productively.
 Timetables, academics/marks records, calendar — the school OS around the
 teaching core. Present, useful, secondary in the story.
 
+## Positioning rule (founder-set)
+
+AI-first under the hood, **never "AI on the face."** The product (and the
+site) leads with outcomes; AI is highlighted subtly, in the details of how
+each thing gets done — embedded, not shouted. Hero stays outcome-led.
+
 ## Open questions for the founder
 
-- Does the hero keep "Run the whole school on one page", or lead with
-  the AI evaluation claim?
 - Evaluation limits per plan (for pricing copy)?
 - Is the public notes sharing live at launch or roadmap?
 - Attendance scanning: live or roadmap?

@@ -73,6 +73,13 @@ Key properties of the loop:
 - **Sharing is a community layer**: a teacher's notes can be published
   for anyone, from any class, to use.
 
+## Teacher's Copilot (the conversational face)
+
+A chat interface where teachers work conversationally — ask for notes,
+prepare materials, get help — plus a small note editor to write or paste
+notes straight into the library. The copilot is how "AI embedded, not on
+the face" feels in practice: a colleague you talk to, not a feature badge.
+
 ## The people around the loop
 
 - **Teachers** — the primary user. Evaluate, create, teach, share.
@@ -111,9 +118,13 @@ sellable — but the *reason to buy* is the loop above. Mission framing:
    metadata** — all re-anchored on evaluation/creation vocabulary
    ("AI answer sheet evaluation", "AI question paper generator").
 
-## Still open (your four calls)
+## Positioning rule
 
-1. Hero headline: keep or go AI-first?
+AI-driven, never AI-on-the-face: outcomes lead, AI shows in the details.
+The hero stays outcome-led; the word "AI" earns its few appearances.
+
+## Still open (your calls)
+
 2. Evaluation volume limits per pricing plan — state numbers or stay vague?
 3. Public note-sharing: live at launch, or roadmap?
 4. Attendance scanning: live, or roadmap?

@@ -694,35 +694,31 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
   .scribble-under path,.scribble-spark path,.scribble-circle path{stroke-dashoffset:0}
 }
 
-/* ---------------- CTA banner ---------------- */
+/* ---------------- CTA banner: yellow, one bright action, the gang ---------------- */
 .cta{padding:48px 0 88px}
 .cta-card{
   position:relative;border-radius:36px;overflow:hidden;
-  padding:clamp(56px,7vw,96px) clamp(28px,6vw,90px);
-  color:#FAF7F0;text-align:left;
-  background:var(--forest);
+  padding:clamp(48px,6vw,84px) clamp(28px,6vw,84px) 0;
+  color:var(--ink);text-align:left;
+  background:var(--bg-soft);   /* light ground — the gang's colours do the talking */
+  border:1px solid var(--line-soft);
   box-shadow:var(--shadow-lg);
 }
-/* flat shapes peek from the corners (inline SVG .doodle elements in HTML) */
-.cta-card .doodle{opacity:1}
 .cta-card::after{
   content:"";position:absolute;inset:0;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:.11;mix-blend-mode:overlay;pointer-events:none;
+  opacity:.07;mix-blend-mode:overlay;pointer-events:none;
 }
-.cta-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:center}
-.cta-card h2{font-family:var(--font-display);font-size:clamp(28px,3.2vw,44px);line-height:1.1;letter-spacing:-.02em;font-weight:500;margin-bottom:16px}
-.cta-card p{color:rgba(250,247,240,.78);max-width:46ch;font-size:16.5px}
-.enquiry-list{display:flex;flex-direction:column;gap:10px}
-.enquiry-list a{
-  display:flex;align-items:center;gap:14px;
-  background:rgba(250,247,240,.08);border:1px solid rgba(250,247,240,.16);
-  border-radius:16px;padding:15px 20px;font-family:var(--font-display);font-weight:500;font-size:15px;transition:.25s;
-}
-.enquiry-list a:hover{background:rgba(250,247,240,.16);transform:translateX(6px)}
-.enquiry-list a span{margin-left:auto;opacity:.6;transition:.25s}
-.enquiry-list a:hover span{opacity:1;transform:translateX(3px)}
-.enquiry-list .e-ico{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:rgba(250,247,240,.12);font-size:16px;flex:none}
+.cta-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:end}
+.cta-copy{padding-bottom:clamp(48px,6vw,84px);display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.cta-card h2{font-family:var(--font-display);font-size:clamp(28px,3.2vw,44px);line-height:1.08;letter-spacing:-.04em;font-weight:500}
+.cta-card p{color:var(--ink-soft);max-width:44ch;font-size:19px;line-height:1.4;letter-spacing:-.02em}
+/* the one bright action: yellow, the complement that supports the gang */
+.btn-ink{background:var(--yellow);color:#10201A;box-shadow:0 8px 22px -8px rgba(233,196,59,.7)}
+.btn-ink:hover{background:#FFDE66;transform:translateY(-1px)}
+/* the gang, standing together on the banner's floor */
+.cta-gang{display:flex;align-items:flex-end;justify-content:flex-end}
+.cta-gang img{display:block;width:100%;max-width:560px;height:auto;filter:drop-shadow(0 5px 10px rgba(16,32,26,.18))}
 
 /* ---------------- footer ---------------- */
 footer{position:relative;border-top:1px solid var(--line-soft);padding:70px 0 40px;background:var(--bg-soft)}
@@ -856,6 +852,9 @@ footer .wrap{position:relative;z-index:2}
   .rf-art{width:64px;height:64px}
   .h-mark .scribble-spark{display:none}
   .cta-inner{grid-template-columns:1fr}
+  .cta-copy{padding-bottom:0}
+  .cta-gang{justify-content:center;margin-top:8px}
+  .cta-gang img{max-width:340px}
   .price-grid{grid-template-columns:1fr;max-width:440px;margin-inline:auto}
   .contact-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr 1fr}

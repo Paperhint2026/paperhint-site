@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital,wght@1,500&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: 'Geist', system-ui, sans-serif; }
+    a { color: #0B8A5C; } a:hover { color: #087A50; }
+  </style>
+</helmet>
+<div style="position: relative; width: 1080px; height: 1920px; background: #FCFBF8; overflow: hidden; font-family: 'Geist', system-ui, sans-serif; color: #10201A;">
+
+  <!-- ribbon diving through the story -->
+  <svg viewBox="0 0 1080 1920" style="position: absolute; inset: 0; width: 1080px; height: 1920px;" aria-hidden="true">
+    <path d="M 1150 260 C 800 340, 700 620, 830 840 C 960 1050, 720 1240, 420 1300 C 160 1350, 60 1560, 140 1990" fill="none" stroke="{{accent}}" stroke-width="52" stroke-linecap="round" transform="translate(12,16)" opacity="0.9"></path>
+    <path id="sband" d="M 1150 260 C 800 340, 700 620, 830 840 C 960 1050, 720 1240, 420 1300 C 160 1350, 60 1560, 140 1990" fill="none" stroke="#10201A" stroke-width="52" stroke-linecap="round"></path>
+    <text style="font-family: 'Geist', system-ui, sans-serif; font-weight: 500; font-size: 28px; letter-spacing: 0.12em; fill: #FCFBF8;" dominant-baseline="middle">
+      <textPath href="#sband" startOffset="60">EVERY RESOURCE A SCHOOL RUNS ON · DIGITISED FOR EVERY ROLE · TIMETABLES · MARKS · NOTES · PARENTS</textPath>
+    </text>
+  </svg>
+
+  <!-- lockup -->
+  <div style="position: absolute; top: 130px; left: 88px; display: flex; align-items: center; gap: 16px;">
+    <svg viewBox="0 0 20 20" style="width: 46px; height: 46px; color: #0B8A5C;" fill="currentColor"><path d="M13.0084 1.3766C13.7737 2.14565 14.2463 3.15379 14.3544 4.22631C15.3798 2.58856 15.6072 1.73351 15.6072 1.73351C16.6106 2.46619 17.2834 3.56947 17.4774 4.80065C17.6467 5.87486 17.4395 6.96965 16.8996 7.90118C18.6871 7.18196 19.3711 6.62453 19.3711 6.62453C19.7544 7.81004 19.6534 9.10001 19.0903 10.2107C18.599 11.1797 17.791 11.943 16.8095 12.3777C18.6762 12.8518 19.5556 12.8049 19.5556 12.8049C19.1723 13.9904 18.3361 14.9743 17.231 15.5402C16.2668 16.034 15.1667 16.1742 14.1183 15.9461C15.3513 17.4323 16.0902 17.9139 16.0902 17.9139C15.0867 18.6465 13.8348 18.9486 12.6097 18.7536C11.5408 18.5835 10.5688 18.0471 9.85413 17.2432C9.98239 19.1739 10.2985 20 10.2985 20C9.0582 20 7.86867 19.5048 6.99163 18.6234C6.2264 17.8544 5.75375 16.8462 5.64567 15.7737C4.62023 17.4115 4.39286 18.2665 4.39286 18.2665C3.38941 17.5338 2.71668 16.4305 2.52265 15.1994C2.35335 14.1252 2.56059 13.0304 3.10043 12.0989C1.31296 12.8181 0.628921 13.3755 0.628921 13.3755C0.245639 12.19 0.346658 10.9 0.909756 9.78937C1.40106 8.82031 2.20902 8.05702 3.19058 7.6223C1.32385 7.14827 0.444435 7.19517 0.444435 7.19517C0.827718 6.00966 1.66391 5.02572 2.76905 4.45982C3.7333 3.96606 4.83338 3.82582 5.88173 4.05395C4.64875 2.56773 3.90986 2.08618 3.90986 2.08618C4.9133 1.3535 6.16527 1.05143 7.39032 1.24643C8.4592 1.41657 9.4312 1.95295 10.1459 2.75678C10.0177 0.826064 9.70151 0 9.70151 0C10.9418 2.42706e-07 12.1314 0.495178 13.0084 1.3766Z"></path></svg>
+    <div style="font-size: 36px; font-weight: 500; letter-spacing: -0.02em;">Paper <span style="color: #0B8A5C;"><em style="font-family: 'Merriweather', Georgia, serif; font-style: italic; font-weight: 500; font-size: 0.94em;">h</em>int</span></div>
+  </div>
+
+  <!-- the one message -->
+  <div style="position: absolute; top: 480px; left: 88px; width: 800px; display: flex; flex-direction: column; gap: 44px;">
+    <div style="font-size: 128px; font-weight: 500; letter-spacing: -0.05em; line-height: 1.02;">Teachers get their <em style="font-family: 'Merriweather', Georgia, serif; font-style: italic; font-weight: 500;">e</em>venings back</div>
+    <div style="font-size: 42px; font-weight: 400; color: #3D4F47; line-height: 1.35; max-width: 700px;">The timetable, the marks, the notes and the parent updates — off your desk.</div>
+  </div>
+
+  <!-- mascot -->
+  <img src="char-02.png" style="position: absolute; left: 96px; bottom: 420px; width: 300px; transform: rotate(5deg);">
+
+  <!-- CTA pill -->
+  <div style="position: absolute; left: 88px; bottom: 200px; display: flex; align-items: center; gap: 20px; background: #10201A; color: #FCFBF8; border-radius: 999px; padding: 34px 54px; font-size: 38px; font-weight: 500;">Book a demo <span style="color: #FFD84D;">&rarr;</span>&nbsp; paperhint.com</div>
+
+  <div style="position: absolute; inset: 0; background-image: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27260%27 height=%27260%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.82%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E'); opacity: 0.05; mix-blend-mode: overlay; pointer-events: none;"></div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"#0B8A5C","options":["#0B8A5C","#FF8A3D","#7C5CFF","#FFD84D"]},"$preview":{"width":1080,"height":1920}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#0B8A5C' };
+  }
+}
+</script>
+</body>
+</html>

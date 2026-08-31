@@ -1,0 +1,12 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",       "title": "Feed post — announcement", "x": 0,    "y": 0,    "w": 1080, "h": 1080 },
+    { "file": "Quote.dc.html",      "title": "Feed post — testimonial",  "x": 1180, "y": 0,    "w": 1080, "h": 1080 },
+    { "file": "Story.dc.html",      "title": "Story / Reel cover",       "x": 2360, "y": 0,    "w": 1080, "h": 1920 },
+    { "file": "LinkBanner.dc.html", "title": "Link banner / og-cover",   "x": 0,    "y": 1220, "w": 1200, "h": 630 }
+  ],
+  "annotations": [
+    { "id": "kit-notes", "x": 0, "y": -190, "w": 460, "text": "Paperhint social kit — four base layouts.\nSwap the accent with the colour chip above each frame; click any text to retype it.\nExport each frame as PNG from the toolbar. The link banner doubles as og-cover.png (1200x630).\nTestimonial quote is a placeholder until real teacher quotes land." }
+  ],
+  "launch": { "view": "canvas" }
+}

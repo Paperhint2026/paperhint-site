@@ -52,6 +52,17 @@ advanced, productively.
      scan & upload it (the product reads it in), OR manage it manually
      in-app (drop / increase).
 
+8. **Admin / School portal** (people & structure management)
+   - Admins create and manage the school's structure: **classes,
+     sections, students, teachers** — the administrative people-management
+     layer ("model base management").
+   - **Subject management**: admins add subjects and the subject books /
+     materials available for each; those become accessible to all the
+     respective department's teachers (feeding their libraries and AI
+     generation).
+   - Primary admin modules: teacher management · classroom management ·
+     section management · student management · subject management.
+
 ## Supporting modules ("fruitful for the school")
 
 Timetables, academics/marks records, calendar — the school OS around the

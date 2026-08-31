@@ -295,7 +295,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .btn-ivory:hover{transform:translateY(-1px)}
 
 /* ---------------- hero ---------------- */
-.hero{position:relative;padding:132px 0 230px}
+.hero{position:relative;padding:132px 0 120px}
 .hero-content{position:relative;z-index:4;text-align:center;width:min(585px,92vw)}
 .tagline{
   display:inline-flex;align-items:center;gap:10px;
@@ -377,7 +377,7 @@ h1.display em{
   .ribbon-echo{transform:translate(8px,11px)}
   .bowl-marquee{font-size:15px}
   .bowl-marquee tspan.kw{font-size:15.5px}
-  .hero{padding-top:168px;padding-bottom:calc(24vw + 70px)}
+  .hero{padding-top:168px;padding-bottom:calc(22vw + 30px)}
 }
 /* Amplemarket-style capture pill */
 .hero-capture{
@@ -991,7 +991,7 @@ footer .wrap{position:relative;z-index:2}
   .bowl-marquee{font-size:12px}
   .bowl-marquee tspan.kw{font-size:12.5px}
   .hero-ribbon{top:104px}
-  .hero{padding-top:132px;padding-bottom:calc(26vw + 70px)}
+  .hero{padding-top:132px;padding-bottom:calc(24vw + 30px)}
   .nav-inner{--cap:56px;padding:12px 18px 12px calc(var(--cap) / 2 - 15px);gap:12px}
   .brand{font-size:18px}
   .foot-grid{grid-template-columns:1fr;gap:28px}

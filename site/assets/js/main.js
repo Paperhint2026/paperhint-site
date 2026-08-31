@@ -488,14 +488,13 @@
   ];
 
   /* ---- the curve, drawn to fit whatever the hero currently is ---- */
-  function bandBox(wrap, isArc) {
+  function bandBox(wrap) {
     var box = wrap.getBoundingClientRect();
     var W = Math.round(box.width);
-    if (isArc) return { W: W, H: Math.max(96, Math.round(W * 0.11)) };
     /* the under-sweep has to pass below the last line of the lockup */
-    var anchor = document.querySelector('.hero-note') || document.querySelector('.hero-capture');
+    var anchor = document.getElementById('ask-paperhint') || document.querySelector('.hero-note') || document.querySelector('.hero-capture');
     var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + 66) : Math.round(W * 0.5);
-    return { W: W, H: Math.max(380, Math.min(H, 860)) };
+    return { W: W, H: Math.max(300, Math.min(H, 860)) };
   }
 
   /* enters upper-left, sweeps under the lockup, curls a loop in the right
@@ -512,9 +511,14 @@
            ' C ' + X(1.03) + ' ' + Y(0.41) + ', ' + X(1.035) + ' ' + Y(0.34) + ', ' + X(1.045) + ' ' + Y(0.24);
   }
 
-  function arcPath(W, H) {
-    return 'M ' + (-W * 0.02) + ' ' + (H - 10) +
-           ' Q ' + (W / 2) + ' ' + (-H * 0.5) + ', ' + (W * 1.02) + ' ' + (H - 10);
+  function sweepPath(W, H) {
+    /* narrow screens: the same character of curve, without the curl */
+    function X(n) { return (n * W).toFixed(1); }
+    function Y(n) { return (n * H).toFixed(1); }
+    return 'M ' + X(-0.05) + ' ' + Y(0.22) +
+           ' C ' + X(0.03) + ' ' + Y(0.62) + ', ' + X(0.10) + ' ' + Y(0.86) + ', ' + X(0.30) + ' ' + Y(0.90) +
+           ' C ' + X(0.55) + ' ' + Y(0.95) + ', ' + X(0.72) + ' ' + Y(0.72) + ', ' + X(0.84) + ' ' + Y(0.50) +
+           ' C ' + X(0.93) + ' ' + Y(0.33) + ', ' + X(0.99) + ' ' + Y(0.22) + ', ' + X(1.05) + ' ' + Y(0.10);
   }
 
   /* one band = one <svg> holding the curve, the ribbon strokes and the text */
@@ -526,19 +530,36 @@
     var bands = svg ? svg.querySelectorAll('.ribbon-line, .ribbon-echo, .bowl-band, .bowl-band-echo') : [];
     if (!svg || !tp || !path) return null;
 
-    var isArc = wrap.getAttribute('data-shape') === 'arc';
+    var compact = function () { return innerWidth < 960; };
     var speed = parseFloat(tp.getAttribute('data-speed')) || 24;
     var words = [], total = 0, unitLen = 0, baseSize = 18;
 
     function layout() {
-      var g = bandBox(wrap, isArc);
+      var g = bandBox(wrap);
       if (!g.W) return false;                       /* hidden — nothing to draw */
-      var H = g.H;
-      var d = isArc ? arcPath(g.W, H) : loopPath(g.W, H);
+      var H, d;
+      if (compact()) {
+        /* phones: the band lives BELOW the lockup, never across it */
+        var hero = wrap.parentNode;
+        var anchor = document.getElementById('ask-paperhint') || document.querySelector('.hero-note');
+        var top = anchor
+          ? Math.round(anchor.getBoundingClientRect().bottom - hero.getBoundingClientRect().top + 18)
+          : 420;
+        wrap.style.top = top + 'px';
+        H = Math.max(110, Math.round(g.W * 0.3));
+        d = sweepPath(g.W, H);
+      } else {
+        wrap.style.top = '';
+        H = g.H;
+        d = loopPath(g.W, H);
+      }
 
-      svg.setAttribute('viewBox', '0 0 ' + g.W + ' ' + H);   /* 1 user unit = 1 px */
+      /* headroom above and below so the 42px stroke never gets shaved */
+      var PADY = 56;
+      svg.setAttribute('viewBox', '0 ' + (-PADY) + ' ' + g.W + ' ' + (H + PADY * 2));
       svg.setAttribute('width', g.W);
-      svg.setAttribute('height', H);
+      svg.setAttribute('height', H + PADY * 2);
+      svg.style.marginTop = (-PADY) + 'px';
       path.setAttribute('d', d);
       for (var i = 0; i < bands.length; i++) bands[i].setAttribute('d', d);
 
@@ -653,7 +674,7 @@
 
   function initBowlBand() {
     var bands = [];
-    document.querySelectorAll('.hero-ribbon, .hero-arc').forEach(function (wrap) {
+    document.querySelectorAll('.hero-ribbon').forEach(function (wrap) {
       var b = Band(wrap);
       if (b) bands.push(b);
     });
@@ -676,6 +697,138 @@
     }
   }
 
+
+
+
+  /* ---------------- ask-paperhint chat (placeholder + adapter seam) ----------------
+     The UI is final; the brain is swappable. Wire a real backend by replacing
+     window.PaperhintChat.adapter with an async (question, history) => reply. */
+  var CANNED = [
+    [/pric|cost|fee|plan/i, 'Pricing is per enrolled student per year \u2014 Starter \u20b949, School \u20b939 (most schools), District custom. One licence covers admins, teachers, students and parents. Details on the pricing page.'],
+    [/parent|email|notif/i, 'When a teacher publishes marks, homework or an overview, the right parents get an email automatically \u2014 no app to install, no group chats.'],
+    [/timetable|schedule|clash/i, 'Feed in teachers, subjects, rooms and periods \u2014 Paperhint generates a clash-free timetable and syncs it to the school calendar. Substitutions take one tap.'],
+    [/paper|question|exam|test/i, 'Teachers build question papers from their own notes library \u2014 pick chapters, weightage and difficulty, and the paper, blueprint and answer key are drafted together.'],
+    [/demo|start|onboard|migrat/i, 'Book a demo from the button above \u2014 we set up one of your classes beforehand so you see your school, not a sample one. Migration is included on School and District plans.']
+  ];
+
+  window.PaperhintChat = {
+    adapter: function (question) {
+      /* PLACEHOLDER brain: canned matches + a graceful fallback.
+         Replace with: return fetch(YOUR_ENDPOINT, {...}).then(r => r.json())... */
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          for (var i = 0; i < CANNED.length; i++) {
+            if (CANNED[i][0].test(question)) return resolve(CANNED[i][1]);
+          }
+          resolve('Good question \u2014 I\u2019m a placeholder for now, so I\u2019d rather not guess. Drop it in the contact form and a person will answer within a working day.');
+        }, 650 + Math.random() * 500);
+      });
+    }
+  };
+
+  function initChat() {
+    var root = document.getElementById('ask-paperhint');
+    if (!root) return;
+    var pill = root.querySelector('.chat-pill');
+    var panel = root.querySelector('.chat-panel');
+    var log = root.querySelector('.chat-log');
+    var form = root.querySelector('.chat-form');
+    var input = form.querySelector('input');
+
+    pill.addEventListener('click', function () {
+      var open = panel.hidden;
+      panel.hidden = !open;
+      pill.setAttribute('aria-expanded', String(open));
+      if (open) input.focus();
+    });
+
+    function add(kind, text) {
+      var el = document.createElement('div');
+      el.className = 'chat-msg ' + kind;
+      el.textContent = text;
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+      return el;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+      add('me', q);
+      var typing = add('bot typing', 'thinking\u2026');
+      window.PaperhintChat.adapter(q).then(function (reply) {
+        typing.classList.remove('typing');
+        typing.textContent = reply;
+        log.scrollTop = log.scrollHeight;
+      });
+    });
+  }
+
+  /* ---------------- nav choreography ----------------
+     Boot: the bar is born as the rosette with the mark spinning inside, then
+     opens and its contents fade in. Scrolling down folds it back into the
+     rosette; scrolling up, or hovering the rosette, opens it again. */
+  function initNavShrink() {
+    var inner = document.querySelector('.nav-inner');
+    if (!inner) return;
+
+    var folded = false, wantFolded = false, booted = false;
+
+    function fold()   {
+      inner.classList.add('nav-shrink');
+      folded = true;
+      /* spin the mark on every fold */
+      inner.classList.remove('nav-spin');
+      void inner.offsetWidth;               /* restart the animation */
+      inner.classList.add('nav-spin');
+    }
+    function unfold() { inner.classList.remove('nav-shrink'); folded = false; }
+
+    /* boot: collapsed + spinning, then release */
+    if (!reduceMotion) {
+      inner.classList.add('nav-shrink', 'nav-boot');
+      folded = true;
+      var release = function () {
+        setTimeout(function () {
+          inner.classList.remove('nav-boot');
+          unfold();
+          booted = true;
+        }, 900); /* one full spin of the mark */
+      };
+      if (document.readyState === 'complete') release();
+      else window.addEventListener('load', release, { once: true });
+      /* safety: never stay locked shut */
+      setTimeout(function () {
+        if (!booted) { inner.classList.remove('nav-boot'); unfold(); booted = true; }
+      }, 3000);
+    } else {
+      booted = true;
+    }
+
+    /* scroll: down folds, up opens */
+    var lastY = scrollY, acc = 0;
+    window.addEventListener('scroll', function () {
+      if (!booted) return;
+      var dy = scrollY - lastY; lastY = scrollY;
+      acc = (dy > 0) === (acc > 0) ? acc + dy : dy;   /* direction-consistent run */
+      if (scrollY < 90) { wantFolded = false; }
+      else if (acc > 60)  { wantFolded = true; }
+      else if (acc < -40) { wantFolded = false; }
+      if (wantFolded !== folded && !inner.matches(':hover')) {
+        wantFolded ? fold() : unfold();
+      }
+    }, { passive: true });
+
+    /* hover the rosette: peek open; leave: fold back if it should be folded */
+    inner.addEventListener('pointerenter', function () {
+      if (booted && folded) unfold();
+    });
+    inner.addEventListener('pointerleave', function () {
+      if (booted && wantFolded && !folded) fold();
+    });
+  }
 
   /* ---------------- role folder: tabs over one shared panel ---------------- */
   var ROLES = {
@@ -835,6 +988,8 @@
     initReveal();
     initContact();
     initHeroCapture();
+    initNavShrink();
+    initChat();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

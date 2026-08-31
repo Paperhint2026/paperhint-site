@@ -56,7 +56,7 @@
       <span class="mark" aria-hidden="true">
         <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M13.0084 1.3766C13.7737 2.14565 14.2463 3.15379 14.3544 4.22631C15.3798 2.58856 15.6072 1.73351 15.6072 1.73351C16.6106 2.46619 17.2834 3.56947 17.4774 4.80065C17.6467 5.87486 17.4395 6.96965 16.8996 7.90118C18.6871 7.18196 19.3711 6.62453 19.3711 6.62453C19.7544 7.81004 19.6534 9.10001 19.0903 10.2107C18.599 11.1797 17.791 11.943 16.8095 12.3777C18.6762 12.8518 19.5556 12.8049 19.5556 12.8049C19.1723 13.9904 18.3361 14.9743 17.231 15.5402C16.2668 16.034 15.1667 16.1742 14.1183 15.9461C15.3513 17.4323 16.0902 17.9139 16.0902 17.9139C15.0867 18.6465 13.8348 18.9486 12.6097 18.7536C11.5408 18.5835 10.5688 18.0471 9.85413 17.2432C9.98239 19.1739 10.2985 20 10.2985 20C9.0582 20 7.86867 19.5048 6.99163 18.6234C6.2264 17.8544 5.75375 16.8462 5.64567 15.7737C4.62023 17.4115 4.39286 18.2665 4.39286 18.2665C3.38941 17.5338 2.71668 16.4305 2.52265 15.1994C2.35335 14.1252 2.56059 13.0304 3.10043 12.0989C1.31296 12.8181 0.628921 13.3755 0.628921 13.3755C0.245639 12.19 0.346658 10.9 0.909756 9.78937C1.40106 8.82031 2.20902 8.05702 3.19058 7.6223C1.32385 7.14827 0.444435 7.19517 0.444435 7.19517C0.827718 6.00966 1.66391 5.02572 2.76905 4.45982C3.7333 3.96606 4.83338 3.82582 5.88173 4.05395C4.64875 2.56773 3.90986 2.08618 3.90986 2.08618C4.9133 1.3535 6.16527 1.05143 7.39032 1.24643C8.4592 1.41657 9.4312 1.95295 10.1459 2.75678C10.0177 0.826064 9.70151 0 9.70151 0C10.9418 2.42706e-07 12.1314 0.495178 13.0084 1.3766Z"/></svg>
       </span>
-      paper<span class="hint">hint</span>
+      <span class="wordmark">paper<span class="hint">hint</span></span>
     </a>
     <nav class="nav-links" aria-label="Main">
       <a href="#capabilities">Product</a>
@@ -73,15 +73,6 @@
 
 <!-- ============ hero ============ -->
 <header class="hero">
-  <!-- narrow-viewport band: shallow arc, path drawn by main.js -->
-  <div class="hero-arc" data-shape="arc" aria-hidden="true">
-    <svg preserveAspectRatio="none" focusable="false">
-      <path class="bowl-band-echo"/>
-      <path class="bowl-band"/>
-      <path class="bowl-line" id="arc-path" fill="none" stroke="none"/>
-      <text class="bowl-marquee"><textPath href="#arc-path" data-speed="20"></textPath></text>
-    </svg>
-  </div>
   <!-- hero band: one looping ribbon, path computed by main.js, text rides it -->
   <div class="hero-ribbon" data-shape="loop" aria-hidden="true">
     <svg preserveAspectRatio="none" focusable="false">
@@ -107,6 +98,25 @@
       <button class="btn btn-primary" type="submit">Book a demo</button>
     </form>
     <p class="hero-note">Loved by teachers · Built for Indian schools · No card needed</p>
+
+    <!-- ask-paperhint: placeholder UI, wired to the adapter in main.js
+         (swap window.PaperhintChat.adapter for the real AI backend) -->
+    <div class="chat" id="ask-paperhint">
+      <button class="chat-pill" type="button" aria-expanded="false" aria-controls="chat-panel">
+        <span class="chat-dot" aria-hidden="true"></span>
+        Ask Paperhint anything
+        <span class="chat-hint" aria-hidden="true">timetables · pricing · migration</span>
+      </button>
+      <div class="chat-panel" id="chat-panel" hidden>
+        <div class="chat-log" role="log" aria-live="polite">
+          <div class="chat-msg bot">Hi! Ask me anything about Paperhint — what it does, pricing, or how a school gets started.</div>
+        </div>
+        <form class="chat-form">
+          <input type="text" name="q" placeholder="e.g. How do parent updates work?" aria-label="Ask about Paperhint" autocomplete="off" maxlength="300">
+          <button class="btn btn-primary" type="submit" aria-label="Send">→</button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <div class="wrap trust">
@@ -134,49 +144,72 @@
       <p class="section-sub">Pick one. This is the actual work Paperhint takes off the desk.</p>
     </div>
 
-    <div class="spec-shell reveal">
-      <!-- tabs are rendered by main.js -->
-      <div class="spec-tabs" role="tablist" aria-label="Product areas"></div>
+    <!-- feature folder-cards (Amplemarket "all-in-one platform" structure) -->
+    <div class="feature-grid">
 
-      <div class="spec-panel">
-        <!-- initial content matches tab 1; main.js re-renders on tab change -->
-        <div class="spec-copy">
-          <h3>Timetables that build themselves</h3>
-          <p>Feed in teachers, subjects, rooms and periods. Paperhint resolves the clashes, respects every teacher load rule, and publishes to the school calendar in one action.</p>
-          <ul class="spec-points">
-            <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Clash-free generation across sections, rooms and labs</span></li>
-            <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Teacher workload and free-period balancing</span></li>
-            <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Substitutions in a tap when a teacher is away</span></li>
-            <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Two-way sync with the school calendar</span></li>
-          </ul>
-        </div>
-
-        <div class="spec-visual">
-          <div class="app">
-            <div class="app-bar"><i></i><i></i><i></i><span>paperhint · Greenfield Public School</span></div>
-            <div class="app-body">
-              <div class="app-side">
-                <b>School</b>
-                <i class="on">Timetable</i><i>Academics</i><i>Library</i><i>Question papers</i><i>Parent connect</i>
-              </div>
-              <div class="app-main">
-                <h4>Class VIII-B · Week 32 <u>Auto-generated</u></h4>
-                <div class="tt-grid">
-                  <s>Mon</s><s>Tue</s><s>Wed</s><s>Thu</s><s>Fri</s>
-                  <s class="c1">Math</s><s class="c2">Sci</s><s>Eng</s><s class="c1">Math</s><s class="c2">Sci</s>
-                  <s>Eng</s><s class="c1">Math</s><s class="c3">Hist</s><s>Eng</s><s class="c1">Math</s>
-                  <s class="c2">Sci</s><s>Eng</s><s class="c1">Math</s><s class="c3">Art</s><s>Eng</s>
-                  <s class="c3">Hist</s><s>PE</s><s class="c2">Sci</s><s>Eng</s><s class="c2">Lab</s>
-                  <s>Lib</s><s class="c3">Hist</s><s>PE</s><s class="c2">Sci</s><s class="c3">Hist</s>
-                </div>
-              </div>
-            </div>
+      <article class="fcard reveal" style="--tint:var(--emerald)">
+        <span class="fcard-kicker">Timetables &amp; calendar</span>
+        <h3>Clash-free in one click</h3>
+        <p>Feed in teachers, subjects, rooms and periods. Paperhint resolves the clashes, balances teacher load, and publishes to the school calendar.</p>
+        <div class="fcard-visual">
+          <div class="tt-grid">
+            <s>Mon</s><s>Tue</s><s>Wed</s><s>Thu</s><s>Fri</s>
+            <s class="c1">Math</s><s class="c2">Sci</s><s>Eng</s><s class="c1">Math</s><s class="c2">Sci</s>
+            <s>Eng</s><s class="c1">Math</s><s class="c3">Hist</s><s>Eng</s><s class="c1">Math</s>
+            <s class="c2">Sci</s><s>Eng</s><s class="c1">Math</s><s class="c3">Art</s><s>Eng</s>
           </div>
         </div>
-      </div>
+      </article>
+
+      <article class="fcard reveal" style="--tint:var(--violet)">
+        <span class="fcard-kicker">Academics &amp; mastery</span>
+        <h3>Every mark, mapped to mastery</h3>
+        <p>Assessments become per-student, per-topic mastery — so teachers reteach the topic a class lost, not just re-read the totals.</p>
+        <div class="fcard-visual">
+          <div class="bar-row"><em>Algebra</em><div class="bar"><i data-w="86%"></i></div><u>86%</u></div>
+          <div class="bar-row"><em>Geometry</em><div class="bar"><i data-w="72%"></i></div><u>72%</u></div>
+          <div class="bar-row"><em>Optics</em><div class="bar"><i data-w="64%"></i></div><u>64%</u></div>
+          <div class="bar-row"><em>Cells</em><div class="bar"><i data-w="91%"></i></div><u>91%</u></div>
+        </div>
+      </article>
+
+      <article class="fcard reveal" style="--tint:var(--orange)">
+        <span class="fcard-kicker">Digital library</span>
+        <h3>Everything taught, kept</h3>
+        <p>Notes, books and worksheets tagged by class and chapter — searchable, and visible to exactly who should see them.</p>
+        <div class="fcard-visual">
+          <div class="lib-grid">
+            <figure><div></div><figcaption>Ch 4 · Light</figcaption></figure>
+            <figure><div></div><figcaption>Ch 5 · Cells</figcaption></figure>
+            <figure><div></div><figcaption>Lab manual</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="fcard reveal" style="--tint:var(--yellow)">
+        <span class="fcard-kicker">Question papers</span>
+        <h3>Papers in minutes, not evenings</h3>
+        <p>Pick chapters, weightage and difficulty — the paper, blueprint and answer key are drafted from the teacher's own library.</p>
+        <div class="fcard-visual">
+          <div class="q-line"><b>Q1</b>Light — reflection, 5 MCQ<span>5m</span></div>
+          <div class="q-line"><b>Q2</b>Cells — label and explain<span>12m</span></div>
+          <div class="q-line"><b>Q3</b>Optics — numerical<span>15m</span></div>
+        </div>
+      </article>
+
+      <article class="fcard reveal" style="--tint:var(--emerald)">
+        <span class="fcard-kicker">Parent connect</span>
+        <h3>Parents told automatically</h3>
+        <p>Publishing marks, homework or an overview triggers email to the right parents — with a full trail of what was shared.</p>
+        <div class="fcard-visual">
+          <div class="feed-item"><i>M</i><div><b>Term 2 marks published</b>38 parents notified</div></div>
+          <div class="feed-item"><i>H</i><div><b>Homework · Science Ch 5</b>Due Friday</div></div>
+          <div class="feed-item"><i>P</i><div><b>Performance overview</b>Shared by R. Iyer</div></div>
+        </div>
+      </article>
+
     </div>
-  </div>
-</section>
+  </section>
 
 <!-- ============ testimonials ============ -->
 <section class="testimonials section-pad">
@@ -214,7 +247,7 @@
     <div class="rolefolder reveal">
       <div class="rf-tabs" role="tablist" aria-label="Roles">
         <button class="rf-tab active" type="button" data-role="admins" role="tab" aria-selected="true">
-          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-09.png" alt="" width="86" height="86"></span>
+          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-05.png" alt="" width="86" height="86"></span>
           <b>Admins</b>
         </button>
         <button class="rf-tab" type="button" data-role="teachers" role="tab" aria-selected="false">
@@ -222,7 +255,7 @@
           <b>Teachers</b>
         </button>
         <button class="rf-tab" type="button" data-role="students" role="tab" aria-selected="false">
-          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-14.png" alt="" width="86" height="86"></span>
+          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-10.png" alt="" width="86" height="86"></span>
           <b>Students</b>
         </button>
         <button class="rf-tab" type="button" data-role="parents" role="tab" aria-selected="false">

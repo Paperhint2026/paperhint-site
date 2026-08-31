@@ -67,7 +67,20 @@ Drop into `site/assets/img/…`; gradients are the stand-ins until then:
 - [x] Spec widget: fixed height, no reflow between tabs
 - [x] SEO: canonical, OG/Twitter meta, JSON-LD, robots.txt, sitemap.xml, lazy stickers
 - [x] Repo: github.com/Paperhint2026/paperhint-site (project at root, history kept)
-- [ ] Real teacher testimonial quotes (placeholders in main.js flagged)
+- [x] Nav choreography: boots as spinning rosette then expands; folds to the centered
+      rosette on scroll-down; opens on scroll-up or hover; mark stays emerald and
+      re-spins on every fold
+- [x] Mascots reduced: 3 on phones / 5 on desktop, +1 per extra ~1500px of page, cap 10;
+      all art from the transparent sticker sheet (stickers-2.png) — old sheet deleted
+- [x] Ask-Paperhint chat placeholder centered in the hero — swappable brain at
+      window.PaperhintChat.adapter (canned answers now, AI endpoint later)
+- [x] Section 2 rebuilt as Amplemarket-style folder-card grid (5 cards, kicker tabs,
+      mini product visuals inside)
+- [x] One responsive band system: dynamic loop on desktop, sweep BELOW the lockup on
+      phones; old arc band deleted; ribbon viewBox has stroke headroom (no cropping)
+- [x] Green frost tint falling from the top edge under the nav
+- [ ] Real teacher testimonial quotes + detailed product reviews (founder preparing
+      product documentation — testimonials rework waits on it)
 - [ ] og-cover.png social image (referenced at assets/img/og-cover.png — needs the artwork)
 - [ ] Name the theme + extract shareable theme.css token sheet for the product
 - [ ] Amplemarket font-size structure audit across ALL sections (H1 done; verify H2/H3/body vs theirs)

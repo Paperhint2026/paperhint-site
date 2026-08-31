@@ -14,16 +14,16 @@
   /* die-cut characters carved out of the founder's sticker sheet
      (assets/img/stickers/char-NN.png — transparent, heart + animated strip excluded) */
   var SHEET = [
-    { f: 'char-02.png', w: 205, h: 192, kind: 'circle' },  /* orange running */
-    { f: 'char-03.png', w: 103, h: 206, kind: 'rect'   },  /* black capsule, arms crossed */
-    { f: 'char-06.png', w: 146, h: 198, kind: 'rect'   },  /* blue tall rectangle */
-    { f: 'char-07.png', w: 173, h: 180, kind: 'tri'    },  /* yellow triangle */
-    { f: 'char-11.png', w: 182, h: 174, kind: 'rect'   },  /* red angry square */
-    { f: 'char-13.png', w: 151, h: 178, kind: 'circle' },  /* teal hexagon */
-    { f: 'char-14.png', w: 210, h: 143, kind: 'circle' },  /* yellow star */
-    { f: 'char-17.png', w: 224, h: 164, kind: 'circle' },  /* orange trapezoid */
-    { f: 'char-20.png', w: 144, h: 170, kind: 'rect'   },  /* yellow plus */
-    { f: 'char-22.png', w: 171, h: 168, kind: 'circle' }   /* pink arrow */
+    { f: 'char-02.png', w: 200, h: 175, kind: 'circle' },  /* orange running */
+    { f: 'char-07.png', w: 172, h: 190, kind: 'tri'    },  /* yellow triangle */
+    { f: 'char-22.png', w: 139, h: 176, kind: 'rect'   },  /* pink arrow */
+    { f: 'char-12.png', w: 163, h: 184, kind: 'circle' },  /* teal hexagon */
+    { f: 'char-10.png', w: 190, h: 190, kind: 'circle' },  /* yellow star */
+    { f: 'char-03.png', w: 107, h: 210, kind: 'rect'   },  /* black capsule */
+    { f: 'char-08.png', w: 181, h: 184, kind: 'rect'   },  /* red square */
+    { f: 'char-06.png', w: 157, h: 201, kind: 'rect'   },  /* blue rectangle */
+    { f: 'char-20.png', w: 143, h: 174, kind: 'rect'   },  /* yellow plus */
+    { f: 'char-14.png', w: 217, h: 164, kind: 'circle' }   /* orange trapezoid */
   ];
 
   /* scale to a comfortable on-screen size */
@@ -70,8 +70,13 @@
     engine.gravity.x = 0.09; /* gentle rightward lean: they heap toward the bottom-right, not up the wall */
 
     var W = innerWidth;
-    CHARS.forEach(function (c, i) {
-      var x = W * (0.07 + 0.094 * i) + (i % 2 ? 12 : -8);
+    /* fewer mascots: 5 on a short page, one more per extra ~1500px of page,
+       never more than the sheet offers */
+    var docH = document.documentElement.scrollHeight;
+    var base = innerWidth < 700 ? 3 : 5;
+    var COUNT = Math.min(CHARS.length, base + Math.max(0, Math.floor((docH - 3200) / 1500)));
+    CHARS.slice(0, COUNT).forEach(function (c, i) {
+      var x = W * (0.10 + (0.80 / Math.max(4, COUNT - 1)) * i) + (i % 2 ? 12 : -8);
       var y = -110 - i * 105; /* rain in from above on load */
       var opts = { restitution: 0.16, friction: 0.6, frictionStatic: 1.6, frictionAir: 0.022, density: 0.004 };
       var b;

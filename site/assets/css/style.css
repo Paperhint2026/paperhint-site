@@ -219,7 +219,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   to{-webkit-mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%;
      mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%}
 }
-.brand{display:flex;align-items:center;gap:10px;white-space:nowrap;flex:none;font-family:var(--font-display);font-weight:700;font-size:21px;letter-spacing:-.03em;text-transform:lowercase}
+.brand{display:flex;align-items:center;gap:10px;white-space:nowrap;flex:none;font-family:var(--font-display);font-weight:700;font-size:21px;letter-spacing:-.02em}
+/* the h of hint: small Merriweather italic, tucked flush into the Geist word */
+.brand .hint em{font-family:var(--font-serif);font-style:italic;font-weight:400;font-size:.94em;letter-spacing:0;margin-right:.5px}
 .brand .hint{color:var(--emerald)}
 .brand .mark{width:30px;height:30px;display:grid;place-items:center;color:var(--emerald)}
 .brand .mark svg{width:27px;height:27px}

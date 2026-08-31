@@ -727,6 +727,34 @@
   };
 
 
+
+  /* ---------------- parallax layers ----------------
+     Elements with data-plx drift by (distance from viewport centre x factor):
+     positive lags the scroll (background), negative leads it (foreground). */
+  function initParallax() {
+    var els = document.querySelectorAll('[data-plx]');
+    if (!els.length || reduceMotion) return;
+    var items = Array.prototype.map.call(els, function (el) {
+      return { el: el, f: parseFloat(el.getAttribute('data-plx')) || 0 };
+    });
+    var queued = false;
+    function frame() {
+      queued = false;
+      var mid = innerHeight / 2;
+      items.forEach(function (it) {
+        var r = it.el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > innerHeight + 200) return;
+        var d = (r.top + r.height / 2) - mid;
+        var base = it.el.classList.contains('cr-gang') ? 'translateX(-50%) ' : '';
+        it.el.style.transform = base + 'translateY(' + (d * it.f).toFixed(1) + 'px)';
+      });
+    }
+    window.addEventListener('scroll', function () {
+      if (!queued) { queued = true; requestAnimationFrame(frame); }
+    }, { passive: true });
+    frame();
+  }
+
   /* ---------------- mobile menu ---------------- */
   function initNavMenu() {
     var nav = document.querySelector('.nav');
@@ -1136,6 +1164,7 @@
     initNavShrink();
     initChat();
     initNavMenu();
+    initParallax();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

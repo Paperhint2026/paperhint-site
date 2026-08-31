@@ -81,7 +81,12 @@ Drop into `site/assets/img/…`; gradients are the stand-ins until then:
 - [x] Green frost tint falling from the top edge under the nav
 - [ ] Real teacher testimonial quotes + detailed product reviews (founder preparing
       product documentation — testimonials rework waits on it)
-- [ ] og-cover.png social image (referenced at assets/img/og-cover.png — needs the artwork)
+- [x] About: chalkboard + classroom-gang parallax scene above the letter (founder art,
+      checkerboards keyed out, webp+fallbacks); letter rewritten as a thank-you to the
+      schools that raised us
+- [x] Contact: waving mail-mascot greeter; 404.html with the lost-kid mascot
+- [ ] og-cover.png social image (referenced at assets/img/og-cover.png — export the
+      social kit's link-banner artboard, or the gang-on-light variant)
 - [ ] Name the theme + extract shareable theme.css token sheet for the product
 - [x] Amplemarket type-scale audit, measured on their live site at 1440px: H1 56/1.0/-5%,
       H2 44/-4%, card H3 24, sub 20 — ours aligned; ALL weights unified to Geist Medium 500

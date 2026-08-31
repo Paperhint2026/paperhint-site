@@ -893,14 +893,14 @@
           inner.classList.add('nav-arrive');   /* one decelerating turn during the glide */
           unfold();
           booted = true;
-        }, 650); /* let the drop settle and the spin read */
+        }, 1500); /* the drop lands (~1.1s) and the spin gets a beat to read */
       };
       if (document.readyState === 'complete') release();
       else window.addEventListener('load', release, { once: true });
       /* safety: never stay locked shut */
       setTimeout(function () {
         if (!booted) { inner.classList.remove('nav-boot'); unfold(); booted = true; }
-      }, 3000);
+      }, 4200);
     } else {
       booted = true;
     }

@@ -493,6 +493,10 @@
     var W = Math.round(box.width);
     /* the under-sweep has to pass below the last line of the lockup */
     var anchor = document.querySelector('.hero-note') || document.querySelector('.hero-capture');
+    if (!anchor) {
+      var lock = wrap.parentNode.querySelector('.hero-content');
+      anchor = lock ? lock.lastElementChild : null;
+    }
     var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + 66) : Math.round(W * 0.5);
     return { W: W, H: Math.max(300, Math.min(H, 860)) };
   }
@@ -522,6 +526,15 @@
   }
 
   /* one band = one <svg> holding the curve, the ribbon strokes and the text */
+  function bandTokens(wrap) {
+    var raw = wrap.getAttribute('data-words');
+    if (!raw) return BOWL_TOKENS;
+    return raw.split(/\s+/).filter(Boolean).map(function (w) {
+      var kw = w.length > 2 && w.charAt(0) === '*' && w.charAt(w.length - 1) === '*';
+      return [kw ? w.slice(1, -1) : w, kw ? 1 : 0];
+    });
+  }
+
   function Band(wrap) {
     var svg   = wrap.querySelector('svg');
     var text  = wrap.querySelector('.bowl-marquee');
@@ -571,12 +584,14 @@
       return fill();
     }
 
+    var TOKENS = bandTokens(wrap);
+
     function unit() {
       var frag = document.createDocumentFragment();
-      for (var i = 0; i < BOWL_TOKENS.length; i++) {
+      for (var i = 0; i < TOKENS.length; i++) {
         var t = document.createElementNS(SVGNS, 'tspan');
-        if (BOWL_TOKENS[i][1]) t.setAttribute('class', 'kw');
-        t.textContent = BOWL_TOKENS[i][0] + ' ';
+        if (TOKENS[i][1]) t.setAttribute('class', 'kw');
+        t.textContent = TOKENS[i][0] + ' ';
         frag.appendChild(t);
       }
       return frag;

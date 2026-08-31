@@ -74,8 +74,20 @@
 </div>
 
 <header class="page-hero">
+  <!-- gratitude ribbon: same engine as home, its own words and pace -->
+  <div class="hero-ribbon" data-speed="34"
+       data-words="*Thank* *you* to the teachers, the staff rooms and the last bell · to *report* *cards* written by hand · to the *schools* *that* *raised* *us* · this one is for the *evenings* we owe you ·"
+       aria-hidden="true">
+    <svg preserveAspectRatio="none" focusable="false">
+      <path class="ribbon-echo"/>
+      <path class="ribbon-line"/>
+      <path class="bowl-line" id="about-band" fill="none" stroke="none"/>
+      <text class="bowl-marquee"><textPath href="#about-band" data-speed="34"></textPath></text>
+    </svg>
+  </div>
+
   <div class="wrap hero-content">
-    <span class="tagline"><span class="tag">ABOUT</span> A note from the founder <i>·</i></span>
+    <span class="tagline"><span class="tag">ABOUT</span> Note from the founders <i>·</i></span>
     <h1 class="display">Why <em>w</em>e built this</h1>
   </div>
 </header>

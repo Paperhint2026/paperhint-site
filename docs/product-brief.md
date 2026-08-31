@@ -147,5 +147,13 @@ credits. Far-fetched; recorded so nobody designs against it accidentally.
   conversations and look credible at silent-launch scale — not mass
   lead-gen.
 
+## Contact form posture (applied)
+
+The form is a founding-school pilot application, not a sales funnel:
+"Join the pilot" leads the enquiry types, Teacher tops the role list,
+WhatsApp number over phone, and the qualifying question is "How does
+correction work in your school today?". Steps promise a demo on the
+school's own class and founding-school terms set together.
+
 ## Open questions for the founder
 

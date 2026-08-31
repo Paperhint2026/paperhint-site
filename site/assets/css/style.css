@@ -229,15 +229,16 @@ h1.display em{
 }
 .hero-sub{margin:0 auto 26px;font-size:17.5px;line-height:1.55;color:var(--ink-soft);text-wrap:balance}
 /* the bowl: hero subcopy rides an invisible U-curve wrapping the lockup */
-/* bands: JS draws the curve and sizes the svg; clipped so nothing widens the page */
-.hero-bowl{position:absolute;top:44px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden}
-.hero-bowl svg{display:block;max-width:100%}
-/* looping ribbon sweeping the hero, behind every bit of content */
-.hero-ribbon{position:absolute;top:96px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden}
+/* the band: colour is TEXT-RELATIVE — the ribbon strokes in currentColor,
+   inherited from the display-text ink, so path and type always agree */
+.hero-ribbon{
+  position:absolute;top:88px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden;
+  color:var(--ink); /* same token the H1 sets its ink with */
+}
+[data-theme="dark"] .hero-ribbon{color:var(--surface)}
 .hero-ribbon svg{display:block;max-width:100%}
-.ribbon-line{fill:none;stroke:var(--ink);stroke-width:42;stroke-linecap:round;stroke-linejoin:round}
+.ribbon-line{fill:none;stroke:currentColor;stroke-width:42;stroke-linecap:round;stroke-linejoin:round}
 .ribbon-echo{fill:none;stroke:var(--emerald);stroke-width:42;stroke-linecap:round;stroke-linejoin:round;transform:translate(11px,15px);opacity:.9}
-[data-theme="dark"] .ribbon-line{stroke:var(--surface)}
 [data-theme="dark"] .ribbon-echo{opacity:.45}
 @media (prefers-reduced-motion: no-preference){
   .ribbon-line,.ribbon-echo{stroke-dasharray:var(--len,5000);stroke-dashoffset:var(--len,5000);animation:ribbonDraw 2s .2s cubic-bezier(.35,.75,.25,1) forwards}
@@ -263,12 +264,16 @@ h1.display em{
 .bowl-fluid{pointer-events:none}
 .hero-bowl.fluid-off .bowl-fluid{display:none}
 .bowl-marquee tspan{transition:fill .3s}
-.hero-arc{display:none;position:absolute;top:84px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden}
+.hero-arc{display:none;position:absolute;top:112px;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden}
 .hero-arc svg{display:block;max-width:100%}
 .hero-arc .bowl-marquee{font-size:21px}
 @media (max-width:1199px){
   .hero-bowl,.hero-ribbon{display:none}
   .hero-arc{display:block}
+  /* the band thins down with the viewport so it never dominates */
+  .bowl-band,.bowl-band-echo{stroke-width:26}
+  .bowl-marquee{font-size:14.5px}
+  .bowl-marquee tspan.kw{font-size:15px}
   .hero{padding-top:168px}
 }
 /* Amplemarket-style capture pill */
@@ -647,4 +652,15 @@ footer .wrap{position:relative;z-index:2}
   .f-row{grid-template-columns:1fr}
   .deck{height:360px}
   .t-card{padding:28px 26px;height:330px}
+}
+
+@media (max-width:640px){
+  .hero-arc{display:none}
+  .hero{padding-top:132px}
+  .nav-inner{--cap:56px;padding:12px 18px 12px calc(var(--cap) / 2 - 15px);gap:12px}
+  .brand{font-size:18px}
+  .foot-grid{grid-template-columns:1fr;gap:28px}
+  .foot-word{font-size:clamp(52px,17vw,90px)}
+  .rf-tabs{grid-template-columns:repeat(2,1fr);gap:6px;padding:10px}
+  .cta-card{border-radius:24px}
 }

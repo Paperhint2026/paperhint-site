@@ -41,3 +41,34 @@ Drop into `site/assets/img/…`; gradients are the stand-ins until then:
 - Default theme: light (ivory); manual toggle; do NOT rely on localStorage in preview contexts (wrap in try/catch if persisting)
 - Pricing: placeholder ₹ tiers, clearly swappable
 - Testimonials: placeholder names/schools until real quotes provided
+
+## Requirements tracker (founder asks → status)
+- [x] Header: frosted glass, near-white, gradient tints + noise inside the bar
+- [x] Header: silhouette morphs into the rosette logo shape at BOTH ends (mask caps)
+- [x] Header: no drop shadow; caps bloom from inside the bar on load; no Home tab
+- [x] Logo: bare rosette (no filled box), grow + spin on load, centred in the left cap
+- [x] Hero: founder's Figma composition — band curve framing a 585px centered lockup
+- [x] H1 "Run the *w*hole school / on one page" — 56px max, Geist Medium, lowercase serif-italic w only
+- [x] Email capture pill + one quiet note line (Amplemarket lockup); prefills contact form
+- [x] Band: ONE shape (founder's looping sketch), path drawn dynamically to the live hero box
+- [x] Band: text rides the looping path as a seamless marquee (Wispr mechanic, 34px band / 18px text)
+- [x] Band: colour is text-relative (currentColor from the display ink token)
+- [x] Band: liquid mesh warp near the cursor (per-glyph dy/rotate/swell — no SVG filters; the
+      feTurbulence/feDisplacement approach locked up and was replaced)
+- [x] Fonts: Geist everywhere + Merriweather italic accents only (Amplemarket itself uses
+      licensed Labil Grotesk — not adoptable; Geist confirmed by founder)
+- [x] Ground: Amplemarket near-white (#FCFBF8), not Wispr beige; global film grain; theme-reactive
+- [x] NEAT: founder's exact ribbon config, brand palette, scroll-reactive, dark rebuild
+- [x] Stickers: founder's sheet cut into 23 transparent die-cuts (no heart, no animated strip)
+- [x] Gravity: Matter.js layer, 10 die-cut characters, drag + flick, bottom-right lean
+- [x] Gravity: scroll-down never lifts them; scroll-up = weighted nudge with velocity ceiling
+- [x] Roles: Amplemarket "revenue heroes" folder — role tabs + shared panel, sticker per role
+- [x] Scribble/highlight accents beside section headings (draw in on reveal)
+- [x] Spec widget: fixed height, no reflow between tabs
+- [x] SEO: canonical, OG/Twitter meta, JSON-LD, robots.txt, sitemap.xml, lazy stickers
+- [x] Repo: github.com/Paperhint2026/paperhint-site (project at root, history kept)
+- [ ] Real teacher testimonial quotes (placeholders in main.js flagged)
+- [ ] og-cover.png social image (referenced at assets/img/og-cover.png — needs the artwork)
+- [ ] Name the theme + extract shareable theme.css token sheet for the product
+- [ ] Amplemarket font-size structure audit across ALL sections (H1 done; verify H2/H3/body vs theirs)
+- [ ] Real product screenshots to replace the mock app in the spec tabs

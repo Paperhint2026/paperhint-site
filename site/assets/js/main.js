@@ -488,30 +488,33 @@
   ];
 
   /* ---- the curve, drawn to fit whatever the hero currently is ---- */
-  function bowlGeometry(wrap) {
+  function bandBox(wrap, isArc) {
     var box = wrap.getBoundingClientRect();
     var W = Math.round(box.width);
-    /* the bowl floor clears the last thing in the lockup */
+    if (isArc) return { W: W, H: Math.max(96, Math.round(W * 0.11)) };
+    /* the under-sweep has to pass below the last line of the lockup */
     var anchor = document.querySelector('.hero-note') || document.querySelector('.hero-capture');
-    var H = anchor
-      ? Math.round(anchor.getBoundingClientRect().bottom - box.top + 46)
-      : Math.round(box.width * 0.36);
-    H = Math.max(240, Math.min(H, 720));
-    return { W: W, H: H };
+    var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + 66) : Math.round(W * 0.5);
+    return { W: W, H: Math.max(380, Math.min(H, 860)) };
   }
 
-  function bowlPath(W, H) {
-    var y = H - 12;                       /* the flat of the bowl */
-    var xa = W * 0.19, xb = W * 0.81;     /* where the descent flattens out */
-    return 'M ' + (-W * 0.02) + ' -10' +
-           ' C ' + (W * 0.008) + ' ' + (H * 0.42) + ', ' + (W * 0.055) + ' ' + (H * 0.74) + ', ' + xa + ' ' + y +
-           ' C ' + (W * 0.33) + ' ' + (H + 14) + ', ' + (W * 0.67) + ' ' + (H + 14) + ', ' + xb + ' ' + y +
-           ' C ' + (W * 0.945) + ' ' + (H * 0.74) + ', ' + (W * 0.992) + ' ' + (H * 0.42) + ', ' + (W * 1.02) + ' -10';
+  /* enters upper-left, sweeps under the lockup, curls a loop in the right
+     margin, exits top-right — so it frames the content instead of crossing it */
+  function loopPath(W, H) {
+    function X(n) { return (n * W).toFixed(1); }
+    function Y(n) { return (n * H).toFixed(1); }
+    return 'M ' + X(-0.04) + ' ' + Y(0.16) +
+           ' C ' + X(0.005) + ' ' + Y(0.46) + ', ' + X(0.05) + ' ' + Y(0.75) + ', ' + X(0.17) + ' ' + Y(0.87) +
+           ' C ' + X(0.33) + ' ' + Y(1.0) + ', ' + X(0.63) + ' ' + Y(1.0) + ', ' + X(0.79) + ' ' + Y(0.90) +
+           ' C ' + X(0.89) + ' ' + Y(0.84) + ', ' + X(0.972) + ' ' + Y(0.73) + ', ' + X(0.95) + ' ' + Y(0.59) +
+           ' C ' + X(0.932) + ' ' + Y(0.46) + ', ' + X(0.80) + ' ' + Y(0.47) + ', ' + X(0.818) + ' ' + Y(0.60) +
+           ' C ' + X(0.836) + ' ' + Y(0.72) + ', ' + X(0.955) + ' ' + Y(0.69) + ', ' + X(1.005) + ' ' + Y(0.50) +
+           ' C ' + X(1.03) + ' ' + Y(0.41) + ', ' + X(1.035) + ' ' + Y(0.34) + ', ' + X(1.045) + ' ' + Y(0.24);
   }
 
   function arcPath(W, H) {
-    return 'M ' + (-W * 0.02) + ' ' + (H - 8) +
-           ' Q ' + (W / 2) + ' ' + (-H * 0.55) + ', ' + (W * 1.02) + ' ' + (H - 8);
+    return 'M ' + (-W * 0.02) + ' ' + (H - 10) +
+           ' Q ' + (W / 2) + ' ' + (-H * 0.5) + ', ' + (W * 1.02) + ' ' + (H - 10);
   }
 
   /* one band = one <svg> holding the curve, the ribbon strokes and the text */
@@ -520,18 +523,18 @@
     var text  = wrap.querySelector('.bowl-marquee');
     var tp    = text && text.querySelector('textPath');
     var path  = svg && svg.querySelector('.bowl-line');
-    var bands = svg ? svg.querySelectorAll('.bowl-band, .bowl-band-echo') : [];
+    var bands = svg ? svg.querySelectorAll('.ribbon-line, .ribbon-echo, .bowl-band, .bowl-band-echo') : [];
     if (!svg || !tp || !path) return null;
 
-    var isArc = wrap.classList.contains('hero-arc');
+    var isArc = wrap.getAttribute('data-shape') === 'arc';
     var speed = parseFloat(tp.getAttribute('data-speed')) || 24;
     var words = [], total = 0, unitLen = 0, baseSize = 18;
 
     function layout() {
-      var g = bowlGeometry(wrap);
+      var g = bandBox(wrap, isArc);
       if (!g.W) return false;                       /* hidden — nothing to draw */
-      var H = isArc ? Math.max(70, Math.round(g.W * 0.055)) : g.H;
-      var d = isArc ? arcPath(g.W, H) : bowlPath(g.W, H);
+      var H = g.H;
+      var d = isArc ? arcPath(g.W, H) : loopPath(g.W, H);
 
       svg.setAttribute('viewBox', '0 0 ' + g.W + ' ' + H);   /* 1 user unit = 1 px */
       svg.setAttribute('width', g.W);
@@ -540,6 +543,9 @@
       for (var i = 0; i < bands.length; i++) bands[i].setAttribute('d', d);
 
       total = path.getTotalLength();
+      for (var b = 0; b < bands.length; b++) {
+        bands[b].style.setProperty('--len', Math.ceil(bands[b].getTotalLength()));
+      }
       baseSize = parseFloat(getComputedStyle(text).fontSize) || 18;
       return fill();
     }
@@ -645,53 +651,9 @@
     return { relayout: function () { ok = layout(); } };
   }
 
-  /* ---------------- looping ribbon (drawn to the live hero box) ---------------- */
-  function ribbonPath(W, H) {
-    /* normalised waypoints: sweep in from the left, dip, rise, curl a full
-       loop on the right, exit top-right — scaled to whatever the hero is */
-    function X(n) { return (n * W).toFixed(1); }
-    function Y(n) { return (n * H).toFixed(1); }
-    return 'M ' + X(-0.03) + ' ' + Y(0.30) +
-           ' C ' + X(0.07) + ' ' + Y(0.52) + ', ' + X(0.13) + ' ' + Y(0.80) + ', ' + X(0.26) + ' ' + Y(0.76) +
-           ' C ' + X(0.39) + ' ' + Y(0.72) + ', ' + X(0.40) + ' ' + Y(0.40) + ', ' + X(0.51) + ' ' + Y(0.27) +
-           ' C ' + X(0.60) + ' ' + Y(0.16) + ', ' + X(0.75) + ' ' + Y(0.20) + ', ' + X(0.755) + ' ' + Y(0.40) +
-           ' C ' + X(0.76) + ' ' + Y(0.60) + ', ' + X(0.61) + ' ' + Y(0.66) + ', ' + X(0.555) + ' ' + Y(0.53) +
-           ' C ' + X(0.50) + ' ' + Y(0.40) + ', ' + X(0.62) + ' ' + Y(0.29) + ', ' + X(0.76) + ' ' + Y(0.31) +
-           ' C ' + X(0.88) + ' ' + Y(0.33) + ', ' + X(0.95) + ' ' + Y(0.22) + ', ' + X(1.03) + ' ' + Y(0.02);
-  }
-
-  function initHeroRibbon() {
-    var wrap = document.querySelector('.hero-ribbon');
-    if (!wrap) return;
-    var svg = wrap.querySelector('svg');
-    var lines = svg ? svg.querySelectorAll('.ribbon-line, .ribbon-echo') : [];
-    if (!svg || !lines.length) return;
-
-    function draw() {
-      var W = Math.round(wrap.getBoundingClientRect().width);
-      if (!W) return;
-      var H = Math.round(Math.min(620, Math.max(340, W * 0.42)));
-      var d = ribbonPath(W, H);
-      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-      svg.setAttribute('width', W);
-      svg.setAttribute('height', H);
-      for (var i = 0; i < lines.length; i++) {
-        lines[i].setAttribute('d', d);
-        var len = Math.ceil(lines[i].getTotalLength());
-        lines[i].style.setProperty('--len', len);
-      }
-    }
-
-    draw();
-    var t = null;
-    window.addEventListener('resize', function () {
-      clearTimeout(t); t = setTimeout(draw, 180);
-    });
-  }
-
   function initBowlBand() {
     var bands = [];
-    document.querySelectorAll('.hero-bowl, .hero-arc').forEach(function (wrap) {
+    document.querySelectorAll('.hero-ribbon, .hero-arc').forEach(function (wrap) {
       var b = Band(wrap);
       if (b) bands.push(b);
     });
@@ -873,7 +835,6 @@
     initReveal();
     initContact();
     initHeroCapture();
-    initHeroRibbon();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

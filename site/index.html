@@ -4,12 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Paperhint — complete school software</title>
+<!-- seo -->
+<link rel="canonical" href="https://paperhint.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Paperhint">
+<meta property="og:title" content="Paperhint — complete school software">
+<meta property="og:description" content="Paperhint is complete school software: timetables, academics, a digital library, question papers and parent notifications — for admins, teachers, students and parents.">
+<meta property="og:url" content="https://paperhint.com/">
+<meta property="og:image" content="https://paperhint.com/assets/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Paperhint — complete school software">
+<meta name="twitter:description" content="Paperhint is complete school software: timetables, academics, a digital library, question papers and parent notifications — for admins, teachers, students and parents.">
+<meta name="twitter:image" content="https://paperhint.com/assets/img/og-cover.png">
+<meta name="theme-color" content="#FCFBF8">
+<!-- /seo -->
 <meta name="description" content="Paperhint is complete school software: timetables, academics, a digital library, question papers and parent notifications — for admins, teachers, students and parents.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Merriweather:ital,wght@1,300;1,400&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="assets/img/Logo/favicon.svg">
 <link rel="stylesheet" href="assets/css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Paperhint",
+      "url": "https://paperhint.com",
+      "logo": "https://paperhint.com/assets/img/Logo/paperhint-mark.svg",
+      "email": "hello@paperhint.com"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Paperhint",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "description": "Complete school software: timetables, academics, a digital library, question papers and parent notifications for admins, teachers, students and parents.",
+      "offers": { "@type": "Offer", "price": "39", "priceCurrency": "INR", "description": "Per student per year, School plan" }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -38,7 +74,7 @@
 <!-- ============ hero ============ -->
 <header class="hero">
   <!-- narrow-viewport band: shallow arc, path drawn by main.js -->
-  <div class="hero-arc" aria-hidden="true">
+  <div class="hero-arc" data-shape="arc" aria-hidden="true">
     <svg preserveAspectRatio="none" focusable="false">
       <path class="bowl-band-echo"/>
       <path class="bowl-band"/>
@@ -46,21 +82,13 @@
       <text class="bowl-marquee"><textPath href="#arc-path" data-speed="20"></textPath></text>
     </svg>
   </div>
-  <!-- hero band: curve computed from the live hero box by main.js -->
-  <div class="hero-bowl" aria-hidden="true">
-    <svg preserveAspectRatio="none" focusable="false">
-      <path class="bowl-band-echo"/>
-      <path class="bowl-band"/>
-      <path class="bowl-line" id="bowl-path" fill="none" stroke="none"/>
-      <text class="bowl-marquee"><textPath href="#bowl-path" data-speed="24"></textPath></text>
-    </svg>
-  </div>
-
-  <!-- looping ribbon that sweeps the hero, drawn by main.js -->
-  <div class="hero-ribbon" aria-hidden="true">
+  <!-- hero band: one looping ribbon, path computed by main.js, text rides it -->
+  <div class="hero-ribbon" data-shape="loop" aria-hidden="true">
     <svg preserveAspectRatio="none" focusable="false">
       <path class="ribbon-echo"/>
       <path class="ribbon-line"/>
+      <path class="bowl-line" id="ribbon-path" fill="none" stroke="none"/>
+      <text class="bowl-marquee"><textPath href="#ribbon-path" data-speed="26"></textPath></text>
     </svg>
   </div>
 
@@ -186,19 +214,19 @@
     <div class="rolefolder reveal">
       <div class="rf-tabs" role="tablist" aria-label="Roles">
         <button class="rf-tab active" type="button" data-role="admins" role="tab" aria-selected="true">
-          <span class="rf-art"><img src="assets/img/stickers/char-09.png" alt="" width="86" height="86"></span>
+          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-09.png" alt="" width="86" height="86"></span>
           <b>Admins</b>
         </button>
         <button class="rf-tab" type="button" data-role="teachers" role="tab" aria-selected="false">
-          <span class="rf-art"><img src="assets/img/stickers/char-02.png" alt="" width="86" height="86"></span>
+          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-02.png" alt="" width="86" height="86"></span>
           <b>Teachers</b>
         </button>
         <button class="rf-tab" type="button" data-role="students" role="tab" aria-selected="false">
-          <span class="rf-art"><img src="assets/img/stickers/char-14.png" alt="" width="86" height="86"></span>
+          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-14.png" alt="" width="86" height="86"></span>
           <b>Students</b>
         </button>
         <button class="rf-tab" type="button" data-role="parents" role="tab" aria-selected="false">
-          <span class="rf-art"><img src="assets/img/stickers/char-22.png" alt="" width="86" height="86"></span>
+          <span class="rf-art"><img loading="lazy" src="assets/img/stickers/char-22.png" alt="" width="86" height="86"></span>
           <b>Parents</b>
         </button>
       </div>

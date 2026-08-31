@@ -854,6 +854,11 @@ footer .wrap{position:relative;z-index:2}
 
 /* ---------------- contact: the twirl behind the form ---------------- */
 .contact-twirl{position:absolute;left:0;right:0;top:auto;bottom:0;height:600px;overflow:hidden;z-index:0}
+.contact-arch{position:absolute;left:0;right:0;top:34px;height:440px;overflow:visible;z-index:0}
+.contact-arch svg{overflow:visible}
+.contact-arch .ribbon-line,.contact-arch .ribbon-echo{stroke-width:34}
+.contact-arch .ribbon-echo{transform:translate(8px,11px)}
+@media (max-width:960px){.contact-arch{display:none}}
 .contact-twirl .ribbon-line,.contact-twirl .ribbon-echo{stroke-width:36}
 .contact-twirl .ribbon-echo{transform:translate(9px,12px)}
 .contact-twirl svg{overflow:visible}

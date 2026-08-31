@@ -533,7 +533,10 @@
     if (reduceMotion) return true; /* static band: full text, no marquee, no hover */
 
     var BASE = parseFloat(getComputedStyle(text).fontSize) || 24;
-    var R = 110, LIFT = -8, SCALE = 0.24;
+    /* fluid wake: proximity injects energy, energy bleeds to neighbours and
+       decays over time, so a swipe leaves a trail that flows and fades */
+    var R = 130, LIFT = -9, SCALE = 0.26;
+    var DECAY = 0.955, BLEED = 0.22, RISE = 0.34;
     var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     var cursor = null;
 
@@ -544,6 +547,7 @@
       document.documentElement.addEventListener('mouseleave', function () { cursor = null; });
     }
 
+    var wake = new Array(words.length).fill(0);
     var t0 = null;
     function frame(t) {
       if (t0 === null) t0 = t;
@@ -553,6 +557,15 @@
       if (canHover) {
         var ctm = cursor ? svg.getScreenCTM() : null;
         var prevLift = 0;
+        /* let energy spill sideways one step per frame — the fluid part */
+        if (wake.length === words.length) {
+          for (var q = 0; q < words.length; q++) wake[q] = words[q].lift;
+          for (var q2 = 0; q2 < words.length; q2++) {
+            var l = wake[q2 - 1] || 0, rr = wake[q2 + 1] || 0;
+            var spill = Math.max(l, rr) * BLEED;
+            if (spill > words[q2].lift) words[q2].lift = spill;
+          }
+        }
         for (var i = 0; i < words.length; i++) {
           var w = words[i];
           var target = 0;
@@ -567,8 +580,10 @@
               if (d < R) { var k = 1 - d / R; target = k * k * (3 - 2 * k); }
             }
           }
-          w.lift += (target - w.lift) * 0.18;
-          if (w.lift < 0.004 && target === 0) w.lift = 0;
+          /* energy: rises fast toward the cursor, then decays like a wake */
+          if (target > w.lift) w.lift += (target - w.lift) * RISE;
+          else w.lift *= DECAY;
+          if (w.lift < 0.004) w.lift = 0;
 
           var liftPx = LIFT * w.lift;
           var delta = liftPx - prevLift;
@@ -577,7 +592,9 @@
           if (Math.abs(liftPx) > 0.01 || Math.abs(delta) > 0.01) {
             w.el.setAttribute('dy', delta.toFixed(2));
             w.el.setAttribute('font-size', (BASE * (1 + SCALE * w.lift)).toFixed(2));
-            w.el.style.fill = w.lift > 0.25 ? 'var(--emerald)' : '';
+            /* colour flows with the wake: yellow at the crest, emerald in the tail */
+            w.el.style.fill = w.lift > 0.55 ? 'var(--yellow)'
+              : w.lift > 0.12 ? 'var(--emerald)' : '';
             w.active = true;
           } else if (w.active) {
             w.el.removeAttribute('dy');

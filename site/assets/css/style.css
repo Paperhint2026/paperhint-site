@@ -377,7 +377,11 @@ h1.display em{
   .ribbon-echo{transform:translate(8px,11px)}
   .bowl-marquee{font-size:15px}
   .bowl-marquee tspan.kw{font-size:15.5px}
-  .hero{padding-top:168px;padding-bottom:calc(22vw + 30px)}
+  .hero{padding-top:168px}
+}
+/* the sweep band (below 960) needs viewport-scaled room; the loop keeps 100px */
+@media (max-width:959px){
+  .hero{padding-bottom:calc(22vw + 30px)}
 }
 /* Amplemarket-style capture pill */
 .hero-capture{

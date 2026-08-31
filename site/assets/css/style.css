@@ -528,6 +528,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 /* ---------------- feature folder-cards ---------------- */
 .feature-grid{perspective:1400px;display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:46px;margin-top:52px}
 .fcard{
+  scroll-margin-top:130px;   /* deep links land clear of the fixed nav */
   grid-column:span 2;
   position:relative;background:var(--surface);
   border:1px solid var(--line-soft);

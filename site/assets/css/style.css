@@ -845,9 +845,10 @@ footer .wrap{position:relative;z-index:2}
 .faq details p{padding:0 24px 20px;color:var(--ink-soft);font-size:14.5px;max-width:65ch}
 
 /* ---------------- contact: the twirl behind the form ---------------- */
-.contact-twirl{position:absolute;left:0;right:0;top:-330px;bottom:-40px;height:auto;overflow:visible;z-index:0}
+.contact-twirl{position:absolute;left:0;right:0;top:-330px;bottom:-170px;height:auto;overflow:visible;z-index:0}
 .contact-twirl svg{overflow:visible}
 .contact-grid{position:relative;z-index:2}
+.contact-sec{z-index:1}
 @media (max-width:960px){.contact-twirl{display:none}}
 
 /* ---------------- contact ---------------- */

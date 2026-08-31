@@ -521,13 +521,17 @@
 
   /* a double-curl living in the right half — for corners and margins */
   function twirlPath(W, H) {
+    /* born at the top-RIGHT edge, a tight curl in the corner, then diving
+       down through the right column and out the bottom — never across the
+       left text side */
     function X(n) { return (n * W).toFixed(1); }
     function Y(n) { return (n * H).toFixed(1); }
-    return 'M ' + X(0.82) + ' ' + Y(-0.06) +
-           ' C ' + X(0.64) + ' ' + Y(0.10) + ', ' + X(0.58) + ' ' + Y(0.26) + ', ' + X(0.70) + ' ' + Y(0.36) +
-           ' C ' + X(0.84) + ' ' + Y(0.47) + ', ' + X(1.00) + ' ' + Y(0.40) + ', ' + X(0.95) + ' ' + Y(0.29) +
-           ' C ' + X(0.90) + ' ' + Y(0.19) + ', ' + X(0.73) + ' ' + Y(0.25) + ', ' + X(0.75) + ' ' + Y(0.43) +
-           ' C ' + X(0.77) + ' ' + Y(0.62) + ', ' + X(0.86) + ' ' + Y(0.80) + ', ' + X(0.72) + ' ' + Y(1.06);
+    return 'M ' + X(1.06) + ' ' + Y(0.02) +
+           ' C ' + X(0.92) + ' ' + Y(0.055) + ', ' + X(0.79) + ' ' + Y(0.095) + ', ' + X(0.825) + ' ' + Y(0.165) +
+           ' C ' + X(0.865) + ' ' + Y(0.235) + ', ' + X(1.00) + ' ' + Y(0.215) + ', ' + X(0.985) + ' ' + Y(0.145) +
+           ' C ' + X(0.972) + ' ' + Y(0.085) + ', ' + X(0.80) + ' ' + Y(0.145) + ', ' + X(0.735) + ' ' + Y(0.30) +
+           ' C ' + X(0.655) + ' ' + Y(0.47) + ', ' + X(0.70) + ' ' + Y(0.64) + ', ' + X(0.785) + ' ' + Y(0.78) +
+           ' C ' + X(0.855) + ' ' + Y(0.90) + ', ' + X(0.815) + ' ' + Y(0.99) + ', ' + X(0.74) + ' ' + Y(1.08);
   }
 
   function sweepPath(W, H) {

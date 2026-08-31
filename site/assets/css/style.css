@@ -745,7 +745,7 @@ footer .wrap{position:relative;z-index:2}
   position:relative;
 }
 .letter::before{ /* stamp: the rosette pressed into the corner */
-  content:"";position:absolute;top:26px;right:26px;width:44px;height:44px;
+  content:"";position:absolute;top:26px;left:26px;width:44px;height:44px;
   background:var(--emerald-tint);border-radius:8px;
   -webkit-mask:url("../img/Logo/nav-cap.svg") center/contain no-repeat;
   mask:url("../img/Logo/nav-cap.svg") center/contain no-repeat;

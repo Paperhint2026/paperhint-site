@@ -73,7 +73,7 @@
     CHARS.forEach(function (c, i) {
       var x = W * (0.07 + 0.094 * i) + (i % 2 ? 12 : -8);
       var y = -110 - i * 105; /* rain in from above on load */
-      var opts = { restitution: 0.3, friction: 0.5, frictionStatic: 1.4, frictionAir: 0.014, density: 0.0016 };
+      var opts = { restitution: 0.16, friction: 0.6, frictionStatic: 1.6, frictionAir: 0.022, density: 0.004 };
       var b;
       if (c.kind === 'circle') {
         b = M.Bodies.circle(x, y, Math.max(c.w, c.h) / 2 - 4, opts);
@@ -104,17 +104,19 @@
       var dy = scrollY - lastY; lastY = scrollY;
       /* force follows the scroll direction: down presses them into the floor,
          only scrolling UP ever tosses them upward */
-      var d = Math.max(-18, Math.min(18, dy));
-      var mag = Math.abs(d) * 0.0011;
+      var d = Math.max(-16, Math.min(16, dy));
+      var mag = Math.abs(d) * 0.00055;   /* they have real weight — a nudge, not a launch */
       if (mag < 0.00002) return;
-      /* scrolling up gets a livelier kick; scrolling down only ever settles them */
       var up = d < 0;
-      var scale = up ? 2.4 : 1;
       bodies.forEach(function (b) {
         M.Body.applyForce(b, b.position, {
-          x: (Math.random() - 0.5) * mag * (up ? 1.2 : 0.4),
-          y: (up ? -1 : 1) * mag * scale * (0.7 + Math.random() * 0.5)
+          x: (Math.random() - 0.5) * mag * (up ? 0.8 : 0.4),
+          y: (up ? -1 : 1) * mag * (0.6 + Math.random() * 0.4)
         });
+      });
+      /* hard ceiling on lift: nothing gets thrown off the top of the viewport */
+      bodies.forEach(function (b) {
+        if (b.velocity.y < -7) M.Body.setVelocity(b, { x: b.velocity.x, y: -7 });
       });
     }, { passive: true });
 
@@ -160,6 +162,10 @@
       for (var i = 0; i < bodies.length; i++) {
         var b = bodies[i], c = CHARS[i];
         /* recover strays that tunnelled out */
+        /* ceiling guard: if anything drifts above the top edge, stop it there */
+        if (b.position.y < c.h * 0.5 && b.velocity.y < 0) {
+          M.Body.setVelocity(b, { x: b.velocity.x * 0.4, y: 0.6 });
+        }
         if (b.position.y > innerHeight + 400 || b.position.x < -300 || b.position.x > innerWidth + 300) {
           M.Body.setPosition(b, { x: innerWidth * Math.random(), y: -120 });
           M.Body.setVelocity(b, { x: 0, y: 0 });

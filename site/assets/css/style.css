@@ -484,7 +484,7 @@ section{position:relative}
 .kicker{display:inline-flex;align-items:center;gap:8px;color:var(--emerald);font-family:var(--font-display);font-weight:500;font-size:13px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px}
 .kicker::before{content:"";width:22px;height:2px;background:var(--emerald);border-radius:2px}
 h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-height:1.1;letter-spacing:-.04em;font-weight:500;max-width:22ch}
-.section-sub{margin-top:16px;color:var(--ink-soft);font-size:19px;line-height:1.35;letter-spacing:-.02em;max-width:58ch}
+.section-sub{margin-top:12px;color:var(--ink-soft);font-size:19px;line-height:1.35;letter-spacing:-.02em;max-width:58ch}
 .reveal{position:relative;z-index:2;opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
 /* first paint: the hero itself arrives as a cascade, not one block */
 @media (prefers-reduced-motion: no-preference){
@@ -540,20 +540,18 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
   background:color-mix(in srgb,var(--emerald) 7%, var(--surface));
 }
 /* ---------------- feature folder-cards ---------------- */
-.feature-grid{perspective:1400px;display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:46px;margin-top:52px}
+.feature-grid{perspective:1400px;display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:58px;margin-top:52px}
 /* section 2 runs as two rooms — a header introduces each group of cards */
-.fgroup-head{margin-top:58px}
-.fgroup-head h3{font-family:var(--font-display);font-weight:500;font-size:24px;letter-spacing:-.02em}
-.fgroup-head p{color:var(--muted);font-size:16px;margin-top:6px}
-.fgroup-head + .feature-grid{margin-top:26px}
+.fgroup-head{margin-top:84px}
+.fgroup-head h3{font-family:var(--font-display);font-weight:500;font-size:26px;letter-spacing:-.02em}
+.fgroup-head p{color:var(--muted);font-size:16px;margin-top:8px}
+.fgroup-head + .feature-grid{margin-top:40px}
 .fg-half .fcard,.fg-half .fcard:nth-child(1),.fg-half .fcard:nth-child(2){grid-column:span 3}
 .fg-desk .fcard,.fg-desk .fcard:nth-child(1),.fg-desk .fcard:nth-child(2){grid-column:span 2}
-.fg-desk .fcard:last-child{
-  grid-column:1/-1;display:grid;grid-template-columns:1.05fr 1fr;
-  column-gap:32px;row-gap:8px;align-content:start;
-}
-.fg-desk .fcard:last-child > *{grid-column:1}
-.fg-desk .fcard:last-child .fcard-visual{grid-column:2;grid-row:1/span 3;margin-top:0}
+.fg-row .fcard,.fg-row .fcard:nth-child(1),.fg-row .fcard:nth-child(2){grid-column:span 2}
+.fg-desk .fcard:last-child{grid-column:1/-1;flex-direction:row;align-items:stretch;gap:36px;padding:30px 30px 26px}
+.fg-desk .fcard:last-child .fcard-copy{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.fg-desk .fcard:last-child .fcard-visual{flex:1;margin-top:0}
 .fcard{
   scroll-margin-top:130px;   /* deep links land clear of the fixed nav */
   grid-column:span 2;
@@ -602,7 +600,8 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
   .feature-grid{grid-template-columns:1fr;gap:34px}
   .fg-half .fcard,.fg-half .fcard:nth-child(1),.fg-half .fcard:nth-child(2){grid-column:span 1}
   .fg-desk .fcard,.fg-desk .fcard:nth-child(1),.fg-desk .fcard:nth-child(2),
-  .fg-desk .fcard:last-child{grid-column:span 1;display:flex;flex-direction:column}
+  .fg-row .fcard,.fg-row .fcard:nth-child(1),.fg-row .fcard:nth-child(2),
+  .fg-desk .fcard:last-child{grid-column:span 1;display:flex;flex-direction:column;gap:10px;padding:26px 26px 22px}
   .fcard,.fcard:nth-child(1),.fcard:nth-child(2){grid-column:span 1}
 }
 

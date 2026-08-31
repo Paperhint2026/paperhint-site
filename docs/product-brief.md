@@ -75,6 +75,12 @@ advanced, productively.
      recreation, classroom configuration and **classroom migration** —
      promote a batch (e.g. 50 students) to the next grade/class in one
      move, absorb a fresh batch cleanly.
+   - **Resource planning & allotment** (founder, Sep 2026): the office is
+     more than records — it manages the whole resource plan. Automation
+     helps fix which teacher is allotted to which class/section, with a
+     proper interface to maintain those allotments, and an **admin
+     copilot** assisting the office through these tasks conversationally
+     (the admin-side counterpart of the teacher's copilot).
 
 ## Personas (founder-set)
 

@@ -1146,7 +1146,7 @@
       items: [
         ['Classes, sections, students, teachers', 'Build the school\u2019s structure — and move it: promote a whole batch to the next grade in one step, absorb the fresh one cleanly.'],
         ['Subjects and their books', 'Attach books and materials to each subject; they flow to every teacher in that department, seeding their libraries.'],
-        ['The school around it', 'Timetables, academic records and the calendar — organised, without being the whole story.']
+        ['Allotment, planned with a copilot', 'Automation works out who\u2019s allotted to each class and section — and an office copilot handles the changes in plain language.']
       ]
     },
     students: {

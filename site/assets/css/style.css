@@ -739,24 +739,26 @@ footer .wrap{position:relative;z-index:2}
 
 /* ---------------- about: the founder's letter ---------------- */
 .letter{
-  max-width:640px;margin:0 auto;
-  /* ruled exercise-book paper: faint lines under the text, red margin rule */
-  background:
-    repeating-linear-gradient(180deg,
-      transparent 0, transparent 30px,
-      color-mix(in srgb,var(--emerald) 9%, transparent) 30px,
-      color-mix(in srgb,var(--emerald) 9%, transparent) 31px),
-    linear-gradient(90deg, transparent 0 calc(clamp(34px,6vw,64px) - 16px),
-      color-mix(in srgb,#E23D2E 32%, transparent) calc(clamp(34px,6vw,64px) - 16px),
-      color-mix(in srgb,#E23D2E 32%, transparent) calc(clamp(34px,6vw,64px) - 14.5px),
-      transparent calc(clamp(34px,6vw,64px) - 14.5px)),
-    var(--surface);
+  max-width:640px;margin:0 auto;background:var(--surface);
   border:1px solid var(--line-soft);border-radius:6px;
-  padding:clamp(34px,6vw,64px);box-shadow:var(--shadow-lg);
+  padding:clamp(34px,6vw,64px);
+  /* paper on a desk: soft lift, one corner folded over */
+  box-shadow:0 2px 4px rgba(16,32,26,.05), 0 26px 50px -22px rgba(16,32,26,.25);
   position:relative;
-  transform:rotate(-.4deg);   /* laid on the desk, not printed by a machine */
+  transform:rotate(-.4deg);   /* laid down, not printed by a machine */
+  clip-path:polygon(0 0, 100% 0, 100% calc(100% - 58px), calc(100% - 58px) 100%, 0 100%);
 }
 .letter>*{transform:rotate(.4deg)}   /* the text stays level */
+/* the folded-over flap in the cut corner */
+.letter .fold{
+  position:absolute;right:0;bottom:0;width:58px;height:58px;transform:none !important;
+  background:linear-gradient(315deg,
+    transparent 49.5%,
+    color-mix(in srgb,var(--ink) 10%, var(--surface)) 50%,
+    color-mix(in srgb,var(--ink) 4%, var(--surface)) 62%,
+    var(--surface-2) 100%);
+  filter:drop-shadow(-3px -3px 5px rgba(16,32,26,.12));
+}
 .letter::before{ /* stamp: the rosette pressed into the corner */
   content:"";position:absolute;top:26px;left:26px;width:44px;height:44px;
   background:var(--emerald-tint);border-radius:8px;
@@ -796,8 +798,10 @@ footer .wrap{position:relative;z-index:2}
 }
 
 /* ---------------- pricing ---------------- */
-.page-hero{position:relative;padding:158px 0 30px;text-align:center;overflow:hidden}
-.page-hero .hero-ribbon{top:60px}
+.page-hero{position:relative;padding:158px 0 30px;text-align:center}
+/* the ribbon is free here: no cropping, it dives behind the next section */
+.page-hero .hero-ribbon{top:60px;overflow:visible;z-index:0}
+.page-hero .hero-ribbon svg{overflow:visible}
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:64px;align-items:stretch}
 .price-card{
   position:relative;background:var(--surface);border:1px solid var(--line-soft);

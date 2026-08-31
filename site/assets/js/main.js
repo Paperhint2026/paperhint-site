@@ -497,8 +497,9 @@
       var lock = wrap.parentNode.querySelector('.hero-content');
       anchor = lock ? lock.lastElementChild : null;
     }
-    var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + 66) : Math.round(W * 0.5);
-    return { W: W, H: Math.max(300, Math.min(H, 860)) };
+    var drop = parseFloat(wrap.getAttribute('data-drop')) || 66;
+    var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + drop) : Math.round(W * 0.5);
+    return { W: W, H: Math.max(300, Math.min(H, 1100)) };
   }
 
   /* enters upper-left, sweeps under the lockup, curls a loop in the right

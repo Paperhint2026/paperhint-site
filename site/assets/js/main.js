@@ -481,8 +481,8 @@
   var BOWL_TOKENS = [
     ['Photograph', 1], ['the', 0], ['answer', 1], ['sheets', 1], ['\u2014', 0],
     ['Paperhint', 0], ['checks', 0], ['every', 0], ['answer,', 0], ['scores', 0], ['on', 0], ['your', 0], ['rubric,', 1],
-    ['drafts', 0], ['question', 1], ['papers', 1], ['and', 0], ['homework', 1],
-    ['from', 0], ['your', 0], ['own', 0], ['notes,', 1], ['and', 0], ['tells', 0], ['the', 0], ['parents', 1], ['\u00B7', 0]
+    ['drafts', 0], ['question', 1], ['papers,', 1], ['homework', 1], ['and', 0], ['teaching', 1], ['notes,', 1],
+    ['and', 0], ['tells', 0], ['the', 0], ['parents', 1], ['\u00B7', 0]
   ];
 
   /* ---- the curve, drawn to fit whatever the hero currently is ---- */
@@ -745,7 +745,7 @@
     [/pric|cost|fee|plan/i, 'Pricing is per student per school, and we\u2019re setting it with our founding pilot schools right now \u2014 book a demo and we\u2019ll work it out together.'],
     [/parent|notif|whatsapp|absen/i, 'Parents are notified the moment homework is assigned, and absences read from the attendance sheet reach them the same day \u2014 no group-chat archaeology.'],
     [/attendance/i, 'Mark attendance on the paper sheet you already use and scan it in \u2014 or manage it manually in the app. Absences can notify parents automatically.'],
-    [/paper|question|exam|test|homework/i, 'Question papers \u2014 with blueprint and answer key \u2014 are drafted from the syllabus and the teacher\u2019s own notes. Homework works the same way, and parents hear the moment it\u2019s assigned.'],
+    [/paper|question|exam|test|homework/i, 'Question papers \u2014 with blueprint and answer key \u2014 are drafted for the syllabus; the teacher\u2019s notes and subject books add context. Homework works the same way, and parents hear the moment it\u2019s assigned.'],
     [/note|copilot|library|share/i, 'Teachers prepare notes with the copilot in chat, or write and paste their own. Everything lands in their library \u2014 private by default, shareable to everyone on the school\u2019s email.'],
     [/demo|start|onboard|migrat|pilot/i, 'We\u2019re onboarding founding schools hands-on right now. Book a demo \u2014 we\u2019ll set up one of your classes beforehand so you see your school, not a sample one.']
   ];
@@ -1117,7 +1117,7 @@
       cta: 'See it on your own answer sheets',
       items: [
         ['Answer sheets, evaluated', 'Photograph them with the app; every answer is checked against its question and scored on your rubric — you review and approve.'],
-        ['Papers and homework from your notes', 'Question papers with blueprint and answer key, drafted from the syllabus and your own library. Homework notifies parents on assignment.'],
+        ['Papers and homework from your notes', 'Question papers with blueprint and answer key, drafted for your syllabus \u2014 your notes add the context. Homework notifies parents on assignment.'],
         ['A copilot and a shared library', 'Prepare teaching notes in chat or paste your own; keep them private or share to everyone on your school\u2019s email.']
       ]
     },

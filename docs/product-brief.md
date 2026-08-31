@@ -97,6 +97,14 @@ AI-first under the hood, **never "AI on the face."** The product (and the
 site) leads with outcomes; AI is highlighted subtly, in the details of how
 each thing gets done — embedded, not shouted. Hero stays outcome-led.
 
+## Framing rule: platform first, library as context (founder-set)
+
+Paperhint is an intelligent platform with its own mechanism — it drafts
+questions, homework and teaching notes on its own power. The teacher's
+library ADDS CONTEXT AND INTENT; it is not the source. Never phrase
+generation as "from your own notes/library" — phrase it as drafted for
+the syllabus/class, tuned or grounded by the teacher's context.
+
 ## The emotional core (founder-set)
 
 Outcome-led AND people-led: the product empathizes with teachers who

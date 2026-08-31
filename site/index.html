@@ -46,12 +46,30 @@
       <text class="bowl-marquee"><textPath href="#arc-path" data-text="Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on · " data-speed="20">Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on · </textPath></text>
     </svg>
   </div>
-  <div class="hero-bowl" aria-hidden="true">
+  <div class="hero-bowl fluid-off" aria-hidden="true">
     <svg viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <defs>
+        <!-- static turbulence: the text flows THROUGH the field, so motion reads as fluid -->
+        <filter id="bowlFluid" filterUnits="userSpaceOnUse" x="0" y="0" width="420" height="420">
+          <feTurbulence type="fractalNoise" baseFrequency="0.013 0.03" numOctaves="2" seed="5" result="turb"/>
+          <feDisplacementMap in="SourceGraphic" in2="turb" scale="17" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <radialGradient id="bowlWin"><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+        <radialGradient id="bowlWinInv"><stop offset=".5" stop-color="#000"/><stop offset="1" stop-color="#fff"/></radialGradient>
+        <mask id="bowlWindow" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="560">
+          <rect width="1440" height="560" fill="#000"/>
+          <circle class="bowl-win" cx="-999" cy="-999" r="165" fill="url(#bowlWin)"/>
+        </mask>
+        <mask id="bowlHole" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="560">
+          <rect width="1440" height="560" fill="#fff"/>
+          <circle class="bowl-win" cx="-999" cy="-999" r="165" fill="url(#bowlWinInv)"/>
+        </mask>
+      </defs>
       <path class="bowl-band-echo" d="M -20 -10 C 10 230, 90 400, 250 478 C 400 534, 550 536, 720 536 C 890 536, 1040 534, 1190 478 C 1350 400, 1430 230, 1460 -10"/>
       <path class="bowl-band" d="M -20 -10 C 10 230, 90 400, 250 478 C 400 534, 550 536, 720 536 C 890 536, 1040 534, 1190 478 C 1350 400, 1430 230, 1460 -10"/>
       <path id="bowl-path" d="M -20 -10 C 10 230, 90 400, 250 478 C 400 534, 550 536, 720 536 C 890 536, 1040 534, 1190 478 C 1350 400, 1430 230, 1460 -10" fill="none" stroke="none"/>
-      <text class="bowl-marquee"><textPath href="#bowl-path" data-text="Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · " data-speed="24">Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · </textPath></text>
+      <text class="bowl-marquee bowl-plain" mask="url(#bowlHole)"><textPath href="#bowl-path" data-text="Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · " data-speed="24">Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · </textPath></text>
+      <text class="bowl-marquee bowl-fluid" mask="url(#bowlWindow)" filter="url(#bowlFluid)"><textPath href="#bowl-path" data-text="Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · " data-speed="24">Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · </textPath></text>
     </svg>
   </div>
 
@@ -93,7 +111,7 @@
   <div class="wrap">
     <div class="reveal" style="max-width:640px;margin-bottom:34px">
       <span class="kicker">The product</span>
-      <h2 class="title">Five jobs a school never gets to finish</h2>
+      <h2 class="title">Five jobs a school <span class="h-mark">never gets to finish<svg class="scribble-under" viewBox="0 0 300 16" aria-hidden="true"><path style="--len:340" d="M3 11 C 52 4, 104 14, 152 8 C 200 2, 250 12, 297 6"/></svg><svg class="scribble-spark" viewBox="0 0 34 34" aria-hidden="true"><path style="--len:120" d="M17 3 V13 M17 21 V31 M3 17 H13 M21 17 H31 M7 7 L12 12 M22 22 L27 27 M27 7 L22 12 M12 22 L7 27"/></svg></span></h2>
       <p class="section-sub">Pick one. This is the actual work Paperhint takes off the desk.</p>
     </div>
 
@@ -147,7 +165,7 @@
     <div class="testi-grid">
       <div class="reveal">
         <span class="kicker">From the staff room</span>
-        <h2 class="title">Teachers get their evenings back</h2>
+        <h2 class="title">Teachers get their <span class="h-mark">evenings back<svg class="scribble-under" viewBox="0 0 300 16" aria-hidden="true"><path style="--len:340" d="M3 12 C 60 5, 110 15, 160 9 C 210 3, 255 13, 297 7"/></svg></span></h2>
         <p class="section-sub">
           The work Paperhint removes is the work nobody was hired to do —
           re-drawing timetables, retyping marks, chasing parents.
@@ -166,133 +184,35 @@
   <div class="wrap">
     <div class="reveal" style="max-width:660px">
       <span class="kicker">One product, four vantage points</span>
-      <h2 class="title">Everyone sees their own school</h2>
+      <h2 class="title">Everyone sees <span class="h-mark">their own school<svg class="scribble-circle" viewBox="0 0 320 90" preserveAspectRatio="none" aria-hidden="true"><path style="--len:760" d="M40 12 C 130 2, 250 4, 300 26 C 316 42, 268 76, 160 82 C 66 87, 6 72, 8 48 C 10 28, 44 16, 96 10"/></svg></span></h2>
       <p class="section-sub">
         Same data, four different jobs. Nobody has to learn a system that was
         built for somebody else's role.
       </p>
     </div>
 
-    <div class="role-stack">
-
-      <!-- Admins -->
-      <article class="folder reveal" style="--tintA:#0B8A5C;--tintB:#7C5CFF;--tab:#0B8A5C">
-        <span class="folder-tab">Admins</span>
-        <div class="folder-inner">
-          <div>
-            <h3>Run the school A to Z, in one place</h3>
-            <p class="lead">
-              Every resource and every record — teachers, students, sections, rooms,
-              the calendar and the full academic year — managed from one console
-              instead of eleven files.
-            </p>
-            <ul class="chiplist">
-              <li>Timetable creation</li>
-              <li>School calendar sync</li>
-              <li>Staff &amp; student records</li>
-              <li>Academic year setup</li>
-              <li>Resource allocation</li>
-              <li>Teacher performance</li>
-            </ul>
-          </div>
-          <div class="role-visual">
-            <!-- assets/img/roles/admin.png drops in here -->
-            <div class="float-ui f1"><span class="ico">◪</span><div>Timetable published<small>Week 32 · 0 clashes</small></div></div>
-            <div class="float-ui f2"><span class="ico">↻</span><div>Calendar synced<small>142 events</small></div></div>
-            <div class="float-ui f3"><span class="ico">◈</span><div>48 teachers<small>Load balanced</small></div></div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Teachers -->
-      <article class="folder reveal" style="--tintA:#7C5CFF;--tintB:#0B8A5C;--tab:#6A46F5">
-        <span class="folder-tab">Teachers</span>
-        <div class="folder-inner flip">
-          <div class="role-visual">
-            <!-- assets/img/roles/teacher.png drops in here -->
-            <div class="float-ui f1"><span class="ico">✎</span><div>Paper drafted<small>80 marks · 12 min</small></div></div>
-            <div class="float-ui f2"><span class="ico">▤</span><div>Notes added<small>Ch 5 · Cells</small></div></div>
-            <div class="float-ui f3"><span class="ico">↑</span><div>Optics mastery<small>64% → reteach</small></div></div>
-          </div>
-          <div>
-            <h3>Your notes, your papers, your strategy</h3>
-            <p class="lead">
-              Build a knowledge base once and teach off it forever. Paperhint uses
-              your own library to draft question papers, prepare notes and suggest
-              where a class needs a second pass.
-            </p>
-            <ul class="chiplist">
-              <li>Question paper creation</li>
-              <li>Notes preparation</li>
-              <li>Knowledge base &amp; library</li>
-              <li>Content generation</li>
-              <li>Teaching strategy</li>
-              <li>Student performance mapping</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <!-- Students -->
-      <article class="folder reveal" style="--tintA:#FF8A3D;--tintB:#FFD84D;--tab:#D2650F">
-        <span class="folder-tab">Students</span>
-        <div class="folder-inner">
-          <div>
-            <h3>Know where you stand, and what to read</h3>
-            <p class="lead">
-              Performance is calculated and shared — not hidden in a teacher's
-              register. Students see their own mastery and every note their
-              teachers have chosen to make visible.
-            </p>
-            <ul class="chiplist">
-              <li>Performance shared</li>
-              <li>Topic-level mastery</li>
-              <li>Notes visibility</li>
-              <li>Class library access</li>
-              <li>Timetable &amp; calendar</li>
-              <li>Homework</li>
-            </ul>
-          </div>
-          <div class="role-visual">
-            <!-- assets/img/roles/student.png drops in here -->
-            <div class="float-ui f1"><span class="ico">★</span><div>Algebra 86%<small>Up from 71%</small></div></div>
-            <div class="float-ui f2"><span class="ico">▦</span><div>New notes<small>Science · Ch 5</small></div></div>
-            <div class="float-ui f3"><span class="ico">◷</span><div>Homework due<small>Friday</small></div></div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Parents -->
-      <article class="folder reveal" style="--tintA:#FFD84D;--tintB:#0B8A5C;--tab:#B8790F">
-        <span class="folder-tab">Parents</span>
-        <div class="folder-inner flip">
-          <div class="role-visual">
-            <!-- assets/img/roles/parent.png drops in here -->
-            <div class="float-ui f1"><span class="ico">✉</span><div>Term 2 marks<small>Emailed today</small></div></div>
-            <div class="float-ui f2"><span class="ico">◔</span><div>Overview shared<small>By R. Iyer</small></div></div>
-            <div class="float-ui f3"><span class="ico">✓</span><div>Homework seen<small>Science · Ch 5</small></div></div>
-          </div>
-          <div>
-            <h3>Told before you have to ask</h3>
-            <p class="lead">
-              When a teacher publishes marks, homework or a performance overview,
-              the right parents get an email. No group chats, no notes lost in a
-              school diary.
-            </p>
-            <ul class="chiplist">
-              <li>Marks notifications</li>
-              <li>Homework alerts</li>
-              <li>Performance overviews</li>
-              <li>Teacher-shared updates</li>
-              <li>Email triggers</li>
-              <li>Full shared history</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
+    <!-- folder: a row of role tabs over one shared panel (Amplemarket mechanic) -->
+    <div class="rolefolder reveal">
+      <div class="rf-tabs" role="tablist" aria-label="Roles">
+        <button class="rf-tab active" type="button" data-role="admins" role="tab" aria-selected="true">
+          <span class="rf-art"><img src="assets/img/stickers/char-09.png" alt="" width="86" height="86"></span>
+          <b>Admins</b>
+        </button>
+        <button class="rf-tab" type="button" data-role="teachers" role="tab" aria-selected="false">
+          <span class="rf-art"><img src="assets/img/stickers/char-02.png" alt="" width="86" height="86"></span>
+          <b>Teachers</b>
+        </button>
+        <button class="rf-tab" type="button" data-role="students" role="tab" aria-selected="false">
+          <span class="rf-art"><img src="assets/img/stickers/char-14.png" alt="" width="86" height="86"></span>
+          <b>Students</b>
+        </button>
+        <button class="rf-tab" type="button" data-role="parents" role="tab" aria-selected="false">
+          <span class="rf-art"><img src="assets/img/stickers/char-22.png" alt="" width="86" height="86"></span>
+          <b>Parents</b>
+        </button>
+      </div>
+      <div class="rf-panel"><!-- rendered by main.js --></div>
     </div>
-  </div>
 </section>
 
 <!-- ============ contact banner ============ -->

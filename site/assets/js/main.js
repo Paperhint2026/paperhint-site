@@ -609,6 +609,64 @@
     requestAnimationFrame(frame);
   }
 
+
+  /* ---------------- fluid text (mesh distortion under the cursor) ----------------
+     Two copies of the band ride the same path: the plain copy is holed out where
+     the cursor is, and a displacement-mapped copy shows through that window. The
+     turbulence field is static — the text flowing through it is what reads as
+     fluid, which also keeps it cheap. */
+  function initBowlFluid() {
+    var wrap = document.querySelector('.hero-bowl');
+    if (!wrap) return;
+    var svg = wrap.querySelector('svg');
+    var filt = svg && svg.querySelector('#bowlFluid');
+    var wins = svg ? svg.querySelectorAll('.bowl-win') : [];
+    if (!svg || !filt || !wins.length) return;
+
+    if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      wrap.classList.add('fluid-off');
+      return;
+    }
+
+    var R = 165, PAD = 230;
+    var pt = svg.createSVGPoint();
+    var queued = null;
+
+    function place(cx, cy) {
+      for (var i = 0; i < wins.length; i++) {
+        wins[i].setAttribute('cx', cx.toFixed(1));
+        wins[i].setAttribute('cy', cy.toFixed(1));
+      }
+      /* keep the filter region tight around the cursor so turbulence stays cheap */
+      filt.setAttribute('x', (cx - PAD).toFixed(1));
+      filt.setAttribute('y', (cy - PAD).toFixed(1));
+      filt.setAttribute('width', (PAD * 2).toFixed(1));
+      filt.setAttribute('height', (PAD * 2).toFixed(1));
+    }
+
+    window.addEventListener('pointermove', function (e) {
+      if (queued) return;
+      queued = requestAnimationFrame(function () {
+        queued = null;
+        var box = svg.getBoundingClientRect();
+        if (!box.width) return;
+        var near = e.clientX > box.left - 40 && e.clientX < box.right + 40 &&
+                   e.clientY > box.top - 40 && e.clientY < box.bottom + 40;
+        if (!near) { wrap.classList.add('fluid-off'); return; }
+        var m = svg.getScreenCTM();
+        if (!m) return;
+        pt.x = e.clientX; pt.y = e.clientY;
+        var u = pt.matrixTransform(m.inverse());
+        place(u.x, u.y);
+        wrap.classList.remove('fluid-off');
+      });
+    }, { passive: true });
+
+    document.documentElement.addEventListener('mouseleave', function () {
+      wrap.classList.add('fluid-off');
+    });
+  }
+
   /* build every band (big bowl + the narrow-viewport arc); a band that is
      display:none at load (so unmeasurable) is retried when the viewport
      crosses the breakpoint. */
@@ -637,6 +695,79 @@
     } else {
       initBowlBand();
     }
+  }
+
+
+  /* ---------------- role folder: tabs over one shared panel ---------------- */
+  var ROLES = {
+    admins: {
+      lead: 'Run the school A to Z, in one place',
+      cta: 'Explore admin tools',
+      items: [
+        ['Timetables without the clashes', 'Generate a clash-free timetable across every section, room and lab, then publish it to the school calendar in one action.'],
+        ['One record per person', 'Teachers, students, sections and the full academic year live in one console instead of eleven spreadsheets.'],
+        ['See teacher load at a glance', 'Balance workloads and free periods before term starts, and fill absences in a tap.']
+      ]
+    },
+    teachers: {
+      lead: 'Your notes, your papers, your strategy',
+      cta: 'Explore teacher tools',
+      items: [
+        ['Question papers in minutes', 'Build a paper from your own library — blueprint, weightage and answer key come with it.'],
+        ['A knowledge base that compounds', 'Notes tagged by class and chapter, reusable every year instead of rewritten every year.'],
+        ['Know which topic to reteach', 'Topic-level mastery shows where a class actually lost marks, not just who scored what.']
+      ]
+    },
+    students: {
+      lead: 'Know where you stand, and what to read',
+      cta: 'Explore the student view',
+      items: [
+        ['Performance you can actually see', 'Marks become topic-level mastery, shared with you instead of hidden in a register.'],
+        ['Every note your teacher shares', 'Class notes, worksheets and books, visible the moment a teacher publishes them.'],
+        ['Homework and timetable in one place', 'What is due, what is next, and what changed this week.']
+      ]
+    },
+    parents: {
+      lead: 'Told before you have to ask',
+      cta: 'See parent updates',
+      items: [
+        ['Marks arrive by email', 'When a teacher publishes results, the right parents are notified — no group chats.'],
+        ['Homework, without the diary', 'Assignments and due dates reach you as they are set.'],
+        ['Plain-language overviews', 'Performance summaries written by the teacher who teaches your child.']
+      ]
+    }
+  };
+
+  function initRoleFolder() {
+    var folder = document.querySelector('.rolefolder');
+    if (!folder) return;
+    var tabs = folder.querySelectorAll('.rf-tab');
+    var panel = folder.querySelector('.rf-panel');
+
+    function render(key) {
+      var d = ROLES[key];
+      if (!d) return;
+      panel.innerHTML =
+        '<div class="rf-lead"><h3>' + d.lead + '</h3>' +
+        '<a class="btn btn-ghost" href="contact.html?type=demo">' + d.cta + '</a></div>' +
+        '<div class="rf-items">' + d.items.map(function (it) {
+          return '<div class="rf-item"><b>' + it[0] + '</b><p>' + it[1] + '</p></div>';
+        }).join('') + '</div>';
+    }
+
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        tabs.forEach(function (o) { o.classList.remove('active'); o.setAttribute('aria-selected', 'false'); });
+        t.classList.add('active'); t.setAttribute('aria-selected', 'true');
+        panel.classList.add('swapping');
+        setTimeout(function () {
+          render(t.getAttribute('data-role'));
+          panel.classList.remove('swapping');
+        }, reduceMotion ? 0 : 160);
+      });
+    });
+
+    render('admins');
   }
 
   /* ---------------- scroll reveal ---------------- */
@@ -725,6 +856,8 @@
     initReveal();
     initContact();
     initHeroCapture();
+    initBowlFluid();
+    initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)
        will be slotted in here later; nothing decorative owns the viewport floor. */

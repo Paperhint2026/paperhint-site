@@ -23,8 +23,9 @@
   --line-soft:rgba(16,32,26,.07);
   --shadow:0 1px 2px rgba(16,32,26,.05),0 12px 40px -12px rgba(16,32,26,.18);
   --shadow-lg:0 2px 4px rgba(16,32,26,.06),0 32px 80px -20px rgba(16,32,26,.28);
-  --nav-bg:rgba(255,255,255,.82);
+  --nav-bg:rgba(255,255,255,.62);
   --nav-line:rgba(255,255,255,.55);
+  --nav-edge:rgba(16,32,26,.16);
   --radius:14px;
   --radius-lg:18px;
   --font-display:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -53,8 +54,9 @@
   --line-soft:rgba(242,238,227,.08);
   --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px -12px rgba(0,0,0,.6);
   --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 32px 80px -20px rgba(0,0,0,.75);
-  --nav-bg:rgba(18,26,21,.78);
+  --nav-bg:rgba(18,26,21,.6);
   --nav-line:rgba(242,238,227,.12);
+  --nav-edge:rgba(242,238,227,.16);
   color-scheme:dark;
 }
 
@@ -103,6 +105,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* ---------------- nav ---------------- */
 .nav{
   position:fixed;inset:8px 0 auto;z-index:50;
+  /* traces the masked silhouette's edge — hairline, not a shadow */
+  filter:drop-shadow(0 0 .7px var(--nav-edge));
 }
 .nav-inner{
   --cap:70px;                       /* rosette end-cap = bar height, kept square so it never distorts */
@@ -112,7 +116,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   background:var(--nav-bg);
   backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);
   border-radius:999px;             /* fallback silhouette where masks are unsupported */
-  padding:16px 36px 16px 42px;
+  padding:16px 36px 16px calc(var(--cap) / 2 - 15px);   /* mark centred inside the left cap */
   /* custom silhouette: the logo shape at each end unioned with the straight middle */
   -webkit-mask-image:url("../img/Logo/nav-cap.svg"),url("../img/Logo/nav-cap.svg"),linear-gradient(#000,#000);
   mask-image:url("../img/Logo/nav-cap.svg"),url("../img/Logo/nav-cap.svg"),linear-gradient(#000,#000);
@@ -137,6 +141,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   opacity:.06;mix-blend-mode:overlay;
 }
 .nav-inner>*{position:relative;z-index:1}
+/* the caps bloom outward from inside the bar on load */
+@media (prefers-reduced-motion: no-preference){
+  .nav-inner{animation:navGrow .78s cubic-bezier(.34,1.44,.62,1) both}
+}
+@keyframes navGrow{
+  from{-webkit-mask-size:0 0,0 0,calc(100% - var(--cap)) 74%;
+       mask-size:0 0,0 0,calc(100% - var(--cap)) 74%}
+  to{-webkit-mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%;
+     mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%}
+}
 .brand{display:flex;align-items:center;gap:10px;white-space:nowrap;flex:none;font-family:var(--font-display);font-weight:700;font-size:21px;letter-spacing:-.03em;text-transform:lowercase}
 .brand .hint{color:var(--emerald)}
 .brand .mark{width:30px;height:30px;display:grid;place-items:center;color:var(--emerald)}
@@ -219,9 +233,9 @@ h1.display em{
 .hero-bowl svg{width:100%;height:auto;display:block;overflow:visible}
 /* ribbon: solid band with the emerald underside flashing through at the turns,
    where a twisting ribbon would show its back face */
-.bowl-band{fill:none;stroke:var(--ink);stroke-width:44;stroke-linecap:round}
+.bowl-band{fill:none;stroke:var(--ink);stroke-width:34;stroke-linecap:round}
 .bowl-band-echo{
-  fill:none;stroke:var(--emerald);stroke-width:44;stroke-linecap:butt;
+  fill:none;stroke:var(--emerald);stroke-width:34;stroke-linecap:butt;
   /* long gaps = ribbon front; short dashes = the flash of its back face */
   stroke-dasharray:0 250 120 300 90 340 140 260;
   transform:translate(2px,-13px) scaleY(.985);
@@ -229,9 +243,12 @@ h1.display em{
 }
 [data-theme="dark"] .bowl-band{stroke:var(--surface)}
 [data-theme="dark"] .bowl-band-echo{stroke:var(--emerald);opacity:.75}
-.bowl-marquee{font-family:var(--font-display);font-weight:550;font-size:20px;letter-spacing:.045em;fill:var(--bg);dominant-baseline:middle;opacity:1}
+.bowl-marquee{font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:.045em;fill:var(--bg);dominant-baseline:middle;opacity:1}
 [data-theme="dark"] .bowl-marquee{fill:var(--ink)}
-.bowl-marquee tspan.bserif{font-family:var(--font-serif);font-style:italic;font-size:21px;fill:var(--yellow)}
+.bowl-marquee tspan.bserif{font-family:var(--font-serif);font-style:italic;font-size:19px;fill:var(--yellow)}
+/* fluid copy: only painted inside the cursor window, displaced by turbulence */
+.bowl-fluid{pointer-events:none}
+.hero-bowl.fluid-off .bowl-fluid{display:none}
 .bowl-marquee tspan{transition:fill .3s}
 .hero-arc{display:none;position:absolute;top:84px;left:0;right:0;z-index:0;pointer-events:none}
 .hero-arc svg{width:100%;height:58px;display:block}
@@ -417,95 +434,58 @@ h2.title{font-family:var(--font-display);font-size:clamp(30px,4vw,48px);line-hei
 .deck-dot{width:8px;height:8px;border-radius:99px;background:var(--line);transition:.3s;padding:0}
 .deck-dot.on{background:var(--emerald);width:26px}
 
-/* ---------------- roles / folders ---------------- */
-.role-stack{display:flex;flex-direction:column;gap:0;margin-top:96px}
-/* real manila-folder silhouette: tab sits ABOVE the body, folders overlap like a pile */
-.folder{
-  position:relative;
-  border-radius:0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
-  border:1px solid var(--line-soft);
-  box-shadow:var(--shadow-lg);
-  background:
-    linear-gradient(168deg,
-      color-mix(in srgb,var(--tintA) 16%, var(--surface)) 0%,
-      color-mix(in srgb,var(--tintB) 7%, var(--surface)) 46%,
-      var(--surface) 82%);
+/* ---------------- roles: one folder, tabs on top ---------------- */
+.rolefolder{
+  margin-top:54px;background:var(--surface);
+  border:1px solid var(--line-soft);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);overflow:hidden;
 }
-.folder+.folder{margin-top:-26px}
-.folder:nth-child(1){z-index:4}.folder:nth-child(2){z-index:3}
-.folder:nth-child(3){z-index:2}.folder:nth-child(4){z-index:1}
-/* the tab: same paper as the folder, slanted right edge, welded to the top */
-.folder::before{
-  content:"";position:absolute;top:-30px;height:31px;width:212px;
-  left:var(--tab-x,0px);
-  background:inherit;
-  border:1px solid var(--line-soft);border-bottom:none;
-  border-radius:14px 26px 0 0;
-  clip-path:polygon(0 0,calc(100% - 26px) 0,100% 100%,0 100%);
+.rf-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:var(--bg-soft)}
+.rf-tab{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:16px 10px 12px;border-radius:14px;border:1px solid transparent;
+  background:transparent;transition:.25s;
 }
-/* stagger the tabs like a filing drawer */
-.folder:nth-child(2)::before{--tab-x:236px}
-.folder:nth-child(3)::before{--tab-x:472px}
-.folder:nth-child(4)::before{--tab-x:708px}
-.folder-tab{
-  position:absolute;top:-26px;z-index:2;
-  left:calc(var(--tab-x,0px) + 26px);
-  color:var(--tab,var(--emerald));
-  font-family:var(--font-display);
-  font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
-  display:inline-flex;align-items:center;gap:8px;
+.rf-tab b{font-family:var(--font-display);font-size:14.5px;font-weight:600;color:var(--muted);transition:.25s}
+.rf-art{
+  width:86px;height:86px;display:grid;place-items:center;
+  filter:grayscale(1) opacity(.32);transition:.3s;
 }
-.folder-tab::before{content:"";width:8px;height:8px;border-radius:99px;background:var(--tab,var(--emerald))}
-.folder:nth-child(2) .folder-tab{--tab-x:236px}
-.folder:nth-child(3) .folder-tab{--tab-x:472px}
-.folder:nth-child(4) .folder-tab{--tab-x:708px}
-.folder-inner{
-  position:relative;z-index:1;
-  display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
-  padding:56px 48px 48px;
+.rf-art img{width:100%;height:100%;object-fit:contain;display:block}
+.rf-tab:hover .rf-art{filter:grayscale(.4) opacity(.7);transform:translateY(-3px)}
+.rf-tab:hover b{color:var(--ink)}
+.rf-tab.active{background:var(--surface);border-color:var(--line-soft);box-shadow:var(--shadow)}
+.rf-tab.active .rf-art{filter:none;transform:translateY(-4px) rotate(-3deg)}
+.rf-tab.active b{color:var(--ink)}
+.rf-panel{
+  display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;
+  padding:44px 46px 46px;transition:opacity .18s ease;
 }
-.folder-inner.flip{direction:rtl}
-.folder-inner.flip>*{direction:ltr}
-.folder h3{font-family:var(--font-display);font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.015em;margin-bottom:14px}
-.folder p.lead{color:var(--ink-soft);margin-bottom:22px;max-width:48ch}
-.chiplist{display:flex;flex-wrap:wrap;gap:9px;list-style:none}
-.chiplist li{
-  font-size:13px;font-weight:600;color:var(--ink-soft);
-  border:1px solid var(--line);border-radius:999px;padding:7px 14px;
-  background:var(--surface);
-  display:inline-flex;gap:7px;align-items:center;
+.rf-panel.swapping{opacity:0}
+.rf-lead h3{font-family:var(--font-display);font-size:clamp(24px,2.7vw,34px);line-height:1.12;letter-spacing:-.02em;font-weight:500;margin-bottom:22px}
+.rf-items{display:flex;flex-direction:column}
+.rf-item{padding:0 0 18px;margin-bottom:18px;border-bottom:1px solid var(--line-soft)}
+.rf-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.rf-item b{display:block;font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:6px}
+.rf-item p{color:var(--ink-soft);font-size:14.5px;line-height:1.55}
+
+/* ---------------- scribble accents beside headings ---------------- */
+.h-mark{position:relative;display:inline-block}
+.h-mark svg{position:absolute;pointer-events:none;overflow:visible}
+.h-mark .scribble-under{left:-2%;bottom:-16px;width:104%;height:16px;color:var(--emerald)}
+.h-mark .scribble-spark{right:-42px;top:-26px;width:34px;height:34px;color:var(--orange)}
+.h-mark .scribble-circle{left:-14px;top:-12px;width:calc(100% + 28px);height:calc(100% + 26px);color:var(--violet)}
+.scribble-under path,.scribble-spark path,.scribble-circle path{
+  fill:none;stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);
 }
-.chiplist li::before{content:"";width:6px;height:6px;border-radius:99px;background:var(--tab,var(--emerald))}
-/* flat colour-blocked visual panel per role (no gradient blur) */
-.role-visual{
-  position:relative;min-height:330px;border-radius:var(--radius);
-  overflow:hidden;border:1px solid var(--line-soft);
-  background:color-mix(in srgb,var(--tintA) 15%, var(--surface));
-  box-shadow:var(--shadow);
+.reveal.in .scribble-under path,.reveal.in .scribble-spark path,.reveal.in .scribble-circle path{
+  animation:draw .9s .25s cubic-bezier(.4,.7,.3,1) forwards;
 }
-/* solid circle peeking from the corner, second role colour */
-.role-visual::before{
-  content:"";position:absolute;right:-52px;bottom:-52px;width:170px;height:170px;
-  border-radius:50%;background:color-mix(in srgb,var(--tintB) 36%, var(--surface));
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){
+  .scribble-under path,.scribble-spark path,.scribble-circle path{stroke-dashoffset:0}
 }
-.role-visual::after{
-  content:"";position:absolute;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:.08;mix-blend-mode:overlay;pointer-events:none;
-}
-.role-visual .float-ui{
-  position:absolute;background:var(--surface);
-  border:1px solid var(--line-soft);border-radius:14px;box-shadow:var(--shadow);
-  padding:13px 16px;font-size:12px;font-weight:600;color:var(--ink);
-  display:flex;gap:10px;align-items:center;
-  animation:bob 6s ease-in-out infinite;
-}
-.role-visual .float-ui small{display:block;font-weight:500;color:var(--muted);font-size:10.5px}
-.role-visual .float-ui .ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--tab,var(--emerald));color:#fff;font-size:13px;flex:none}
-.float-ui.f1{top:12%;left:8%;animation-delay:0s}
-.float-ui.f2{top:44%;right:7%;animation-delay:1.4s}
-.float-ui.f3{bottom:10%;left:16%;animation-delay:2.6s}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 
 /* ---------------- CTA banner ---------------- */
 .cta{padding:48px 0 88px}
@@ -643,11 +623,10 @@ footer .wrap{position:relative;z-index:2}
   .spec-panel{grid-template-columns:1fr;height:auto;min-height:0}
   .spec-visual{padding:0 24px}
   .testi-grid{grid-template-columns:1fr;gap:40px}
-  .folder-inner{grid-template-columns:1fr;padding:54px 26px 26px}
-  .folder+.folder{margin-top:24px}
-  .folder::before,.folder-tab{--tab-x:0px !important}
-  .folder::before{width:170px}
-  .folder-tab{left:26px}
+  .rf-tabs{grid-template-columns:repeat(2,1fr)}
+  .rf-panel{grid-template-columns:1fr;gap:26px;padding:28px 24px 30px}
+  .rf-art{width:64px;height:64px}
+  .h-mark .scribble-spark{display:none}
   .cta-inner{grid-template-columns:1fr}
   .price-grid{grid-template-columns:1fr;max-width:440px;margin-inline:auto}
   .contact-grid{grid-template-columns:1fr}

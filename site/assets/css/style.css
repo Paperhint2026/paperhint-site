@@ -709,15 +709,15 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity:.07;mix-blend-mode:overlay;pointer-events:none;
 }
-.cta-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:end}
-.cta-copy{padding-bottom:clamp(48px,6vw,84px);display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.cta-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.cta-copy{padding-bottom:clamp(48px,6vw,84px);display:flex;flex-direction:column;align-items:flex-start;gap:18px;justify-content:center}
 .cta-card h2{font-family:var(--font-display);font-size:clamp(28px,3.2vw,44px);line-height:1.08;letter-spacing:-.04em;font-weight:500}
 .cta-card p{color:var(--ink-soft);max-width:44ch;font-size:19px;line-height:1.4;letter-spacing:-.02em}
 /* the one bright action: yellow, the complement that supports the gang */
 .btn-ink{background:var(--yellow);color:#10201A;box-shadow:0 8px 22px -8px rgba(233,196,59,.7)}
 .btn-ink:hover{background:#FFDE66;transform:translateY(-1px)}
 /* the gang, standing together on the banner's floor */
-.cta-gang{display:flex;align-items:flex-end;justify-content:flex-end}
+.cta-gang{display:flex;align-items:flex-end;justify-content:flex-end;align-self:end}
 .cta-gang img{display:block;width:100%;max-width:560px;height:auto;filter:drop-shadow(0 5px 10px rgba(16,32,26,.18))}
 
 /* ---------------- footer ---------------- */

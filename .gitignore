@@ -1,0 +1,10 @@
+.DS_Store
+*.swp
+*.swo
+*.tmp
+*.log
+node_modules/
+.vercel/
+.env
+.env.local
+*.local

@@ -183,13 +183,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
    LAYOUT NEVER CHANGES — only the mask collapses to a centred rosette and the
    brand glides over on a transform, so nothing can jump or blink */
 .nav-inner.nav-shrink{
-  /* SAME three mask layers as the open bar — image lists must match for the
-     morph to interpolate: both caps glide to centre and merge into one
-     rosette while the middle band shrinks away */
+  /* the bar itself collapses to a square exactly its own height (--foldcap,
+     measured by main.js), and the caps converge to fill it — so the folded
+     state IS the logo silhouette, 1:1, never squashed. Same three mask
+     layers as the open bar, so the morph interpolates all the way. */
+  width:var(--foldcap,76px);
   -webkit-mask-position:center,center,center;
   mask-position:center,center,center;
-  -webkit-mask-size:96px 96px,96px 96px,0 74%;
-  mask-size:96px 96px,96px 96px,0 74%;
+  -webkit-mask-size:var(--foldcap,76px) var(--foldcap,76px),var(--foldcap,76px) var(--foldcap,76px),0 74%;
+  mask-size:var(--foldcap,76px) var(--foldcap,76px),var(--foldcap,76px) var(--foldcap,76px),0 74%;
   pointer-events:none;             /* only the rosette (brand) stays interactive */
 }
 .nav-inner.nav-shrink>*{opacity:0;pointer-events:none}

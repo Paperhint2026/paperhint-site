@@ -853,6 +853,8 @@
         inner.style.setProperty('--brand-x',
           (innerWidth / 2 - (m.left + m.width / 2)).toFixed(1) + 'px');
       }
+      /* the folded rosette must be a true square: cap = the bar's own height */
+      inner.style.setProperty('--foldcap', inner.offsetHeight + 'px');
       inner.classList.add('nav-shrink');
       folded = true;
     }
@@ -890,9 +892,11 @@
       var release = function () {
         setTimeout(function () {
           inner.classList.remove('nav-boot');
+          booted = true;
+          /* if the user already scrolled away during boot, stay folded */
+          if (scrollY > 240) { wantFolded = true; return; }
           inner.classList.add('nav-arrive');   /* one decelerating turn during the glide */
           unfold();
-          booted = true;
         }, 1500); /* the drop lands (~1.1s) and the spin gets a beat to read */
       };
       if (document.readyState === 'complete') release();
@@ -905,16 +909,23 @@
       booted = true;
     }
 
-    /* scroll: down folds, up opens */
-    var lastY = scrollY, acc = 0;
+    /* scroll: down folds, up opens — with real hysteresis so trackpad
+       jitter and momentum wiggle can never make the bar oscillate */
+    var lastY = scrollY, run = 0, lastFlip = 0;
     window.addEventListener('scroll', function () {
       if (!booted) return;
       var dy = scrollY - lastY; lastY = scrollY;
-      acc = (dy > 0) === (acc > 0) ? acc + dy : dy;   /* direction-consistent run */
-      if (scrollY < 160) { wantFolded = false; }
-      else if (acc > 170)  { wantFolded = true; }
-      else if (acc < -90)  { wantFolded = false; }
-      if (wantFolded !== folded && !inner.matches(':hover')) {
+      if (Math.abs(dy) < 3) return;                    /* ignore jitter */
+      run = (dy > 0) === (run > 0) ? run + dy : dy;    /* direction-consistent run */
+
+      if (scrollY < 160) wantFolded = false;           /* always open near the top */
+      else if (run > 220)  wantFolded = true;          /* a real downward run */
+      else if (run < -260) wantFolded = false;         /* a real upward run */
+
+      var now = performance.now();
+      if (wantFolded !== folded && now - lastFlip > 700 && !inner.matches(':hover')) {
+        lastFlip = now;
+        run = 0;
         wantFolded ? fold() : unfold();
       }
     }, { passive: true });

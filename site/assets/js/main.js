@@ -1125,7 +1125,7 @@
       lead: 'The portal that sets up every desk',
       cta: 'Explore the school portal',
       items: [
-        ['Classes, sections, students, teachers', 'Build and manage the school\u2019s structure — the people layer everything else runs on.'],
+        ['Classes, sections, students, teachers', 'Build the school\u2019s structure — and move it: promote a whole batch to the next grade in one step, absorb the fresh one cleanly.'],
         ['Subjects and their books', 'Attach books and materials to each subject; they flow to every teacher in that department, seeding their libraries.'],
         ['The school around it', 'Timetables, academic records and the calendar — organised, without being the whole story.']
       ]

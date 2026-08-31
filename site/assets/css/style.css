@@ -810,7 +810,7 @@ footer .wrap{position:relative;z-index:2}
 /* the ribbon is free here: no cropping, it dives behind the next section */
 .page-hero .hero-ribbon{top:60px;overflow:visible;z-index:0}
 .page-hero .hero-ribbon svg{overflow:visible}
-.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:64px;align-items:stretch}
+.price-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:64px;align-items:stretch}
 .price-card{
   position:relative;background:var(--surface);border:1px solid var(--line-soft);
   border-radius:var(--radius-lg);padding:36px 32px;box-shadow:var(--shadow);
@@ -837,7 +837,7 @@ footer .wrap{position:relative;z-index:2}
 .price-card ul li{display:flex;gap:10px;font-size:14px;color:var(--ink-soft);align-items:flex-start}
 .price-card ul li svg{flex:none;margin-top:3px;color:var(--emerald)}
 .price-card .btn{margin-top:auto;width:100%}
-.faq{max-width:760px;margin:70px auto 0}
+.faq{position:relative;z-index:2;max-width:760px;margin:70px auto 0}
 .faq details{border:1px solid var(--line-soft);border-radius:16px;background:var(--surface);margin-bottom:12px;overflow:hidden}
 .faq summary{padding:20px 24px;font-weight:500;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-size:15.5px}
 .faq summary::after{content:"+";font-family:var(--font-display);font-size:22px;color:var(--emerald);transition:.3s}
@@ -845,7 +845,7 @@ footer .wrap{position:relative;z-index:2}
 .faq details p{padding:0 24px 20px;color:var(--ink-soft);font-size:14.5px;max-width:65ch}
 
 /* ---------------- contact: the twirl behind the form ---------------- */
-.contact-twirl{position:absolute;left:0;right:0;bottom:-60px;top:auto;height:640px;overflow:visible;z-index:0}
+.contact-twirl{position:absolute;left:0;right:0;top:-330px;bottom:-40px;height:auto;overflow:visible;z-index:0}
 .contact-twirl svg{overflow:visible}
 .contact-grid{position:relative;z-index:2}
 @media (max-width:960px){.contact-twirl{display:none}}

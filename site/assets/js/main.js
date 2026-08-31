@@ -524,8 +524,7 @@
     function X(n) { return (n * W).toFixed(1); }
     function Y(n) { return (n * H).toFixed(1); }
     return 'M ' + X(0.82) + ' ' + Y(-0.06) +
-           ' C ' + X(0.64) + ' ' + Y(0.10), + '' +
-           '' + X(0.58) + ' ' + Y(0.26) + ', ' + X(0.70) + ' ' + Y(0.36) +
+           ' C ' + X(0.64) + ' ' + Y(0.10) + ', ' + X(0.58) + ' ' + Y(0.26) + ', ' + X(0.70) + ' ' + Y(0.36) +
            ' C ' + X(0.84) + ' ' + Y(0.47) + ', ' + X(1.00) + ' ' + Y(0.40) + ', ' + X(0.95) + ' ' + Y(0.29) +
            ' C ' + X(0.90) + ' ' + Y(0.19) + ', ' + X(0.73) + ' ' + Y(0.25) + ', ' + X(0.75) + ' ' + Y(0.43) +
            ' C ' + X(0.77) + ' ' + Y(0.60) + ', ' + X(0.88) + ' ' + Y(0.72) + ', ' + X(1.04) + ' ' + Y(0.86);
@@ -762,6 +761,66 @@
   };
 
 
+
+
+  /* ---------------- custom selects ----------------
+     Progressive enhancement: each .field select is hidden and driven by our
+     own popover — options stagger in; the native select stays in the form
+     so submission and prefill logic never notice the difference. */
+  function initDropdowns() {
+    document.querySelectorAll('.field select').forEach(function (sel) {
+      var dd = document.createElement('div');
+      dd.className = 'dd';
+      sel.parentNode.insertBefore(dd, sel);
+      dd.appendChild(sel);
+      sel.style.display = 'none';
+      sel.setAttribute('aria-hidden', 'true');
+      sel.tabIndex = -1;
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'dd-btn';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.textContent = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : '';
+      dd.appendChild(btn);
+
+      var list = document.createElement('ul');
+      list.className = 'dd-list';
+      list.setAttribute('role', 'listbox');
+      Array.prototype.forEach.call(sel.options, function (opt, i) {
+        var li = document.createElement('li');
+        li.className = 'dd-opt';
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', String(i === sel.selectedIndex));
+        li.style.setProperty('--i', i);
+        li.textContent = opt.text;
+        li.addEventListener('click', function () {
+          sel.selectedIndex = i;
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          btn.textContent = opt.text;
+          list.querySelectorAll('.dd-opt').forEach(function (o) { o.setAttribute('aria-selected', 'false'); });
+          li.setAttribute('aria-selected', 'true');
+          close();
+        });
+        list.appendChild(li);
+      });
+      dd.appendChild(list);
+
+      function open()  { dd.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      function close() { dd.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+
+      btn.addEventListener('click', function () {
+        dd.classList.contains('open') ? close() : open();
+      });
+      document.addEventListener('click', function (e) {
+        if (dd.classList.contains('open') && !dd.contains(e.target)) close();
+      });
+      btn.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
+    });
+  }
 
   /* ---------------- parallax layers ----------------
      Elements with data-plx drift by (distance from viewport centre x factor):
@@ -1200,6 +1259,7 @@
     initChat();
     initNavMenu();
     initParallax();
+    initDropdowns();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

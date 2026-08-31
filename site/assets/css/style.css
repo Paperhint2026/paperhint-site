@@ -716,6 +716,12 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 /* the one bright action: yellow, the complement that supports the gang */
 .btn-ink{background:var(--yellow);color:#10201A;box-shadow:0 8px 22px -8px rgba(233,196,59,.7)}
 .btn-ink:hover{background:#FFDE66;transform:translateY(-1px)}
+/* the banner's own ribbon: pink twirl behind the gang */
+.cta-band{position:absolute;inset:0;top:0;overflow:hidden;z-index:1;pointer-events:none}
+.cta-band .ribbon-line,.cta-band .ribbon-echo{stroke-width:34}
+.cta-band .ribbon-echo{transform:translate(8px,11px)}
+@media (max-width:960px){.cta-band{display:none}}
+
 /* the gang, standing together on the banner's floor */
 .cta-gang{display:flex;align-items:flex-end;justify-content:flex-end;align-self:end}
 .cta-gang img{display:block;width:100%;max-width:560px;height:auto;filter:drop-shadow(0 5px 10px rgba(16,32,26,.18))}
@@ -839,7 +845,7 @@ footer .wrap{position:relative;z-index:2}
 .faq details p{padding:0 24px 20px;color:var(--ink-soft);font-size:14.5px;max-width:65ch}
 
 /* ---------------- contact: the twirl behind the form ---------------- */
-.contact-twirl{position:absolute;inset:0;top:0;overflow:visible;z-index:0}
+.contact-twirl{position:absolute;left:0;right:0;bottom:-60px;top:auto;height:640px;overflow:visible;z-index:0}
 .contact-twirl svg{overflow:visible}
 .contact-grid{position:relative;z-index:2}
 @media (max-width:960px){.contact-twirl{display:none}}
@@ -881,6 +887,38 @@ footer .wrap{position:relative;z-index:2}
 }
 .field textarea{resize:vertical;min-height:110px}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--emerald);box-shadow:0 0 0 4px var(--emerald-tint)}
+/* custom select: our own popover, options stagger in */
+.dd{position:relative}
+.dd-btn{
+  font:inherit;font-size:14.5px;color:var(--ink);width:100%;text-align:left;
+  background:var(--surface-2);border:1.5px solid var(--line);border-radius:12px;
+  padding:12px 38px 12px 14px;cursor:pointer;transition:.2s;position:relative;
+}
+.dd-btn::after{
+  content:"";position:absolute;right:14px;top:50%;width:8px;height:8px;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:translateY(-70%) rotate(45deg);transition:transform .25s;
+}
+.dd.open .dd-btn{border-color:var(--emerald);box-shadow:0 0 0 4px var(--emerald-tint)}
+.dd.open .dd-btn::after{transform:translateY(-30%) rotate(-135deg)}
+.dd-list{
+  position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:40;
+  background:var(--surface);border:1px solid var(--line-soft);border-radius:14px;
+  box-shadow:var(--shadow-lg);padding:6px;margin:0;list-style:none;
+  opacity:0;transform:translateY(-6px) scale(.985);pointer-events:none;
+  transition:opacity .22s ease,transform .28s cubic-bezier(.3,.8,.24,1);
+}
+.dd.open .dd-list{opacity:1;transform:none;pointer-events:auto}
+.dd-opt{
+  padding:11px 13px;border-radius:9px;font-size:14.5px;color:var(--ink);cursor:pointer;
+}
+.dd-opt:hover{background:var(--emerald-tint)}
+.dd-opt[aria-selected="true"]{color:var(--emerald);font-weight:500}
+@media (prefers-reduced-motion: no-preference){
+  .dd.open .dd-opt{opacity:0;transform:translateY(-5px);animation:ddIn .3s cubic-bezier(.25,.8,.3,1) forwards;animation-delay:calc(var(--i) * 45ms)}
+}
+@keyframes ddIn{to{opacity:1;transform:none}}
+
 .form-note{font-size:12.5px;color:var(--muted);margin-top:14px;text-align:center}
 .toast{
   position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);

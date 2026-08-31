@@ -775,16 +775,33 @@
     if (!inner) return;
 
     var folded = false, wantFolded = false, booted = false;
+    var mark = inner.querySelector('.brand .mark svg');
 
-    function fold()   {
+    /* the boot entrance animation holds its final keyframe (fill:both), which
+       would override the spin transition — release it once it has played */
+    if (mark) {
+      mark.addEventListener('animationend', function (e) {
+        if (e.animationName === 'markIn') mark.style.animation = 'none';
+      });
+    }
+
+    function fold() {
+      /* measure BEFORE the class flips: how far the mark must glide to sit at
+         the bar's centre once it has collapsed */
+      if (mark) {
+        var m = mark.getBoundingClientRect();
+        inner.style.setProperty('--brand-x',
+          (innerWidth / 2 - (m.left + m.width / 2)).toFixed(1) + 'px');
+      }
       inner.classList.add('nav-shrink');
       folded = true;
-      /* spin the mark on every fold */
-      inner.classList.remove('nav-spin');
-      void inner.offsetWidth;               /* restart the animation */
-      inner.classList.add('nav-spin');
+      if (mark) mark.style.transform = 'rotate(360deg)';   /* clockwise, one turn */
     }
-    function unfold() { inner.classList.remove('nav-shrink'); folded = false; }
+    function unfold() {
+      inner.classList.remove('nav-shrink');
+      folded = false;
+      if (mark) mark.style.transform = 'rotate(0deg)';     /* and back the other way */
+    }
 
     /* boot: collapsed + spinning, then release */
     if (!reduceMotion) {
@@ -915,9 +932,22 @@
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
-        en.target.classList.add('in');
-        animateBars(en.target);
-        io.unobserve(en.target);
+        var el = en.target;
+        /* stagger: nth revealed sibling in the same parent waits its turn */
+        var sibs = Array.prototype.filter.call(el.parentElement.children, function (c) {
+          return c.classList && c.classList.contains('reveal');
+        });
+        var k = sibs.indexOf(el);
+        if (k > 0) {
+          el.style.transitionDelay = (k * 90) + 'ms';
+          el.addEventListener('transitionend', function h() {
+            el.style.transitionDelay = '';           /* don't lag later hovers */
+            el.removeEventListener('transitionend', h);
+          });
+        }
+        el.classList.add('in');
+        animateBars(el);
+        io.unobserve(el);
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
 

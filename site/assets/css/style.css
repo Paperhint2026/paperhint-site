@@ -124,12 +124,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 }
 .nav-inner{
   --cap:70px;
-  transition:width .55s cubic-bezier(.5,.1,.2,1),
-             -webkit-mask-size .55s cubic-bezier(.5,.1,.2,1),
-             mask-size .55s cubic-bezier(.5,.1,.2,1),
-             -webkit-mask-position .55s cubic-bezier(.5,.1,.2,1),
-             mask-position .55s cubic-bezier(.5,.1,.2,1),
-             padding .55s cubic-bezier(.5,.1,.2,1);                       /* rosette end-cap = bar height, kept square so it never distorts */
+  --nav-ease:cubic-bezier(.32,.86,.22,1);
+  transition:width .72s var(--nav-ease),
+             -webkit-mask-size .72s var(--nav-ease),
+             mask-size .72s var(--nav-ease),
+             -webkit-mask-position .72s var(--nav-ease),
+             mask-position .72s var(--nav-ease),
+             padding .72s var(--nav-ease);
+  will-change:width;                       /* rosette end-cap = bar height, kept square so it never distorts */
   position:relative;overflow:hidden;
   width:min(1180px,92vw);margin-inline:auto;
   display:flex;align-items:center;gap:28px;
@@ -161,22 +163,46 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   opacity:.06;mix-blend-mode:overlay;
 }
 .nav-inner>*{position:relative;z-index:1}
-/* content fades a beat after the bar opens; hides instantly when it closes */
-.nav-inner>*{transition:opacity .3s ease .22s}
-/* ---- collapsed: the bar IS the rosette ---- */
+/* content: staggered fades — out quickly front-to-back, in gently back-to-front */
+.nav-inner>*{transition:opacity .32s ease}
+.nav-inner:not(.nav-shrink)>*:nth-child(1){transition-delay:.20s}
+.nav-inner:not(.nav-shrink)>*:nth-child(2){transition-delay:.28s}
+.nav-inner:not(.nav-shrink)>*:nth-child(3){transition-delay:.36s}
+.nav-inner:not(.nav-shrink)>*:nth-child(4){transition-delay:.44s}
+.nav-inner.nav-shrink>*:nth-child(4){transition-delay:0s}
+.nav-inner.nav-shrink>*:nth-child(3){transition-delay:.05s}
+.nav-inner.nav-shrink>*:nth-child(2){transition-delay:.10s}
+.nav-inner.nav-shrink>*:nth-child(1){transition-delay:.15s}
+/* links inside the list ripple too */
+.nav-links a{transition:opacity .28s ease, color .2s, background .2s}
+.nav-inner.nav-shrink .nav-links a{opacity:0}
+.nav-inner.nav-shrink .nav-links a:nth-child(1){transition-delay:.06s}
+.nav-inner.nav-shrink .nav-links a:nth-child(2){transition-delay:.03s}
+.nav-inner.nav-shrink .nav-links a:nth-child(3){transition-delay:0s}
+/* ---- collapsed: the bar IS the rosette ----
+   LAYOUT NEVER CHANGES — only the mask collapses to a centred rosette and the
+   brand glides over on a transform, so nothing can jump or blink */
 .nav-inner.nav-shrink{
-  width:96px;padding:20px 0;justify-content:center;
   -webkit-mask-image:url("../img/Logo/nav-cap.svg");mask-image:url("../img/Logo/nav-cap.svg");
   -webkit-mask-position:center;mask-position:center;
   -webkit-mask-size:96px 96px;mask-size:96px 96px;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  pointer-events:none;             /* only the rosette (brand) stays interactive */
 }
-.nav-inner.nav-shrink>*{opacity:0;transition:opacity .16s ease;pointer-events:none}
-.nav-inner.nav-shrink .brand{opacity:1;pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-.nav-inner.nav-shrink .brand .wordmark{display:none}
+.nav-inner.nav-shrink>*{opacity:0;pointer-events:none}
+/* the brand never blinks: it stays in flow and GLIDES to the bar's centre
+   (main.js sets --brand-x from measurement) */
+.brand{transition:transform .72s var(--nav-ease, cubic-bezier(.32,.86,.22,1))}
+.nav-inner.nav-shrink .brand{
+  opacity:1;pointer-events:auto;
+  transform:translateX(var(--brand-x, 0px));
+  transition-delay:0s;
+}
+.brand .wordmark{transition:opacity .3s ease .25s}
+.nav-inner.nav-shrink .brand .wordmark{opacity:0;transition-delay:0s}
 .nav-inner.nav-shrink .brand .mark{color:var(--emerald)}
-/* every fold re-spins the mark */
-.nav-inner.nav-spin .brand .mark svg{animation:markSpin .7s cubic-bezier(.4,.2,.2,1) 1}
+/* the mark turns with the bar: fold = one clockwise turn, open = the reverse */
+.brand .mark svg{transition:transform .72s var(--nav-ease, cubic-bezier(.32,.86,.22,1))}
 /* boot: spin the mark while collapsed, then main.js releases the bar */
 .nav-inner.nav-boot .brand .mark svg{animation:markSpin 1s linear infinite}
 @keyframes markSpin{to{transform:rotate(360deg)}}

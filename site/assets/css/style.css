@@ -689,7 +689,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 .h-mark svg{position:absolute;pointer-events:none;overflow:visible}
 .h-mark .scribble-under{left:-2%;bottom:-16px;width:104%;height:16px;color:var(--emerald)}
 .h-mark .scribble-spark{right:-42px;top:-26px;width:34px;height:34px;color:var(--orange)}
-.h-mark .scribble-circle{left:-14px;top:-12px;width:calc(100% + 28px);height:calc(100% + 26px);color:var(--violet)}
+.h-mark .scribble-circle{left:-14px;top:-12px;width:calc(100% + 58px);height:calc(100% + 30px);color:var(--violet)}
 .scribble-under path,.scribble-spark path,.scribble-circle path{
   fill:none;stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;
   stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);

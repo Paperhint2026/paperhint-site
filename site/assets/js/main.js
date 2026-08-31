@@ -27,7 +27,7 @@
   }
 
   document.addEventListener('click', function (e) {
-    var btn = e.target.closest && e.target.closest('.theme-btn');
+    var btn = e.target.closest && (e.target.closest('.theme-btn') || e.target.closest('.menu-theme'));
     if (!btn) return;
     var next = currentTheme() === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
@@ -839,7 +839,9 @@
        would override the spin transition — release it once it has played */
     if (mark) {
       mark.addEventListener('animationend', function (e) {
-        if (e.animationName === 'markIn') mark.style.animation = 'none';
+        if (e.animationName === 'markSpin' && inner.classList.contains('nav-arrive')) {
+          inner.classList.remove('nav-arrive');   /* hand the mark to the scroll spin */
+        }
       });
     }
 
@@ -879,16 +881,19 @@
       })(0);
     }
 
-    /* boot: collapsed + spinning, then release */
+    /* boot: the collapsed rosette drops in from above with the mark spinning
+       at centre; on release the bar exhales open while the mark spins once
+       more on its way back to the left */
     if (!reduceMotion) {
-      inner.classList.add('nav-shrink', 'nav-boot');
-      folded = true;
+      fold();                                  /* measured glide puts the mark dead-centre */
+      inner.classList.add('nav-boot');
       var release = function () {
         setTimeout(function () {
           inner.classList.remove('nav-boot');
+          inner.classList.add('nav-arrive');   /* one decelerating turn during the glide */
           unfold();
           booted = true;
-        }, 900); /* one full spin of the mark */
+        }, 650); /* let the drop settle and the spin read */
       };
       if (document.readyState === 'complete') release();
       else window.addEventListener('load', release, { once: true });

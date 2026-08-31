@@ -183,10 +183,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
    LAYOUT NEVER CHANGES — only the mask collapses to a centred rosette and the
    brand glides over on a transform, so nothing can jump or blink */
 .nav-inner.nav-shrink{
-  -webkit-mask-image:url("../img/Logo/nav-cap.svg");mask-image:url("../img/Logo/nav-cap.svg");
-  -webkit-mask-position:center;mask-position:center;
-  -webkit-mask-size:96px 96px;mask-size:96px 96px;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  /* SAME three mask layers as the open bar — image lists must match for the
+     morph to interpolate: both caps glide to centre and merge into one
+     rosette while the middle band shrinks away */
+  -webkit-mask-position:center,center,center;
+  mask-position:center,center,center;
+  -webkit-mask-size:96px 96px,96px 96px,0 74%;
+  mask-size:96px 96px,96px 96px,0 74%;
   pointer-events:none;             /* only the rosette (brand) stays interactive */
 }
 .nav-inner.nav-shrink>*{opacity:0;pointer-events:none}
@@ -209,29 +212,23 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   .nav-inner,.nav-inner>*{transition:none}
   .nav-inner.nav-boot .brand .mark svg{animation:none}
 }
-/* the caps bloom outward from inside the bar on load */
-@media (prefers-reduced-motion: no-preference){
-  .nav-inner{animation:navGrow .78s cubic-bezier(.34,1.44,.62,1) both}
-}
-@keyframes navGrow{
-  from{-webkit-mask-size:0 0,0 0,calc(100% - var(--cap)) 74%;
-       mask-size:0 0,0 0,calc(100% - var(--cap)) 74%}
-  to{-webkit-mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%;
-     mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%}
-}
 .brand{display:flex;align-items:center;gap:10px;white-space:nowrap;flex:none;font-family:var(--font-display);font-weight:500;font-size:21px;letter-spacing:-.02em}
 /* the h of hint: small Merriweather italic, tucked flush into the Geist word */
 .brand .hint em{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:.94em;letter-spacing:0;margin-right:.5px}
 .brand .hint{color:var(--emerald)}
 .brand .mark{width:30px;height:30px;display:grid;place-items:center;color:var(--emerald)}
 .brand .mark svg{width:27px;height:27px}
-/* logo entrance: the rosette shape itself scales in while spinning, once, on load */
+/* boot: the collapsed rosette drops in from above the viewport… */
 @media (prefers-reduced-motion: no-preference){
-  .nav .brand .mark svg{animation:markIn .8s cubic-bezier(.34,1.56,.64,1) backwards;transform-origin:50% 50%}
+  .nav .brand .mark svg{transform-origin:50% 50%}
+  .nav-inner.nav-boot{animation:navDrop .65s cubic-bezier(.3,.85,.3,1) both}
+  /* …and as the bar exhales open, the mark takes one decelerating turn
+     while it glides back to the left — same clock as the glide */
+  .nav-inner.nav-arrive .brand .mark svg{animation:markSpin .95s cubic-bezier(.3,.8,.24,1) 1}
 }
-@keyframes markIn{
-  from{transform:scale(0) rotate(-180deg)}
-  to{transform:scale(1) rotate(0deg)}
+@keyframes navDrop{
+  from{transform:translateY(-160%)}
+  to{transform:translateY(0)}
 }
 .nav-links{display:flex;gap:4px;margin-left:auto;align-items:center}
 /* ---- mobile hamburger ---- */
@@ -254,6 +251,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .nav-menu a{padding:13px 16px;border-radius:12px;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)}
 .nav-menu a:hover{background:var(--emerald-tint)}
 .nav-menu .btn{margin-top:6px;justify-content:center}
+.nav-menu .menu-theme{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px;border-radius:12px;
+  font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink);
+  cursor:pointer;background:none;border:none;width:100%;text-align:left;
+}
+.nav-menu .menu-theme:hover{background:var(--emerald-tint)}
+.nav-menu .menu-theme .theme-btn{width:34px;height:34px;pointer-events:none;display:grid}
 .nav.menu-open .nav-menu,.nav-menu.open{opacity:1;transform:none}
 
 .nav-links a{padding:7px 13px;border-radius:9px;font-family:var(--font-display);font-size:14.5px;font-weight:500;color:var(--ink-soft);transition:.2s}
@@ -831,7 +836,8 @@ footer .wrap{position:relative;z-index:2}
 /* ---------------- responsive ---------------- */
 @media (max-width:960px){
   .nav-links{display:none}
-  .nav-burger{display:flex}
+  .nav-inner>.theme-btn,.nav-inner>.btn-primary{display:none}   /* both live in the menu */
+  .nav-burger{display:flex;margin-left:auto}
   .nav-menu{display:flex}
   .doodle{display:none}
   .cta-card .doodle{display:block;transform:scale(.7);transform-origin:inherit}

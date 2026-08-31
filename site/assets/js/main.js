@@ -858,6 +858,24 @@
     });
   }
 
+
+  /* reason chips: tap to compose the message, tap again to take it back */
+  function initReasonChips() {
+    var row = document.querySelector('.chip-row');
+    var ta = document.getElementById('f-msg');
+    if (!row || !ta) return;
+    row.querySelectorAll('.reason-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var phrase = chip.textContent.trim() + '. ';
+        if (chip.classList.toggle('on')) {
+          ta.value = (ta.value ? ta.value.replace(/\s*$/, ' ') : '') + phrase;
+        } else {
+          ta.value = ta.value.replace(phrase, '').replace(/^\s+/, '');
+        }
+      });
+    });
+  }
+
   /* ---------------- parallax layers ----------------
      Elements with data-plx drift by (distance from viewport centre x factor):
      positive lags the scroll (background), negative leads it (foreground). */
@@ -1284,7 +1302,46 @@
   }
 
   /* ---------------- boot ---------------- */
+
+  /* ---------------- CTA banner component ----------------
+     One source of truth for the closing banner (gang + arch band + one
+     action). Pages mount it with:
+       <section class="cta"><div class="wrap">
+         <div data-component="cta-banner" data-heading="..." data-sub="..."></div>
+       </div></section>
+     Runs first in boot so the band engine and reveal pick it up. */
+  function initCtaBanner() {
+    document.querySelectorAll('[data-component="cta-banner"]').forEach(function (el) {
+      var h = el.getAttribute('data-heading') || 'Let\u2019s take the marking off your desk';
+      var sub = el.getAttribute('data-sub') || 'Tell us how correction works in your school today \u2014 we\u2019ll show you the same class running in Paperhint.';
+      var mount = document.createElement('div');
+      mount.className = 'cta-card reveal';
+      mount.innerHTML =
+        '<div class="hero-ribbon cta-band" data-shape="twirl" data-speed="30" data-span="0.50,1.10"' +
+        ' data-words="*Answer* *sheets* \u00b7 question papers \u00b7 homework \u00b7 *teaching* *notes* \u00b7 attendance \u00b7 *shared* *library* \u00b7"' +
+        ' style="--band:#EA7DAA;--band-echo:#2563EB;--band-text:#FAF7F0;--band-kw:#FFD84D" aria-hidden="true">' +
+          '<svg preserveAspectRatio="none" focusable="false">' +
+            '<path class="ribbon-echo"></path><path class="ribbon-line"></path>' +
+            '<path class="bowl-line" id="cta-band-path" fill="none" stroke="none"></path>' +
+            '<text class="bowl-marquee"><textPath href="#cta-band-path" data-speed="30"></textPath></text>' +
+          '</svg>' +
+        '</div>' +
+        '<div class="cta-inner">' +
+          '<div class="cta-copy"><h2></h2><p></p>' +
+            '<a class="btn btn-ink btn-lg" href="contact.html?type=demo">Book a demo</a></div>' +
+          '<div class="cta-gang" aria-hidden="true"><picture>' +
+            '<source srcset="assets/img/stickers/friends-group.webp" type="image/webp">' +
+            '<img loading="lazy" src="assets/img/stickers/friends-group.png" alt="" width="1000" height="667">' +
+          '</picture></div>' +
+        '</div>';
+      mount.querySelector('h2').textContent = h;
+      mount.querySelector('p').textContent = sub;
+      el.replaceWith(mount);
+    });
+  }
+
   function boot() {
+    initCtaBanner();   /* before the band engine and reveal */
     initNeat();
     initSpec();
     initDeck();
@@ -1297,6 +1354,7 @@
     initParallax();
     initDropdowns();
     initCardTilt();
+    initReasonChips();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

@@ -795,12 +795,24 @@
       }
       inner.classList.add('nav-shrink');
       folded = true;
-      if (mark) mark.style.transform = 'rotate(360deg)';   /* clockwise, one turn */
     }
     function unfold() {
       inner.classList.remove('nav-shrink');
       folded = false;
-      if (mark) mark.style.transform = 'rotate(0deg)';     /* and back the other way */
+    }
+
+    /* the mark turns WITH the scroll: clockwise going down, back going up —
+       lerped every frame so it trails the page like it has momentum */
+    if (mark && !reduceMotion) {
+      var rot = 0;
+      (function spinLoop() {
+        var target = scrollY * 0.4;               /* 0.4° per scrolled px */
+        rot += (target - rot) * 0.09;             /* soft pursuit */
+        if (Math.abs(target - rot) > 0.05) {
+          mark.style.transform = 'rotate(' + rot.toFixed(2) + 'deg)';
+        }
+        requestAnimationFrame(spinLoop);
+      })();
     }
 
     /* boot: collapsed + spinning, then release */
@@ -830,9 +842,9 @@
       if (!booted) return;
       var dy = scrollY - lastY; lastY = scrollY;
       acc = (dy > 0) === (acc > 0) ? acc + dy : dy;   /* direction-consistent run */
-      if (scrollY < 90) { wantFolded = false; }
-      else if (acc > 60)  { wantFolded = true; }
-      else if (acc < -40) { wantFolded = false; }
+      if (scrollY < 160) { wantFolded = false; }
+      else if (acc > 170)  { wantFolded = true; }
+      else if (acc < -90)  { wantFolded = false; }
       if (wantFolded !== folded && !inner.matches(':hover')) {
         wantFolded ? fold() : unfold();
       }

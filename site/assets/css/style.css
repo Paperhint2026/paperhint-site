@@ -124,13 +124,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 }
 .nav-inner{
   --cap:70px;
-  --nav-ease:cubic-bezier(.32,.86,.22,1);
-  transition:width .72s var(--nav-ease),
-             -webkit-mask-size .72s var(--nav-ease),
-             mask-size .72s var(--nav-ease),
-             -webkit-mask-position .72s var(--nav-ease),
-             mask-position .72s var(--nav-ease),
-             padding .72s var(--nav-ease);
+  --nav-ease:cubic-bezier(.3,.8,.24,1);
+  transition:width .95s var(--nav-ease),
+             -webkit-mask-size .95s var(--nav-ease),
+             mask-size .95s var(--nav-ease),
+             -webkit-mask-position .95s var(--nav-ease),
+             mask-position .95s var(--nav-ease),
+             padding .95s var(--nav-ease);
   will-change:width;                       /* rosette end-cap = bar height, kept square so it never distorts */
   position:relative;overflow:hidden;
   width:min(1180px,92vw);margin-inline:auto;
@@ -164,17 +164,17 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 }
 .nav-inner>*{position:relative;z-index:1}
 /* content: staggered fades — out quickly front-to-back, in gently back-to-front */
-.nav-inner>*{transition:opacity .32s ease}
-.nav-inner:not(.nav-shrink)>*:nth-child(1){transition-delay:.20s}
-.nav-inner:not(.nav-shrink)>*:nth-child(2){transition-delay:.28s}
-.nav-inner:not(.nav-shrink)>*:nth-child(3){transition-delay:.36s}
-.nav-inner:not(.nav-shrink)>*:nth-child(4){transition-delay:.44s}
+.nav-inner>*{transition:opacity .55s ease}
+.nav-inner:not(.nav-shrink)>*:nth-child(1){transition-delay:.30s}
+.nav-inner:not(.nav-shrink)>*:nth-child(2){transition-delay:.40s}
+.nav-inner:not(.nav-shrink)>*:nth-child(3){transition-delay:.50s}
+.nav-inner:not(.nav-shrink)>*:nth-child(4){transition-delay:.60s}
 .nav-inner.nav-shrink>*:nth-child(4){transition-delay:0s}
-.nav-inner.nav-shrink>*:nth-child(3){transition-delay:.05s}
-.nav-inner.nav-shrink>*:nth-child(2){transition-delay:.10s}
-.nav-inner.nav-shrink>*:nth-child(1){transition-delay:.15s}
+.nav-inner.nav-shrink>*:nth-child(3){transition-delay:.09s}
+.nav-inner.nav-shrink>*:nth-child(2){transition-delay:.18s}
+.nav-inner.nav-shrink>*:nth-child(1){transition-delay:.27s}
 /* links inside the list ripple too */
-.nav-links a{transition:opacity .28s ease, color .2s, background .2s}
+.nav-links a{transition:opacity .5s ease, color .2s, background .2s}
 .nav-inner.nav-shrink .nav-links a{opacity:0}
 .nav-inner.nav-shrink .nav-links a:nth-child(1){transition-delay:.06s}
 .nav-inner.nav-shrink .nav-links a:nth-child(2){transition-delay:.03s}
@@ -192,17 +192,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .nav-inner.nav-shrink>*{opacity:0;pointer-events:none}
 /* the brand never blinks: it stays in flow and GLIDES to the bar's centre
    (main.js sets --brand-x from measurement) */
-.brand{transition:transform .72s var(--nav-ease, cubic-bezier(.32,.86,.22,1))}
+.brand{transition:transform .95s var(--nav-ease, cubic-bezier(.3,.8,.24,1))}
 .nav-inner.nav-shrink .brand{
   opacity:1;pointer-events:auto;
   transform:translateX(var(--brand-x, 0px));
   transition-delay:0s;
 }
-.brand .wordmark{transition:opacity .3s ease .25s}
+.brand .wordmark{transition:opacity .5s ease .35s}
 .nav-inner.nav-shrink .brand .wordmark{opacity:0;transition-delay:0s}
 .nav-inner.nav-shrink .brand .mark{color:var(--emerald)}
-/* the mark turns with the bar: fold = one clockwise turn, open = the reverse */
-.brand .mark svg{transition:transform .72s var(--nav-ease, cubic-bezier(.32,.86,.22,1))}
+/* the mark's rotation is scroll-driven from main.js (lerped per frame) */
 /* boot: spin the mark while collapsed, then main.js releases the bar */
 .nav-inner.nav-boot .brand .mark svg{animation:markSpin 1s linear infinite}
 @keyframes markSpin{to{transform:rotate(360deg)}}
@@ -472,7 +471,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(30px,4vw,48px);line-hei
   background:color-mix(in srgb,var(--emerald) 7%, var(--surface));
 }
 /* ---------------- feature folder-cards ---------------- */
-.feature-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:44px}
+.feature-grid{display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:46px;margin-top:52px}
 .fcard{
   grid-column:span 2;
   position:relative;background:var(--surface);
@@ -484,19 +483,19 @@ h2.title{font-family:var(--font-display);font-size:clamp(30px,4vw,48px);line-hei
 }
 .fcard:nth-child(1),.fcard:nth-child(2){grid-column:span 3}
 .fcard:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
-/* the folder tab, cut from the card's own paper */
-.fcard::before{
-  content:"";position:absolute;top:-24px;left:-1px;height:25px;width:150px;
+/* the folder tab IS the kicker — same paper as the card, sized to its text,
+   overlapping the card border by 1px so they read as one piece */
+.fcard-kicker{
+  position:absolute;top:-25px;left:-1px;height:26px;
+  display:inline-flex;align-items:center;gap:7px;
+  padding:1px 30px 0 15px;
   background:var(--surface);
   border:1px solid var(--line-soft);border-bottom:none;
-  border-radius:12px 22px 0 0;
-  clip-path:polygon(0 0,calc(100% - 22px) 0,100% 100%,0 100%);
-}
-.fcard-kicker{
-  position:absolute;top:-19px;left:18px;
-  display:inline-flex;align-items:center;gap:7px;
-  font-family:var(--font-display);font-size:11.5px;font-weight:800;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+  border-radius:12px 20px 0 0;
+  clip-path:polygon(0 0,calc(100% - 20px) 0,100% 100%,0 100%);
+  font-family:var(--font-display);font-size:11px;font-weight:800;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft);
+  white-space:nowrap;
 }
 .fcard-kicker::before{content:"";width:7px;height:7px;border-radius:99px;background:var(--tint,var(--emerald))}
 .fcard h3{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:-.015em;margin-top:6px}

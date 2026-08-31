@@ -232,6 +232,28 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   to{transform:scale(1) rotate(0deg)}
 }
 .nav-links{display:flex;gap:4px;margin-left:auto;align-items:center}
+/* ---- mobile hamburger ---- */
+.nav-burger{display:none;flex:none;width:40px;height:40px;border-radius:11px;border:1px solid var(--line);
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:.25s}
+.nav-burger span{display:block;width:17px;height:2px;border-radius:2px;background:var(--ink);
+  transition:transform .3s ease, opacity .25s ease}
+.nav.menu-open .nav-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav.menu-open .nav-burger span:nth-child(2){opacity:0}
+.nav.menu-open .nav-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-menu{
+  display:none;width:min(1180px,92vw);margin:10px auto 0;
+  background:var(--nav-bg);
+  backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);
+  border:1px solid var(--nav-line);border-radius:20px;padding:10px;
+  flex-direction:column;gap:2px;
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .3s ease, transform .35s cubic-bezier(.3,.8,.24,1);
+}
+.nav-menu a{padding:13px 16px;border-radius:12px;font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--ink)}
+.nav-menu a:hover{background:var(--emerald-tint)}
+.nav-menu .btn{margin-top:6px;justify-content:center}
+.nav.menu-open .nav-menu,.nav-menu.open{opacity:1;transform:none}
+
 .nav-links a{padding:7px 13px;border-radius:9px;font-family:var(--font-display);font-size:14.5px;font-weight:500;color:var(--ink-soft);transition:.2s}
 .nav-links a:hover{color:var(--ink);background:var(--emerald-tint)}
 .nav-links a.active{color:var(--emerald);background:var(--emerald-tint);font-weight:600}
@@ -392,7 +414,11 @@ h1.display em{
 .trust-row span{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-.015em;color:var(--ink-soft)}
 
 /* ---------------- ask-paperhint chat (placeholder, backend-ready) ---------------- */
-.chat{max-width:585px;margin:26px auto 0;position:relative;z-index:5;text-align:left}
+.chat{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  width:min(585px, calc(100vw - 28px));z-index:70;text-align:left;
+  display:flex;flex-direction:column-reverse;gap:10px;   /* panel opens upward */
+}
 .chat-pill{
   display:flex;align-items:center;gap:10px;width:100%;
   background:var(--surface);border:1px solid var(--line);border-radius:16px;
@@ -403,7 +429,7 @@ h1.display em{
 .chat-dot{width:9px;height:9px;border-radius:99px;background:var(--emerald);box-shadow:0 0 0 4px var(--emerald-tint);animation:pulse 2.4s infinite}
 .chat-hint{margin-left:auto;font-family:var(--font-body);font-weight:500;font-size:12px;color:var(--muted)}
 .chat-panel{
-  margin-top:10px;background:var(--surface);border:1px solid var(--line-soft);
+background:var(--surface);border:1px solid var(--line-soft);
   border-radius:18px;box-shadow:var(--shadow-lg);overflow:hidden;
 }
 .chat-log{max-height:240px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
@@ -429,6 +455,18 @@ section{position:relative}
 h2.title{font-family:var(--font-display);font-size:clamp(30px,4vw,48px);line-height:1.1;letter-spacing:-.02em;font-weight:500;max-width:22ch}
 .section-sub{margin-top:16px;color:var(--ink-soft);font-size:17px;max-width:58ch}
 .reveal{position:relative;z-index:2;opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+/* first paint: the hero itself arrives as a cascade, not one block */
+@media (prefers-reduced-motion: no-preference){
+  .hero-content>*{animation:riseIn .75s cubic-bezier(.25,.8,.25,1) both}
+  .hero-content>*:nth-child(1){animation-delay:.15s}
+  .hero-content>*:nth-child(2){animation-delay:.24s}
+  .hero-content>*:nth-child(3){animation-delay:.33s}
+  .hero-content>*:nth-child(4){animation-delay:.42s}
+  .hero-content>*:nth-child(5){animation-delay:.51s}
+  .hero-content>*:nth-child(6){animation-delay:.60s}
+}
+@keyframes riseIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
 .reveal.in{opacity:1;transform:none}
 
 /* ---------------- product spec / interactive ---------------- */
@@ -686,6 +724,25 @@ footer .wrap{position:relative;z-index:2}
 }
 .foot-base{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line-soft);padding-top:24px;margin-top:10px;font-size:13px;color:var(--muted)}
 
+/* ---------------- about: the founder's letter ---------------- */
+.letter{
+  max-width:640px;margin:0 auto;background:var(--surface);
+  border:1px solid var(--line-soft);border-radius:6px;
+  padding:clamp(34px,6vw,64px);box-shadow:var(--shadow-lg);
+  position:relative;
+}
+.letter::before{ /* stamp: the rosette pressed into the corner */
+  content:"";position:absolute;top:26px;right:26px;width:44px;height:44px;
+  background:var(--emerald-tint);border-radius:8px;
+  -webkit-mask:url("../img/Logo/nav-cap.svg") center/contain no-repeat;
+  mask:url("../img/Logo/nav-cap.svg") center/contain no-repeat;
+  background-color:var(--emerald);opacity:.85;
+}
+.letter p{font-size:16.5px;line-height:1.75;color:var(--ink-soft);margin-bottom:20px}
+.letter p em{font-family:var(--font-serif);font-style:italic;color:var(--ink)}
+.letter-date{font-size:13px !important;letter-spacing:.12em;text-transform:uppercase;color:var(--muted) !important;margin-bottom:30px !important}
+.letter-sign{font-family:var(--font-serif);font-style:italic;font-size:19px !important;color:var(--ink) !important;margin-top:34px;margin-bottom:0 !important}
+.letter-cta{display:flex;gap:18px;align-items:center;justify-content:center;margin-top:44px}
 /* ---------------- pricing ---------------- */
 .page-hero{position:relative;padding:158px 0 30px;text-align:center}
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:64px;align-items:stretch}
@@ -768,8 +825,9 @@ footer .wrap{position:relative;z-index:2}
 
 /* ---------------- responsive ---------------- */
 @media (max-width:960px){
-  .nav-links a:not(.active){display:none}
-  .nav-links a.active{display:none}
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+  .nav-menu{display:flex}
   .doodle{display:none}
   .cta-card .doodle{display:block;transform:scale(.7);transform-origin:inherit}
   .spec-panel{grid-template-columns:1fr;height:auto;min-height:0}

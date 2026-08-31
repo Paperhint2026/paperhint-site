@@ -96,6 +96,46 @@
     M.Composite.add(engine.world, bodies.concat(wallBodies));
     window.__grav = { engine: engine, bodies: bodies, M: M }; /* debug */
 
+
+    /* ---- phones: gravity follows the device tilt (gyroscope) ----
+       Tip the phone and the cast slides the way you tip it. iOS needs a
+       user-gesture permission; Android just streams the events. */
+    function initTilt() {
+      if (!window.DeviceOrientationEvent) return;
+      if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+
+      var G = 1.15;
+      function onTilt(e) {
+        if (e.gamma === null || e.beta === null) return;
+        /* gamma: left/right tilt, beta: front/back — both in degrees */
+        var gx = Math.max(-1, Math.min(1, e.gamma / 40));
+        var gy = Math.max(0.15, Math.min(1, Math.abs(e.beta) / 50));
+        engine.gravity.x = gx * G;
+        engine.gravity.y = gy * G;
+        bodies.forEach(function (b) { if (b.isSleeping) M.Sleeping.set(b, false); });
+      }
+
+      function arm() {
+        window.addEventListener('deviceorientation', onTilt, { passive: true });
+      }
+
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        /* iOS: ask on the first touch, once */
+        var asked = false;
+        window.addEventListener('touchend', function ask() {
+          if (asked) return;
+          asked = true;
+          window.removeEventListener('touchend', ask);
+          DeviceOrientationEvent.requestPermission()
+            .then(function (state) { if (state === 'granted') arm(); })
+            .catch(function () { /* stays on the default lean */ });
+        }, { passive: true });
+      } else {
+        arm();
+      }
+    }
+    initTilt();
+
     /* ---- resize: rebuild walls ---- */
     addEventListener('resize', function () {
       M.Composite.remove(engine.world, wallBodies);

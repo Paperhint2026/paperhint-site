@@ -492,7 +492,7 @@
     var box = wrap.getBoundingClientRect();
     var W = Math.round(box.width);
     /* the under-sweep has to pass below the last line of the lockup */
-    var anchor = document.getElementById('ask-paperhint') || document.querySelector('.hero-note') || document.querySelector('.hero-capture');
+    var anchor = document.querySelector('.hero-note') || document.querySelector('.hero-capture');
     var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + 66) : Math.round(W * 0.5);
     return { W: W, H: Math.max(300, Math.min(H, 860)) };
   }
@@ -541,7 +541,7 @@
       if (compact()) {
         /* phones: the band lives BELOW the lockup, never across it */
         var hero = wrap.parentNode;
-        var anchor = document.getElementById('ask-paperhint') || document.querySelector('.hero-note');
+        var anchor = document.querySelector('.hero-note');
         var top = anchor
           ? Math.round(anchor.getBoundingClientRect().bottom - hero.getBoundingClientRect().top + 18)
           : 420;
@@ -726,6 +726,29 @@
     }
   };
 
+
+  /* ---------------- mobile menu ---------------- */
+  function initNavMenu() {
+    var nav = document.querySelector('.nav');
+    var burger = nav && nav.querySelector('.nav-burger');
+    if (!nav || !burger) return;
+    var menu = nav.querySelector('.nav-menu');
+    function setOpen(open) {
+      nav.classList.toggle('menu-open', open);
+      if (menu) menu.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    }
+    burger.addEventListener('click', function () {
+      setOpen(!nav.classList.contains('menu-open'));
+    });
+    nav.querySelectorAll('.nav-menu a').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+    document.addEventListener('click', function (e) {
+      if (nav.classList.contains('menu-open') && !nav.contains(e.target)) setOpen(false);
+    });
+  }
+
   function initChat() {
     var root = document.getElementById('ask-paperhint');
     if (!root) return;
@@ -804,12 +827,16 @@
     /* the mark turns WITH the scroll: clockwise going down, back going up —
        lerped every frame so it trails the page like it has momentum */
     if (mark && !reduceMotion) {
+      var spinners = [mark];
+      var footMark = document.querySelector('footer .brand .mark svg');
+      if (footMark) spinners.push(footMark);
       var rot = 0;
       (function spinLoop() {
         var target = scrollY * 0.4;               /* 0.4° per scrolled px */
         rot += (target - rot) * 0.09;             /* soft pursuit */
         if (Math.abs(target - rot) > 0.05) {
-          mark.style.transform = 'rotate(' + rot.toFixed(2) + 'deg)';
+          var t = 'rotate(' + rot.toFixed(2) + 'deg)';
+          for (var i = 0; i < spinners.length; i++) spinners[i].style.transform = t;
         }
         requestAnimationFrame(spinLoop);
       })();
@@ -933,6 +960,16 @@
 
   /* ---------------- scroll reveal ---------------- */
   function initReveal() {
+    /* every major block takes part — auto-tag the ones the markup missed */
+    ['.trust', '.foot-grid > div', '.faq details', '.contact-grid > *',
+     '.c-step', '.deck-nav', '.testi-grid > *'].forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        if (!el.classList.contains('reveal') && !el.closest('.reveal')) {
+          el.classList.add('reveal');
+        }
+      });
+    });
+
     var items = document.querySelectorAll('.reveal');
     if (!items.length) return;
 
@@ -961,7 +998,7 @@
         animateBars(el);
         io.unobserve(el);
       });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+    }, { rootMargin: '0px 0px -18% 0px', threshold: 0.12 });
 
     items.forEach(function (el) { io.observe(el); });
   }
@@ -1032,6 +1069,7 @@
     initHeroCapture();
     initNavShrink();
     initChat();
+    initNavMenu();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

@@ -38,14 +38,25 @@
     <nav class="nav-links" aria-label="Main">
       <a href="index.html#capabilities">Product</a>
       <a href="pricing.html" class="active">Pricing</a>
+      <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
     </nav>
+    <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+      <span></span><span></span><span></span>
+    </button>
     <button class="theme-btn" type="button" aria-label="Switch theme">
       <svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
       <svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg>
     </button>
     <a class="btn btn-primary" href="contact.html?type=demo">Book a demo</a>
   </div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="index.html#product">Product</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a class="btn btn-primary" href="contact.html?type=demo">Book a demo</a>
+    </div>
 </div>
 
 <header class="page-hero">
@@ -200,6 +211,7 @@
         <h5>Company</h5>
         <ul>
           <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="about.html">About</a></li>
           <li><a href="contact.html?type=demo">Book a demo</a></li>
           <li><a href="contact.html?type=partnership">Partnerships</a></li>
           <li><a href="contact.html?type=support">Support</a></li>
@@ -215,6 +227,26 @@
     </div>
   </div>
 </footer>
+
+
+  <!-- ask-paperhint: placeholder UI, wired to the adapter in main.js
+       (swap window.PaperhintChat.adapter for the real AI backend) -->
+  <div class="chat" id="ask-paperhint">
+    <button class="chat-pill" type="button" aria-expanded="false" aria-controls="chat-panel">
+      <span class="chat-dot" aria-hidden="true"></span>
+      Ask Paperhint anything
+      <span class="chat-hint" aria-hidden="true">timetables · pricing · migration</span>
+    </button>
+    <div class="chat-panel" id="chat-panel" hidden>
+      <div class="chat-log" role="log" aria-live="polite">
+        <div class="chat-msg bot">Hi! Ask me anything about Paperhint — what it does, pricing, or how a school gets started.</div>
+      </div>
+      <form class="chat-form">
+        <input type="text" name="q" placeholder="e.g. How do parent updates work?" aria-label="Ask about Paperhint" autocomplete="off" maxlength="300">
+        <button class="btn btn-primary" type="submit" aria-label="Send">→</button>
+      </form>
+    </div>
+  </div>
 
 <script src="assets/js/main.js"></script>
 <script src="assets/js/gravity.js"></script>

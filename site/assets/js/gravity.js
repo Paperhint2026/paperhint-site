@@ -85,13 +85,13 @@
     makeLayer();
     engine = M.Engine.create();
     engine.gravity.y = 1.15;
-    engine.gravity.x = 0.28; /* constant drift: everything piles into the bottom-right corner */
+    engine.gravity.x = 0.09; /* gentle rightward lean: they heap toward the bottom-right, not up the wall */
 
     var W = innerWidth;
     CHARS.forEach(function (c, i) {
       var x = W * (0.09 + 0.115 * i) + (i % 2 ? 14 : -10);
       var y = -120 - i * 130; /* rain in from above on load */
-      var opts = { restitution: 0.42, friction: 0.32, frictionAir: 0.012, density: 0.0016 };
+      var opts = { restitution: 0.3, friction: 0.5, frictionStatic: 1.4, frictionAir: 0.014, density: 0.0016 };
       var b;
       if (c.kind === 'circle') {
         b = M.Bodies.circle(x, y, Math.max(c.w, c.h) / 2 - 4, opts);

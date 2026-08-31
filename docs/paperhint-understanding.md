@@ -133,8 +133,14 @@ down to what ships.
 AI-driven, never AI-on-the-face: outcomes lead, AI shows in the details.
 The hero stays outcome-led; the word "AI" earns its few appearances.
 
+## Business reality
+
+Garage stage, designer+tech team. Pilot a few contact schools first, then
+a silent LinkedIn launch. Pricing unmodelled — needs ≥50% margin over the
+full cost base (servers, data, security, onboarding, maintenance) — so
+the site keeps pricing in pilot posture, not hard numbers.
+
 ## Still open (your calls)
 
-2. Evaluation volume limits per pricing plan — state numbers or stay vague?
 3. Public note-sharing: live at launch, or roadmap?
-4. Attendance scanning: live, or roadmap?
+4. Attendance scanning: LIVE (answered).

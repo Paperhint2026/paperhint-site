@@ -47,10 +47,12 @@ advanced, productively.
    - Today this uses a WhatsApp-group-style template; the direction is
      teachers connecting directly with parents.
 
-7. **Attendance (teacher module)**
-   - Two paths: mark attendance on the usual paper/graph sheet, then
-     scan & upload it (the product reads it in), OR manage it manually
-     in-app (drop / increase).
+7. **Attendance (teacher module) — LIVE**
+   - Two paths: mark attendance on the usual paper sheet as schools
+     already do, scan & drop it — the product reads it in and can notify
+     parents of absences — OR manage it manually in-app (drop / increase).
+   - Principle: meet the school's standard practices where they are;
+     flexibility to fit existing norms is part of the promise.
 
 8. **Teacher's Copilot**
    - A chat interface for teachers: communicate with it, prepare notes,
@@ -94,8 +96,22 @@ AI-first under the hood, **never "AI on the face."** The product (and the
 site) leads with outcomes; AI is highlighted subtly, in the details of how
 each thing gets done — embedded, not shouted. Hero stays outcome-led.
 
+## Business & go-to-market (founder-set)
+
+- **Team**: designer + tech. Build something genuinely effective; the twin
+  goals are ADOPTION and protected margins.
+- **Pricing: NOT settled.** Constraint: recover at least ~50% margin over
+  the true cost base — servers, data management, security, onboarding,
+  maintenance. Until modelled, the site must not present prices as real.
+  Content-pass plan: keep the three-tier structure as shape, but shift the
+  page to pilot-programme posture (numbers softened/removed, talk-to-us
+  led). Founder to confirm.
+- **Stage**: "still in garage." Sequence: (1) hand-onboard a few contact
+  schools as pilots, learn; (2) SILENT LAUNCH via LinkedIn and similar;
+  (3) later, the louder market. The site's job today: support pilot
+  conversations and look credible at silent-launch scale — not mass
+  lead-gen.
+
 ## Open questions for the founder
 
-- Evaluation limits per plan (for pricing copy)?
 - Is the public notes sharing live at launch or roadmap?
-- Attendance scanning: live or roadmap?

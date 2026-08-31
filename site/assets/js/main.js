@@ -848,13 +848,19 @@
     function fold() {
       /* measure BEFORE the class flips: how far the mark must glide to sit at
          the bar's centre once it has collapsed */
+      /* the folded bar is a square of its own height, centred on the page;
+         inside it the mark must land dead-centre. The bar's width collapse
+         moves the brand's in-flow position too, so the glide is computed in
+         the FOLDED box's coordinates: half the box, minus the padding and
+         half the mark that precede it. */
+      var cap = inner.offsetHeight;
+      inner.style.setProperty('--foldcap', cap + 'px');
       if (mark) {
-        var m = mark.getBoundingClientRect();
+        var mw = mark.getBoundingClientRect().width || 27;
+        var pad = parseFloat(getComputedStyle(inner).paddingLeft) || 0;
         inner.style.setProperty('--brand-x',
-          (innerWidth / 2 - (m.left + m.width / 2)).toFixed(1) + 'px');
+          (cap / 2 - pad - mw / 2).toFixed(1) + 'px');
       }
-      /* the folded rosette must be a true square: cap = the bar's own height */
-      inner.style.setProperty('--foldcap', inner.offsetHeight + 'px');
       inner.classList.add('nav-shrink');
       folded = true;
     }

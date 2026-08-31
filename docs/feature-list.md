@@ -43,7 +43,46 @@ is allotted to each class and section, kept in one clean interface,
 with an office copilot handling changes in plain language.
 
 **Admin portal** — Classes, sections, students, teachers and subjects
-managed in one place ("model base management").
+managed in one place ("model base management"). Full CRUD per module,
+with the office copilot able to drive any of it conversationally:
+
+- **Teachers** —
+  *Create*: add a teacher with school email, department and subjects;
+  their library is seeded from the department's subject books.
+  *Read*: staff directory; a teacher's profile shows their allotments,
+  subjects and shared-library contributions.
+  *Update*: change department, subjects or allotments; reset access.
+  *Delete*: deactivate on exit — their allotments free up for
+  re-allotment, their shared notes stay on the school shelf.
+- **Classes (grades)** —
+  *Create*: open a grade/classroom with its subject set.
+  *Read*: class overview — sections, strength, subjects, teachers.
+  *Update*: reconfigure subjects or structure mid-year.
+  *Delete*: archive at year end; batch migration promotes the whole
+  class to the next grade in one move.
+- **Sections** —
+  *Create*: add sections under a class (VI-A, VI-B, …).
+  *Read*: section roster with its allotted teachers and timetable slot.
+  *Update*: move students between sections; swap the allotted teacher.
+  *Delete*: merge or close a section, students reassigned first.
+- **Students** —
+  *Create*: admit a student — roll number, section, parent contacts.
+  *Read*: student profile — evaluations exam over exam, attendance,
+  homework trail.
+  *Update*: section changes, corrections, parent contact updates.
+  *Delete*: transfer out — the academic record is archived, not lost.
+- **Subjects & books** —
+  *Create*: add a subject to a class and attach its books/materials;
+  they flow to every department teacher's library.
+  *Read*: see which departments and teachers a subject serves.
+  *Update*: swap in a new edition — libraries pick it up.
+  *Delete*: retire a subject at year rollover.
+- **Allotments (resource planning)** —
+  *Create*: automation proposes teacher-to-class/section allotments;
+  the office confirms.
+  *Read*: one allotment board — who teaches what, where, when.
+  *Update*: swaps and period covers, by hand or by asking the copilot.
+  *Delete*: release an allotment when a teacher or section changes.
 
 **Batch migration** — Promote a whole class to the next grade in one
 move at year end; absorb the fresh batch cleanly.

@@ -340,7 +340,12 @@ h1.display em{
   font-size:1.04em;line-height:0;letter-spacing:0;
   margin-right:.015em;position:relative;top:-.01em;
 }
-.hero-sub{margin:0 auto 26px;font-size:19px;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-wrap:balance}
+.hero-sub{
+  /* Amplemarket's measured sub: 20px; wider than the 585px lockup so it
+     sets as two full lines instead of three balanced slivers */
+  width:min(680px,94vw);margin:0 calc((100% - min(680px,94vw)) / 2) 26px;
+  font-size:20px;line-height:1.42;letter-spacing:-.02em;color:var(--ink-soft);text-wrap:balance;
+}
 /* the bowl: hero subcopy rides an invisible U-curve wrapping the lockup */
 /* the band: colour is TEXT-RELATIVE — the ribbon strokes in currentColor,
    inherited from the display-text ink, so path and type always agree */

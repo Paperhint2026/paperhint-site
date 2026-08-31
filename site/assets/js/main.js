@@ -853,13 +853,16 @@
          moves the brand's in-flow position too, so the glide is computed in
          the FOLDED box's coordinates: half the box, minus the padding and
          half the mark that precede it. */
-      var cap = inner.offsetHeight;
-      inner.style.setProperty('--foldcap', cap + 'px');
+      /* folded chip = the same --cap as the open bar's end-caps */
+      var cap = parseFloat(getComputedStyle(inner).getPropertyValue('--cap')) || 70;
       if (mark) {
-        var mw = mark.getBoundingClientRect().width || 27;
-        var pad = parseFloat(getComputedStyle(inner).paddingLeft) || 0;
+        /* exact: where the mark's centre sits inside the bar right now vs
+           where the folded box's centre will be */
+        var mr = mark.getBoundingClientRect();
+        var ir = inner.getBoundingClientRect();
+        var markCentreInBar = (mr.left + mr.width / 2) - ir.left;
         inner.style.setProperty('--brand-x',
-          (cap / 2 - pad - mw / 2).toFixed(1) + 'px');
+          (cap / 2 - markCentreInBar).toFixed(1) + 'px');
       }
       inner.classList.add('nav-shrink');
       folded = true;
@@ -893,8 +896,10 @@
        at centre; on release the bar exhales open while the mark spins once
        more on its way back to the left */
     if (!reduceMotion) {
-      fold();                                  /* measured glide puts the mark dead-centre */
-      inner.classList.add('nav-boot');
+      /* .nav-shrink/.nav-boot ship in the markup so the very first painted
+         frame is already the collapsed rosette — here we only refine the
+         measured values and arm the release */
+      fold();
       var release = function () {
         setTimeout(function () {
           inner.classList.remove('nav-boot');
@@ -912,6 +917,8 @@
         if (!booted) { inner.classList.remove('nav-boot'); unfold(); booted = true; }
       }, 4200);
     } else {
+      inner.classList.remove('nav-boot');
+      unfold();
       booted = true;
     }
 

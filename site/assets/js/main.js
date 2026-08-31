@@ -468,13 +468,14 @@
   }
 
 
-  /* ---------------- bowl band: mixed-type marquee + cursor lift ----------------
-     The hero subcopy rides the invisible bowl curve as a slow seamless
-     marquee. Keywords are Merriweather italic (tspan.kw), connectives
-     Geist medium. On fine pointers, words near the cursor lift off the
-     curve, scale up and warm to emerald with a smoothstep falloff.
-     NOTE: dy inside a textPath is cumulative, so every word writes the
-     DELTA from the previous word's lift (self-compensating baseline). */
+  /* ---------------- bowl band: dynamic curve + liquid mesh warp ----------------
+     The curve is COMPUTED from the live hero box (not a hardcoded d), so it
+     always frames the lockup and re-draws on resize. The hero subcopy rides it
+     as a seamless marquee. Near the cursor each glyph run ripples — per-word
+     dy, per-glyph rotate and a size swell driven by a travelling sine field.
+     Done with attributes instead of SVG filters: same liquid read, 60fps.
+     NOTE: dy inside a textPath is cumulative, so every word writes the DELTA
+     from the previous word (self-compensating baseline). */
   var SVGNS = 'http://www.w3.org/2000/svg';
 
   var BOWL_TOKENS = [
@@ -486,207 +487,223 @@
     ['that', 0], ['belongs', 0], ['to', 0], ['them', 0], ['\u00B7', 0]
   ];
 
-  function buildBand(tp) {
-    var text = tp.parentNode;
-    var svg = text.ownerSVGElement;
-    var ref = tp.getAttribute('href') || tp.getAttribute('xlink:href');
-    var path = ref && document.querySelector(ref);
-    if (!svg || !path) return true; /* unbuildable, don't retry */
+  /* ---- the curve, drawn to fit whatever the hero currently is ---- */
+  function bowlGeometry(wrap) {
+    var box = wrap.getBoundingClientRect();
+    var W = Math.round(box.width);
+    /* the bowl floor clears the last thing in the lockup */
+    var anchor = document.querySelector('.hero-note') || document.querySelector('.hero-capture');
+    var H = anchor
+      ? Math.round(anchor.getBoundingClientRect().bottom - box.top + 46)
+      : Math.round(box.width * 0.36);
+    H = Math.max(240, Math.min(H, 720));
+    return { W: W, H: H };
+  }
 
-    var total = path.getTotalLength();
+  function bowlPath(W, H) {
+    var y = H - 12;                       /* the flat of the bowl */
+    var xa = W * 0.19, xb = W * 0.81;     /* where the descent flattens out */
+    return 'M ' + (-W * 0.02) + ' -10' +
+           ' C ' + (W * 0.008) + ' ' + (H * 0.42) + ', ' + (W * 0.055) + ' ' + (H * 0.74) + ', ' + xa + ' ' + y +
+           ' C ' + (W * 0.33) + ' ' + (H + 14) + ', ' + (W * 0.67) + ' ' + (H + 14) + ', ' + xb + ' ' + y +
+           ' C ' + (W * 0.945) + ' ' + (H * 0.74) + ', ' + (W * 0.992) + ' ' + (H * 0.42) + ', ' + (W * 1.02) + ' -10';
+  }
+
+  function arcPath(W, H) {
+    return 'M ' + (-W * 0.02) + ' ' + (H - 8) +
+           ' Q ' + (W / 2) + ' ' + (-H * 0.55) + ', ' + (W * 1.02) + ' ' + (H - 8);
+  }
+
+  /* one band = one <svg> holding the curve, the ribbon strokes and the text */
+  function Band(wrap) {
+    var svg   = wrap.querySelector('svg');
+    var text  = wrap.querySelector('.bowl-marquee');
+    var tp    = text && text.querySelector('textPath');
+    var path  = svg && svg.querySelector('.bowl-line');
+    var bands = svg ? svg.querySelectorAll('.bowl-band, .bowl-band-echo') : [];
+    if (!svg || !tp || !path) return null;
+
+    var isArc = wrap.classList.contains('hero-arc');
     var speed = parseFloat(tp.getAttribute('data-speed')) || 24;
+    var words = [], total = 0, unitLen = 0, baseSize = 18;
 
-    function makeUnit() {
+    function layout() {
+      var g = bowlGeometry(wrap);
+      if (!g.W) return false;                       /* hidden — nothing to draw */
+      var H = isArc ? Math.max(70, Math.round(g.W * 0.055)) : g.H;
+      var d = isArc ? arcPath(g.W, H) : bowlPath(g.W, H);
+
+      svg.setAttribute('viewBox', '0 0 ' + g.W + ' ' + H);   /* 1 user unit = 1 px */
+      svg.setAttribute('width', g.W);
+      svg.setAttribute('height', H);
+      path.setAttribute('d', d);
+      for (var i = 0; i < bands.length; i++) bands[i].setAttribute('d', d);
+
+      total = path.getTotalLength();
+      baseSize = parseFloat(getComputedStyle(text).fontSize) || 18;
+      return fill();
+    }
+
+    function unit() {
       var frag = document.createDocumentFragment();
-      BOWL_TOKENS.forEach(function (t) {
-        var el = document.createElementNS(SVGNS, 'tspan');
-        el.setAttribute('class', t[1] ? 'bw bserif' : 'bw');
-        el.textContent = t[0] + ' ';
-        frag.appendChild(el);
-      });
+      for (var i = 0; i < BOWL_TOKENS.length; i++) {
+        var t = document.createElementNS(SVGNS, 'tspan');
+        if (BOWL_TOKENS[i][1]) t.setAttribute('class', 'kw');
+        t.textContent = BOWL_TOKENS[i][0] + ' ';
+        frag.appendChild(t);
+      }
       return frag;
     }
 
-    /* one unit first, to measure */
-    tp.textContent = '';
-    tp.appendChild(makeUnit());
-    var u = tp.getComputedTextLength();
-    if (!u || u <= 0) { tp.textContent = tp.getAttribute('data-text') || ''; return false; } /* hidden now (e.g. .hero-arc on desktop) — retry on resize */
+    function fill() {
+      tp.textContent = '';
+      tp.appendChild(unit());
+      unitLen = tp.getComputedTextLength();
+      if (!unitLen || unitLen <= 0) return false;
 
-    var reps = Math.ceil((total + u) / u) + 1;
-    for (var r = 1; r < reps; r++) tp.appendChild(makeUnit());
+      var reps = Math.ceil((total + unitLen) / unitLen) + 1;
+      for (var r = 1; r < reps; r++) tp.appendChild(unit());
 
-    /* per-word metadata: arc start is pure font metrics, path-independent */
-    var words = [];
-    var chars = 0;
-    Array.prototype.forEach.call(tp.querySelectorAll('tspan'), function (el) {
-      words.push({
-        el: el,
-        start: tp.getSubStringLength(0, chars),
-        width: el.getComputedTextLength(),
-        lift: 0,
-        active: false
+      words = [];
+      var chars = 0;
+      Array.prototype.forEach.call(tp.querySelectorAll('tspan'), function (el) {
+        words.push({ el: el, start: tp.getSubStringLength(0, chars), w: el.getComputedTextLength(), e: 0, on: false });
+        chars += el.textContent.length;
       });
-      chars += el.textContent.length;
-    });
-
-    if (reduceMotion) return true; /* static band: full text, no marquee, no hover */
-
-    var BASE = parseFloat(getComputedStyle(text).fontSize) || 24;
-    /* fluid wake: proximity injects energy, energy bleeds to neighbours and
-       decays over time, so a swipe leaves a trail that flows and fades */
-    var R = 130, LIFT = -9, SCALE = 0.26;
-    var DECAY = 0.955, BLEED = 0.22, RISE = 0.34;
-    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    var cursor = null;
-
-    if (canHover) {
-      window.addEventListener('pointermove', function (e) {
-        cursor = { x: e.clientX, y: e.clientY };
-      }, { passive: true });
-      document.documentElement.addEventListener('mouseleave', function () { cursor = null; });
+      return words.length > 0;
     }
 
-    var wake = new Array(words.length).fill(0);
-    var t0 = null;
+    var ok = layout();
+
+    /* ---- cursor: kept in this band's own user units ---- */
+    var cur = null, live = false;
+    var canWarp = !reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    if (canWarp) {
+      window.addEventListener('pointermove', function (e) {
+        var r = svg.getBoundingClientRect();
+        if (!r.width) { cur = null; return; }
+        var near = e.clientX > r.left - 60 && e.clientX < r.right + 60 &&
+                   e.clientY > r.top - 60 && e.clientY < r.bottom + 60;
+        cur = near ? { x: (e.clientX - r.left) * (total ? svg.viewBox.baseVal.width / r.width : 1),
+                       y: (e.clientY - r.top) * (svg.viewBox.baseVal.height / r.height) } : null;
+        if (near) live = true;
+      }, { passive: true });
+      document.documentElement.addEventListener('mouseleave', function () { cur = null; });
+    }
+
+    var R = 150, t0 = null;
     function frame(t) {
+      if (!ok) { requestAnimationFrame(frame); return; }
       if (t0 === null) t0 = t;
-      var offset = -(((t - t0) / 1000 * speed) % u);
-      tp.setAttribute('startOffset', offset);
+      var el = (t - t0) / 1000;
+      var offset = reduceMotion ? 0 : -((el * speed) % unitLen);
+      tp.setAttribute('startOffset', offset.toFixed(1));
 
-      if (canHover) {
-        var ctm = cursor ? svg.getScreenCTM() : null;
-        var prevLift = 0;
-        /* let energy spill sideways one step per frame — the fluid part */
-        if (wake.length === words.length) {
-          for (var q = 0; q < words.length; q++) wake[q] = words[q].lift;
-          for (var q2 = 0; q2 < words.length; q2++) {
-            var l = wake[q2 - 1] || 0, rr = wake[q2 + 1] || 0;
-            var spill = Math.max(l, rr) * BLEED;
-            if (spill > words[q2].lift) words[q2].lift = spill;
-          }
-        }
+      if (canWarp && (cur || live)) {
+        var prev = 0, anyOn = false;
         for (var i = 0; i < words.length; i++) {
-          var w = words[i];
-          var target = 0;
-          if (cursor && ctm) {
-            var arc = w.start + offset + w.width / 2;
-            if (arc >= 0 && arc <= total) {
-              var pt = path.getPointAtLength(arc);
-              var sx = ctm.a * pt.x + ctm.c * pt.y + ctm.e;
-              var sy = ctm.b * pt.x + ctm.d * pt.y + ctm.f;
-              var dx = sx - cursor.x, dyv = sy - cursor.y;
-              var d = Math.sqrt(dx * dx + dyv * dyv);
-              if (d < R) { var k = 1 - d / R; target = k * k * (3 - 2 * k); }
-            }
+          var w = words[i], target = 0;
+          var arc = w.start + offset + w.w / 2;
+          if (cur && arc >= 0 && arc <= total) {
+            var pt = path.getPointAtLength(arc);
+            var dx = pt.x - cur.x, dy2 = pt.y - cur.y;
+            var dist = Math.sqrt(dx * dx + dy2 * dy2);
+            if (dist < R) { var k = 1 - dist / R; target = k * k * (3 - 2 * k); }
           }
-          /* energy: rises fast toward the cursor, then decays like a wake */
-          if (target > w.lift) w.lift += (target - w.lift) * RISE;
-          else w.lift *= DECAY;
-          if (w.lift < 0.004) w.lift = 0;
+          /* energy rises fast, ebbs slowly — the wake */
+          w.e = target > w.e ? w.e + (target - w.e) * 0.34 : w.e * 0.94;
+          if (w.e < 0.004) w.e = 0;
 
-          var liftPx = LIFT * w.lift;
-          var delta = liftPx - prevLift;
-          prevLift = liftPx;
-
-          if (Math.abs(liftPx) > 0.01 || Math.abs(delta) > 0.01) {
-            w.el.setAttribute('dy', delta.toFixed(2));
-            w.el.setAttribute('font-size', (BASE * (1 + SCALE * w.lift)).toFixed(2));
-            /* colour flows with the wake: yellow at the crest, emerald in the tail */
-            w.el.style.fill = w.lift > 0.55 ? 'var(--yellow)'
-              : w.lift > 0.12 ? 'var(--emerald)' : '';
-            w.active = true;
-          } else if (w.active) {
-            w.el.removeAttribute('dy');
+          if (w.e) {
+            anyOn = true;
+            /* travelling sine field = the liquid ripple */
+            var ph = arc * 0.055 + el * 3.4;
+            var lift = -10 * w.e * (0.55 + 0.45 * Math.sin(ph));
+            var spin = 9 * w.e * Math.sin(ph * 0.8 + 1.1);
+            var d = lift - prev; prev = lift;
+            w.el.setAttribute('dy', d.toFixed(2));
+            w.el.setAttribute('rotate', spin.toFixed(1));
+            w.el.setAttribute('font-size', (baseSize * (1 + 0.24 * w.e)).toFixed(2));
+            w.el.style.fill = w.e > 0.5 ? 'var(--yellow)' : w.e > 0.1 ? 'var(--emerald)' : '';
+            w.on = true;
+          } else if (w.on) {
+            var d0 = 0 - prev; prev = 0;
+            w.el.setAttribute('dy', d0.toFixed(2));
+            w.el.removeAttribute('rotate');
             w.el.removeAttribute('font-size');
             w.el.style.fill = '';
-            w.active = false;
+            w.on = false;
           }
         }
+        if (!anyOn && !cur) live = false;
       }
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
+
+    return { relayout: function () { ok = layout(); } };
   }
 
+  /* ---------------- looping ribbon (drawn to the live hero box) ---------------- */
+  function ribbonPath(W, H) {
+    /* normalised waypoints: sweep in from the left, dip, rise, curl a full
+       loop on the right, exit top-right — scaled to whatever the hero is */
+    function X(n) { return (n * W).toFixed(1); }
+    function Y(n) { return (n * H).toFixed(1); }
+    return 'M ' + X(-0.03) + ' ' + Y(0.30) +
+           ' C ' + X(0.07) + ' ' + Y(0.52) + ', ' + X(0.13) + ' ' + Y(0.80) + ', ' + X(0.26) + ' ' + Y(0.76) +
+           ' C ' + X(0.39) + ' ' + Y(0.72) + ', ' + X(0.40) + ' ' + Y(0.40) + ', ' + X(0.51) + ' ' + Y(0.27) +
+           ' C ' + X(0.60) + ' ' + Y(0.16) + ', ' + X(0.75) + ' ' + Y(0.20) + ', ' + X(0.755) + ' ' + Y(0.40) +
+           ' C ' + X(0.76) + ' ' + Y(0.60) + ', ' + X(0.61) + ' ' + Y(0.66) + ', ' + X(0.555) + ' ' + Y(0.53) +
+           ' C ' + X(0.50) + ' ' + Y(0.40) + ', ' + X(0.62) + ' ' + Y(0.29) + ', ' + X(0.76) + ' ' + Y(0.31) +
+           ' C ' + X(0.88) + ' ' + Y(0.33) + ', ' + X(0.95) + ' ' + Y(0.22) + ', ' + X(1.03) + ' ' + Y(0.02);
+  }
 
-  /* ---------------- fluid text (mesh distortion under the cursor) ----------------
-     Two copies of the band ride the same path: the plain copy is holed out where
-     the cursor is, and a displacement-mapped copy shows through that window. The
-     turbulence field is static — the text flowing through it is what reads as
-     fluid, which also keeps it cheap. */
-  function initBowlFluid() {
-    var wrap = document.querySelector('.hero-bowl');
+  function initHeroRibbon() {
+    var wrap = document.querySelector('.hero-ribbon');
     if (!wrap) return;
     var svg = wrap.querySelector('svg');
-    var filt = svg && svg.querySelector('#bowlFluid');
-    var wins = svg ? svg.querySelectorAll('.bowl-win') : [];
-    if (!svg || !filt || !wins.length) return;
+    var lines = svg ? svg.querySelectorAll('.ribbon-line, .ribbon-echo') : [];
+    if (!svg || !lines.length) return;
 
-    if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      wrap.classList.add('fluid-off');
-      return;
-    }
-
-    var R = 165, PAD = 230;
-    var pt = svg.createSVGPoint();
-    var queued = null;
-
-    function place(cx, cy) {
-      for (var i = 0; i < wins.length; i++) {
-        wins[i].setAttribute('cx', cx.toFixed(1));
-        wins[i].setAttribute('cy', cy.toFixed(1));
+    function draw() {
+      var W = Math.round(wrap.getBoundingClientRect().width);
+      if (!W) return;
+      var H = Math.round(Math.min(620, Math.max(340, W * 0.42)));
+      var d = ribbonPath(W, H);
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      svg.setAttribute('width', W);
+      svg.setAttribute('height', H);
+      for (var i = 0; i < lines.length; i++) {
+        lines[i].setAttribute('d', d);
+        var len = Math.ceil(lines[i].getTotalLength());
+        lines[i].style.setProperty('--len', len);
       }
-      /* keep the filter region tight around the cursor so turbulence stays cheap */
-      filt.setAttribute('x', (cx - PAD).toFixed(1));
-      filt.setAttribute('y', (cy - PAD).toFixed(1));
-      filt.setAttribute('width', (PAD * 2).toFixed(1));
-      filt.setAttribute('height', (PAD * 2).toFixed(1));
     }
 
-    window.addEventListener('pointermove', function (e) {
-      if (queued) return;
-      queued = requestAnimationFrame(function () {
-        queued = null;
-        var box = svg.getBoundingClientRect();
-        if (!box.width) return;
-        var near = e.clientX > box.left - 40 && e.clientX < box.right + 40 &&
-                   e.clientY > box.top - 40 && e.clientY < box.bottom + 40;
-        if (!near) { wrap.classList.add('fluid-off'); return; }
-        var m = svg.getScreenCTM();
-        if (!m) return;
-        pt.x = e.clientX; pt.y = e.clientY;
-        var u = pt.matrixTransform(m.inverse());
-        place(u.x, u.y);
-        wrap.classList.remove('fluid-off');
-      });
-    }, { passive: true });
-
-    document.documentElement.addEventListener('mouseleave', function () {
-      wrap.classList.add('fluid-off');
+    draw();
+    var t = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(t); t = setTimeout(draw, 180);
     });
   }
 
-  /* build every band (big bowl + the narrow-viewport arc); a band that is
-     display:none at load (so unmeasurable) is retried when the viewport
-     crosses the breakpoint. */
   function initBowlBand() {
-    var pending = Array.prototype.slice.call(document.querySelectorAll('.bowl-marquee textPath'));
-    if (!pending.length) return;
+    var bands = [];
+    document.querySelectorAll('.hero-bowl, .hero-arc').forEach(function (wrap) {
+      var b = Band(wrap);
+      if (b) bands.push(b);
+    });
+    if (!bands.length) return;
 
-    function attempt() {
-      pending = pending.filter(function (tp) { return buildBand(tp) === false; });
-    }
-    attempt();
-
-    if (pending.length) {
-      var timer = null;
-      window.addEventListener('resize', function () {
-        if (!pending.length) return;
-        clearTimeout(timer);
-        timer = setTimeout(attempt, 200);
-      });
-    }
+    var timer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        bands.forEach(function (b) { b.relayout(); });
+      }, 180);
+    });
   }
 
   function bootMarquee() {
@@ -856,7 +873,7 @@
     initReveal();
     initContact();
     initHeroCapture();
-    initBowlFluid();
+    initHeroRibbon();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

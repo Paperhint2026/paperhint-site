@@ -37,39 +37,30 @@
 
 <!-- ============ hero ============ -->
 <header class="hero">
-  <!-- narrow-viewport marquee: gentle arc under the nav (bowl hides <1200px) -->
+  <!-- narrow-viewport band: shallow arc, path drawn by main.js -->
   <div class="hero-arc" aria-hidden="true">
-    <svg viewBox="0 0 1440 90" preserveAspectRatio="xMidYMid slice" focusable="false">
-      <path class="bowl-band-echo" d="M -20 74 Q 720 8, 1460 74"/>
-      <path class="bowl-band" d="M -20 74 Q 720 8, 1460 74"/>
-      <path id="arc-path" d="M -20 74 Q 720 8, 1460 74" fill="none" stroke="none"/>
-      <text class="bowl-marquee"><textPath href="#arc-path" data-text="Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on · " data-speed="20">Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on · </textPath></text>
+    <svg preserveAspectRatio="none" focusable="false">
+      <path class="bowl-band-echo"/>
+      <path class="bowl-band"/>
+      <path class="bowl-line" id="arc-path" fill="none" stroke="none"/>
+      <text class="bowl-marquee"><textPath href="#arc-path" data-speed="20"></textPath></text>
     </svg>
   </div>
-  <div class="hero-bowl fluid-off" aria-hidden="true">
-    <svg viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid meet" focusable="false">
-      <defs>
-        <!-- static turbulence: the text flows THROUGH the field, so motion reads as fluid -->
-        <filter id="bowlFluid" filterUnits="userSpaceOnUse" x="0" y="0" width="420" height="420">
-          <feTurbulence type="fractalNoise" baseFrequency="0.013 0.03" numOctaves="2" seed="5" result="turb"/>
-          <feDisplacementMap in="SourceGraphic" in2="turb" scale="17" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-        <radialGradient id="bowlWin"><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
-        <radialGradient id="bowlWinInv"><stop offset=".5" stop-color="#000"/><stop offset="1" stop-color="#fff"/></radialGradient>
-        <mask id="bowlWindow" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="560">
-          <rect width="1440" height="560" fill="#000"/>
-          <circle class="bowl-win" cx="-999" cy="-999" r="165" fill="url(#bowlWin)"/>
-        </mask>
-        <mask id="bowlHole" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="560">
-          <rect width="1440" height="560" fill="#fff"/>
-          <circle class="bowl-win" cx="-999" cy="-999" r="165" fill="url(#bowlWinInv)"/>
-        </mask>
-      </defs>
-      <path class="bowl-band-echo" d="M -20 -10 C 10 230, 90 400, 250 478 C 400 534, 550 536, 720 536 C 890 536, 1040 534, 1190 478 C 1350 400, 1430 230, 1460 -10"/>
-      <path class="bowl-band" d="M -20 -10 C 10 230, 90 400, 250 478 C 400 534, 550 536, 720 536 C 890 536, 1040 534, 1190 478 C 1350 400, 1430 230, 1460 -10"/>
-      <path id="bowl-path" d="M -20 -10 C 10 230, 90 400, 250 478 C 400 534, 550 536, 720 536 C 890 536, 1040 534, 1190 478 C 1350 400, 1430 230, 1460 -10" fill="none" stroke="none"/>
-      <text class="bowl-marquee bowl-plain" mask="url(#bowlHole)"><textPath href="#bowl-path" data-text="Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · " data-speed="24">Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · </textPath></text>
-      <text class="bowl-marquee bowl-fluid" mask="url(#bowlWindow)" filter="url(#bowlFluid)"><textPath href="#bowl-path" data-text="Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · " data-speed="24">Timetables, academics, a digital library, question papers and parent updates — Paperhint digitises every resource a school runs on, and gives admins, teachers, students and parents exactly the slice that belongs to them · </textPath></text>
+  <!-- hero band: curve computed from the live hero box by main.js -->
+  <div class="hero-bowl" aria-hidden="true">
+    <svg preserveAspectRatio="none" focusable="false">
+      <path class="bowl-band-echo"/>
+      <path class="bowl-band"/>
+      <path class="bowl-line" id="bowl-path" fill="none" stroke="none"/>
+      <text class="bowl-marquee"><textPath href="#bowl-path" data-speed="24"></textPath></text>
+    </svg>
+  </div>
+
+  <!-- looping ribbon that sweeps the hero, drawn by main.js -->
+  <div class="hero-ribbon" aria-hidden="true">
+    <svg preserveAspectRatio="none" focusable="false">
+      <path class="ribbon-echo"/>
+      <path class="ribbon-line"/>
     </svg>
   </div>
 

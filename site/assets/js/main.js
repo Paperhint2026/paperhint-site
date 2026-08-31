@@ -520,21 +520,18 @@
   }
 
   /* a double-curl living in the right half — for corners and margins */
-  function twirlPath(W, H) {
-    /* born at the top-RIGHT edge, a tight curl in the corner, then diving
-       down through the right column and out the bottom — never across the
-       left text side */
-    function X(n) { return (n * W).toFixed(1); }
-    /* padded vertically: the curl keeps a clear gap from the stage edges
-       whatever the stage height (banner ~380px or a full page ~1400px) */
-    var PAD = Math.min(80, H * 0.12);
-    function Y(n) { return (PAD + n * (H - PAD * 1.6)).toFixed(1); }
-    return 'M ' + X(1.06) + ' ' + Y(0.015) +
-           ' C ' + X(0.92) + ' ' + Y(0.045) + ', ' + X(0.785) + ' ' + Y(0.08) + ', ' + X(0.825) + ' ' + Y(0.16) +
-           ' C ' + X(0.872) + ' ' + Y(0.25) + ', ' + X(1.008) + ' ' + Y(0.215) + ', ' + X(0.985) + ' ' + Y(0.11) +
-           ' C ' + X(0.966) + ' ' + Y(0.03) + ', ' + X(0.788) + ' ' + Y(0.07) + ', ' + X(0.732) + ' ' + Y(0.29) +
-           ' C ' + X(0.655) + ' ' + Y(0.47) + ', ' + X(0.70) + ' ' + Y(0.64) + ', ' + X(0.785) + ' ' + Y(0.78) +
-           ' C ' + X(0.855) + ' ' + Y(0.90) + ', ' + X(0.815) + ' ' + Y(0.99) + ', ' + X(0.74) + ' ' + Y(1.08);
+  function twirlPath(W, H, wrap) {
+    /* a simple arch from the bottom-right to the bottom-left. data-span="x0,x1"
+       (viewport fractions) plants the feet, so a placement can keep the arch
+       clear of text columns; default is the full-width rainbow. */
+    var span = (wrap && wrap.getAttribute('data-span') || '-0.06,1.06').split(',');
+    var x0 = parseFloat(span[0]), x1 = parseFloat(span[1]);
+    var mid = (x0 + x1) / 2, q = (x1 - x0) / 4;
+    var apexY = Math.max(70, H * 0.20);
+    function p(x, y) { return x.toFixed(1) + ' ' + y.toFixed(1); }
+    return 'M ' + p(W * x1, H + 30) +
+           ' C ' + p(W * (mid + q), H * 0.55) + ', ' + p(W * (mid + q * 0.9), apexY) + ', ' + p(W * mid, apexY) +
+           ' C ' + p(W * (mid - q * 0.9), apexY) + ', ' + p(W * (mid - q), H * 0.55) + ', ' + p(W * x0, H + 30);
   }
 
   function sweepPath(W, H) {
@@ -576,7 +573,7 @@
       var H, d;
       if (shape === 'twirl') {
         H = g.H;
-        d = twirlPath(g.W, H);
+        d = twirlPath(g.W, H, wrap);
       } else if (compact()) {
         /* phones: the band lives BELOW the lockup, never across it */
         var hero = wrap.parentNode;
@@ -825,6 +822,37 @@
       });
       btn.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') close();
+      });
+    });
+  }
+
+
+  /* ---------------- folder tilt ----------------
+     Very subtle: the card leans a few degrees toward the pointer and a soft
+     light reflection follows it across the paper. Fine pointers only. */
+  function initCardTilt() {
+    if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var MAX = 3.5; /* degrees — around the edges, barely */
+    document.querySelectorAll('.fcard').forEach(function (card) {
+      var raf = null;
+      card.addEventListener('pointermove', function (e) {
+        if (raf) return;
+        raf = requestAnimationFrame(function () {
+          raf = null;
+          var r = card.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width;
+          var py = (e.clientY - r.top) / r.height;
+          card.style.setProperty('--ry', ((px - 0.5) * 2 * MAX).toFixed(2) + 'deg');
+          card.style.setProperty('--rx', ((0.5 - py) * 2 * MAX).toFixed(2) + 'deg');
+          card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+          card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+          card.style.setProperty('--sheen', '1');
+        });
+      });
+      card.addEventListener('pointerleave', function () {
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+        card.style.setProperty('--sheen', '0');
       });
     });
   }
@@ -1267,6 +1295,7 @@
     initNavMenu();
     initParallax();
     initDropdowns();
+    initCardTilt();
     initRoleFolder();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)

@@ -526,7 +526,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
   background:color-mix(in srgb,var(--emerald) 7%, var(--surface));
 }
 /* ---------------- feature folder-cards ---------------- */
-.feature-grid{display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:46px;margin-top:52px}
+.feature-grid{perspective:1400px;display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:46px;margin-top:52px}
 .fcard{
   grid-column:span 2;
   position:relative;background:var(--surface);
@@ -534,10 +534,18 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
   border-radius:0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
   padding:26px 26px 22px;box-shadow:var(--shadow);
   display:flex;flex-direction:column;gap:10px;
-  transition:transform .3s,box-shadow .3s;
+  transform:translateY(var(--lift,0px)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:transform .22s ease-out,box-shadow .3s;
+}
+/* light catches the paper as it tilts */
+.fcard::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(460px circle at var(--mx,50%) var(--my,50%),
+    rgba(255,255,255,.32), transparent 62%);
+  opacity:var(--sheen,0);transition:opacity .35s ease;mix-blend-mode:soft-light;
 }
 .fcard:nth-child(1),.fcard:nth-child(2){grid-column:span 3}
-.fcard:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.fcard:hover{--lift:-5px;box-shadow:var(--shadow-lg)}
 /* the folder tab IS the kicker — same paper as the card, sized to its text,
    overlapping the card border by 1px so they read as one piece */
 .fcard-kicker{
@@ -845,7 +853,7 @@ footer .wrap{position:relative;z-index:2}
 .faq details p{padding:0 24px 20px;color:var(--ink-soft);font-size:14.5px;max-width:65ch}
 
 /* ---------------- contact: the twirl behind the form ---------------- */
-.contact-twirl{position:absolute;left:0;right:0;top:-330px;bottom:-120px;height:auto;overflow:visible;z-index:0}
+.contact-twirl{position:absolute;left:0;right:0;top:auto;bottom:0;height:600px;overflow:hidden;z-index:0}
 .contact-twirl .ribbon-line,.contact-twirl .ribbon-echo{stroke-width:36}
 .contact-twirl .ribbon-echo{transform:translate(9px,12px)}
 .contact-twirl svg{overflow:visible}

@@ -79,6 +79,12 @@ Drop into `site/assets/img/…`; gradients are the stand-ins until then:
 - [x] One responsive band system: dynamic loop on desktop, sweep BELOW the lockup on
       phones; old arc band deleted; ribbon viewBox has stroke headroom (no cropping)
 - [x] Green frost tint falling from the top edge under the nav
+- [x] FULL CONTENT REPOSITIONING to the real product (docs/product-brief.md is the
+      source of truth): evaluation-led feature cards, teachers-first roles, loop-true
+      ribbon words and chat answers, pilot-posture pricing (no invented ₹), letter
+      detail, SEO metadata — under the founder's rules: outcome/people-led with AI
+      embedded in details (never "AI on the face"), situational empathy without
+      sentimental wording, and no promises beyond what ships (analytics stripped)
 - [ ] Real teacher testimonial quotes + detailed product reviews (founder preparing
       product documentation — testimonials rework waits on it)
 - [x] About: chalkboard + classroom-gang parallax scene above the letter (founder art,

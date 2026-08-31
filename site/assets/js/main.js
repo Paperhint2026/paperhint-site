@@ -479,12 +479,10 @@
   var SVGNS = 'http://www.w3.org/2000/svg';
 
   var BOWL_TOKENS = [
-    ['Timetables,', 1], ['academics,', 0], ['a', 0], ['digital', 1], ['library,', 1],
-    ['question', 1], ['papers', 1], ['and', 0], ['parent', 1], ['updates', 1], ['\u2014', 0],
-    ['Paperhint', 0], ['digitises', 0], ['every', 0], ['resource', 0], ['a', 0], ['school', 0],
-    ['runs', 0], ['on,', 0], ['and', 0], ['gives', 0], ['admins,', 0], ['teachers,', 0],
-    ['students', 0], ['and', 0], ['parents', 0], ['exactly', 0], ['the', 0], ['slice', 0],
-    ['that', 0], ['belongs', 0], ['to', 0], ['them', 0], ['\u00B7', 0]
+    ['Photograph', 1], ['the', 0], ['answer', 1], ['sheets', 1], ['\u2014', 0],
+    ['Paperhint', 0], ['checks', 0], ['every', 0], ['answer,', 0], ['scores', 0], ['on', 0], ['your', 0], ['rubric,', 1],
+    ['drafts', 0], ['question', 1], ['papers', 1], ['and', 0], ['homework', 1],
+    ['from', 0], ['your', 0], ['own', 0], ['notes,', 1], ['and', 0], ['tells', 0], ['the', 0], ['parents', 1], ['\u00B7', 0]
   ];
 
   /* ---- the curve, drawn to fit whatever the hero currently is ---- */
@@ -575,9 +573,10 @@
         H = g.H;
         d = twirlPath(g.W, H, wrap);
       } else if (compact()) {
-        /* phones: the band lives BELOW the lockup, never across it */
+        /* phones: the band lives below EVERYTHING in the lockup —
+           including the trust strip — never across any text */
         var hero = wrap.parentNode;
-        var anchor = document.querySelector('.hero-note');
+        var anchor = document.querySelector('.hero .trust') || document.querySelector('.hero-note');
         var top = anchor
           ? Math.round(anchor.getBoundingClientRect().bottom - hero.getBoundingClientRect().top + 18)
           : 420;
@@ -742,11 +741,13 @@
      The UI is final; the brain is swappable. Wire a real backend by replacing
      window.PaperhintChat.adapter with an async (question, history) => reply. */
   var CANNED = [
-    [/pric|cost|fee|plan/i, 'Pricing is per enrolled student per year \u2014 Starter \u20b949, School \u20b939 (most schools), District custom. One licence covers admins, teachers, students and parents. Details on the pricing page.'],
-    [/parent|email|notif/i, 'When a teacher publishes marks, homework or an overview, the right parents get an email automatically \u2014 no app to install, no group chats.'],
-    [/timetable|schedule|clash/i, 'Feed in teachers, subjects, rooms and periods \u2014 Paperhint generates a clash-free timetable and syncs it to the school calendar. Substitutions take one tap.'],
-    [/paper|question|exam|test/i, 'Teachers build question papers from their own notes library \u2014 pick chapters, weightage and difficulty, and the paper, blueprint and answer key are drafted together.'],
-    [/demo|start|onboard|migrat/i, 'Book a demo from the button above \u2014 we set up one of your classes beforehand so you see your school, not a sample one. Migration is included on School and District plans.']
+    [/evaluat|grade|grading|answer sheet|scan|correct/i, 'Photograph answer sheets with the mobile app \u2014 Paperhint reads the whole PDF, checks each answer against its question, and scores it on your rubric, the same way for every student. You review and approve.'],
+    [/pric|cost|fee|plan/i, 'Pricing is per student per school, and we\u2019re setting it with our founding pilot schools right now \u2014 book a demo and we\u2019ll work it out together.'],
+    [/parent|notif|whatsapp|absen/i, 'Parents are notified the moment homework is assigned, and absences read from the attendance sheet reach them the same day \u2014 no group-chat archaeology.'],
+    [/attendance/i, 'Mark attendance on the paper sheet you already use and scan it in \u2014 or manage it manually in the app. Absences can notify parents automatically.'],
+    [/paper|question|exam|test|homework/i, 'Question papers \u2014 with blueprint and answer key \u2014 are drafted from the syllabus and the teacher\u2019s own notes. Homework works the same way, and parents hear the moment it\u2019s assigned.'],
+    [/note|copilot|library|share/i, 'Teachers prepare notes with the copilot in chat, or write and paste their own. Everything lands in their library \u2014 private by default, shareable to everyone on the school\u2019s email.'],
+    [/demo|start|onboard|migrat|pilot/i, 'We\u2019re onboarding founding schools hands-on right now. Book a demo \u2014 we\u2019ll set up one of your classes beforehand so you see your school, not a sample one.']
   ];
 
   window.PaperhintChat = {
@@ -1111,40 +1112,40 @@
 
   /* ---------------- role folder: tabs over one shared panel ---------------- */
   var ROLES = {
-    admins: {
-      lead: 'Run the school A to Z, in one place',
-      cta: 'Explore admin tools',
+    teachers: {
+      lead: 'Evaluate, prepare, teach — the grind is handled',
+      cta: 'See it on your own answer sheets',
       items: [
-        ['Timetables without the clashes', 'Generate a clash-free timetable across every section, room and lab, then publish it to the school calendar in one action.'],
-        ['One record per person', 'Teachers, students, sections and the full academic year live in one console instead of eleven spreadsheets.'],
-        ['See teacher load at a glance', 'Balance workloads and free periods before term starts, and fill absences in a tap.']
+        ['Answer sheets, evaluated', 'Photograph them with the app; every answer is checked against its question and scored on your rubric — you review and approve.'],
+        ['Papers and homework from your notes', 'Question papers with blueprint and answer key, drafted from the syllabus and your own library. Homework notifies parents on assignment.'],
+        ['A copilot and a shared library', 'Prepare teaching notes in chat or paste your own; keep them private or share to everyone on your school\u2019s email.']
       ]
     },
-    teachers: {
-      lead: 'Your notes, your papers, your strategy',
-      cta: 'Explore teacher tools',
+    admins: {
+      lead: 'The portal that sets up every desk',
+      cta: 'Explore the school portal',
       items: [
-        ['Question papers in minutes', 'Build a paper from your own library — blueprint, weightage and answer key come with it.'],
-        ['A knowledge base that compounds', 'Notes tagged by class and chapter, reusable every year instead of rewritten every year.'],
-        ['Know which topic to reteach', 'Topic-level mastery shows where a class actually lost marks, not just who scored what.']
+        ['Classes, sections, students, teachers', 'Build and manage the school\u2019s structure — the people layer everything else runs on.'],
+        ['Subjects and their books', 'Attach books and materials to each subject; they flow to every teacher in that department, seeding their libraries.'],
+        ['The school around it', 'Timetables, academic records and the calendar — organised, without being the whole story.']
       ]
     },
     students: {
-      lead: 'Know where you stand, and what to read',
-      cta: 'Explore the student view',
+      lead: 'The same rubric for everyone',
+      cta: 'How scoring works',
       items: [
-        ['Performance you can actually see', 'Marks become topic-level mastery, shared with you instead of hidden in a register.'],
-        ['Every note your teacher shares', 'Class notes, worksheets and books, visible the moment a teacher publishes them.'],
-        ['Homework and timetable in one place', 'What is due, what is next, and what changed this week.']
+        ['Fair marks, faster', 'Every answer is scored against the same rubric, the same way, for the whole class.'],
+        ['Results that build a record', 'Each evaluation is recorded to the student, exam over exam.'],
+        ['Homework that\u2019s clear', 'What was assigned and when it\u2019s due — the same message the parents saw.']
       ]
     },
     parents: {
-      lead: 'Told before you have to ask',
+      lead: 'You know the moment it\u2019s assigned',
       cta: 'See parent updates',
       items: [
-        ['Marks arrive by email', 'When a teacher publishes results, the right parents are notified — no group chats.'],
-        ['Homework, without the diary', 'Assignments and due dates reach you as they are set.'],
-        ['Plain-language overviews', 'Performance summaries written by the teacher who teaches your child.']
+        ['Homework, delivered to you', 'The moment a teacher assigns homework, you\u2019re notified — so it actually gets done at home.'],
+        ['Absences, flagged same-day', 'Attendance is read straight from the class sheet; you hear about an absence without asking.'],
+        ['A direct line to the teacher', 'Updates come to where you already are — no noticeboard archaeology.']
       ]
     }
   };
@@ -1178,7 +1179,7 @@
       });
     });
 
-    render('admins');
+    render('teachers');
   }
 
   /* ---------------- scroll reveal ---------------- */

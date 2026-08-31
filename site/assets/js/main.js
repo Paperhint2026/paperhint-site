@@ -479,10 +479,11 @@
   var SVGNS = 'http://www.w3.org/2000/svg';
 
   var BOWL_TOKENS = [
-    ['Photograph', 1], ['the', 0], ['answer', 1], ['sheets', 1], ['\u2014', 0],
-    ['Paperhint', 0], ['checks', 0], ['every', 0], ['answer,', 0], ['scores', 0], ['on', 0], ['your', 0], ['rubric,', 1],
-    ['drafts', 0], ['question', 1], ['papers,', 1], ['homework', 1], ['and', 0], ['teaching', 1], ['notes,', 1],
-    ['and', 0], ['tells', 0], ['the', 0], ['parents', 1], ['\u00B7', 0]
+    ['Teaching', 1], ['is', 0], ['the', 0], ['job', 1], ['\u2014', 0],
+    ['Paperhint', 0], ['drafts', 0], ['the', 0], ['teaching', 1], ['notes,', 1],
+    ['sets', 0], ['the', 0], ['question', 1], ['papers,', 1],
+    ['keeps', 0], ['the', 0], ['parents', 1], ['posted,', 0],
+    ['and', 0], ['marks', 1], ['every', 0], ['answer', 1], ['sheet', 1], ['\u00B7', 0]
   ];
 
   /* ---- the curve, drawn to fit whatever the hero currently is ---- */
@@ -1131,12 +1132,12 @@
   /* ---------------- role folder: tabs over one shared panel ---------------- */
   var ROLES = {
     teachers: {
-      lead: 'Evaluate, prepare, teach — the grind is handled',
+      lead: 'Prepare, teach — the paperwork is handled',
       cta: 'See it on your own answer sheets',
       items: [
-        ['Answer sheets, evaluated', 'Photograph them with the app; every answer is checked against its question and scored on your rubric — you review and approve.'],
-        ['Papers and homework from your notes', 'Question papers with blueprint and answer key, drafted for your syllabus \u2014 your notes add the context. Homework notifies parents on assignment.'],
-        ['A copilot and a shared library', 'Prepare teaching notes in chat or paste your own; keep them private or share to everyone on your school\u2019s email.']
+        ['Teaching notes, prepared with you', 'Ask the copilot for notes you can actually teach with, or paste your own; keep them private or share to everyone on your school\u2019s email.'],
+        ['Papers and homework for your syllabus', 'Question papers with blueprint and answer key, drafted for your syllabus \u2014 your notes and subject books tune them. Homework notifies parents on assignment.'],
+        ['Answer sheets, marked for you', 'Photograph them with the app; every answer is checked against its question and scored on your rubric \u2014 you review and approve.']
       ]
     },
     admins: {

@@ -541,6 +541,12 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 }
 /* ---------------- feature folder-cards ---------------- */
 .feature-grid{perspective:1400px;display:grid;grid-template-columns:repeat(6,1fr);column-gap:18px;row-gap:46px;margin-top:52px}
+/* section 2 runs as two rooms — a header introduces each group of cards */
+.fgroup-head{margin-top:58px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.fgroup-head h3{font-family:var(--font-display);font-weight:500;font-size:24px;letter-spacing:-.02em}
+.fgroup-head p{color:var(--muted);font-size:16px}
+.fgroup-head + .feature-grid{margin-top:26px}
+.fg-half .fcard,.fg-half .fcard:nth-child(1),.fg-half .fcard:nth-child(2){grid-column:span 3}
 .fcard{
   scroll-margin-top:130px;   /* deep links land clear of the fixed nav */
   grid-column:span 2;
@@ -580,12 +586,14 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 .fcard h3{font-family:var(--font-display);font-size:23px;font-weight:500;letter-spacing:-.02em;line-height:1.15;margin-top:6px}
 .fcard p{color:var(--ink-soft);font-size:14px;line-height:1.55}
 .fcard-visual{
-  margin-top:auto;padding:14px;border-radius:12px;
+  margin-top:auto;flex:1;display:flex;flex-direction:column;justify-content:center;gap:0;
+  padding:14px;border-radius:12px;
   background:color-mix(in srgb,var(--tint,var(--emerald)) 6%, var(--surface-2));
   border:1px solid var(--line-soft);
 }
 @media (max-width:960px){
   .feature-grid{grid-template-columns:1fr;gap:34px}
+  .fg-half .fcard,.fg-half .fcard:nth-child(1),.fg-half .fcard:nth-child(2){grid-column:span 1}
   .fcard,.fcard:nth-child(1),.fcard:nth-child(2){grid-column:span 1}
 }
 

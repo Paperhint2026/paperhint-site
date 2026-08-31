@@ -833,7 +833,7 @@
      light reflection follows it across the paper. Fine pointers only. */
   function initCardTilt() {
     if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    var MAX = 3.5; /* degrees — around the edges, barely */
+    var MAX = 1.4; /* degrees — around the edges, barely */
     document.querySelectorAll('.fcard').forEach(function (card) {
       var raf = null;
       card.addEventListener('pointermove', function (e) {

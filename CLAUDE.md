@@ -83,5 +83,7 @@ Drop into `site/assets/img/…`; gradients are the stand-ins until then:
       product documentation — testimonials rework waits on it)
 - [ ] og-cover.png social image (referenced at assets/img/og-cover.png — needs the artwork)
 - [ ] Name the theme + extract shareable theme.css token sheet for the product
-- [ ] Amplemarket font-size structure audit across ALL sections (H1 done; verify H2/H3/body vs theirs)
+- [x] Amplemarket type-scale audit, measured on their live site at 1440px: H1 56/1.0/-5%,
+      H2 44/-4%, card H3 24, sub 20 — ours aligned; ALL weights unified to Geist Medium 500
+      per founder direction (font link trimmed to 400..500)
 - [ ] Real product screenshots to replace the mock app in the spec tabs

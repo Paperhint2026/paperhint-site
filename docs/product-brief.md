@@ -34,11 +34,12 @@ advanced, productively.
    - Teacher asks AI to create class notes or teaching notes they can
      actually teach with. Emphasis on producing *productive* notes.
 
-5. **The Library (personal repository, shareable)**
+5. **The Library + Shared Library (BUILT)**
    - Every note and reference saves into the teacher's own repository
-     ("my notebook").
-   - Notes can be kept private or **shared publicly** — usable by anyone,
-     from any class.
+     ("my notebook"). Private by default.
+   - **Shared Library** (already built): upload or share a note and it is
+     visible to everyone in the org — anyone with the school's email
+     address, any class. Internal to the school, not public internet.
    - The library feeds everything: teaching, question papers, homework.
 
 6. **Parent connect (notification system)**
@@ -96,6 +97,19 @@ AI-first under the hood, **never "AI on the face."** The product (and the
 site) leads with outcomes; AI is highlighted subtly, in the details of how
 each thing gets done — embedded, not shouted. Hero stays outcome-led.
 
+## The emotional core (founder-set)
+
+Outcome-led AND people-led: the product empathizes with teachers who
+carry answer sheets home — correcting through their evenings instead of
+being with family — and with schools stressed and slowed by evaluation
+cycles. That empathy IS the goal of Paperhint; the AI is the engine that
+serves it. Copy leads with the person, the relief, the evening returned.
+
+## Far-future (context only, never on the site)
+
+A light edition for tuition teachers — limited seat management, smaller
+credits. Far-fetched; recorded so nobody designs against it accidentally.
+
 ## Business & go-to-market (founder-set)
 
 - **Team**: designer + tech. Build something genuinely effective; the twin
@@ -103,9 +117,8 @@ each thing gets done — embedded, not shouted. Hero stays outcome-led.
 - **Pricing: NOT settled.** Constraint: recover at least ~50% margin over
   the true cost base — servers, data management, security, onboarding,
   maintenance. Until modelled, the site must not present prices as real.
-  Content-pass plan: keep the three-tier structure as shape, but shift the
-  page to pilot-programme posture (numbers softened/removed, talk-to-us
-  led). Founder to confirm.
+  Founder likes the per-student-per-school structure; keep it as the
+  shape. Content pass: pilot-programme posture, no hard numbers.
 - **Stage**: "still in garage." Sequence: (1) hand-onboard a few contact
   schools as pilots, learn; (2) SILENT LAUNCH via LinkedIn and similar;
   (3) later, the louder market. The site's job today: support pilot
@@ -114,4 +127,3 @@ each thing gets done — embedded, not shouted. Hero stays outcome-led.
 
 ## Open questions for the founder
 
-- Is the public notes sharing live at launch or roadmap?

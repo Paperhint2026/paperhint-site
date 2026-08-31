@@ -253,7 +253,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   border:1px solid var(--nav-line);border-radius:20px;padding:10px;
   flex-direction:column;gap:2px;
   opacity:0;transform:translateY(-8px);
-  transition:opacity .3s ease, transform .35s cubic-bezier(.3,.8,.24,1);
+  /* closed = gone: an opacity-0 popover still swallows taps without these */
+  visibility:hidden;pointer-events:none;
+  transition:opacity .3s ease, transform .35s cubic-bezier(.3,.8,.24,1), visibility .3s;
 }
 .nav-menu a{padding:13px 16px;border-radius:12px;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)}
 .nav-menu a:hover{background:var(--emerald-tint)}
@@ -266,7 +268,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 }
 .nav-menu .menu-theme:hover{background:var(--emerald-tint)}
 .nav-menu .menu-theme .theme-btn{width:34px;height:34px;pointer-events:none;display:grid}
-.nav.menu-open .nav-menu,.nav-menu.open{opacity:1;transform:none}
+.nav.menu-open .nav-menu,.nav-menu.open{opacity:1;transform:none;visibility:visible;pointer-events:auto}
 
 .nav-links a{padding:7px 13px;border-radius:9px;font-family:var(--font-display);font-size:14.5px;font-weight:500;color:var(--ink-soft);transition:.2s}
 .nav-links a:hover{color:var(--ink);background:var(--emerald-tint)}

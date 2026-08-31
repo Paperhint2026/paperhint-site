@@ -74,6 +74,20 @@ advanced, productively.
 Timetables, academics/marks records, calendar — the school OS around the
 teaching core. Present, useful, secondary in the story.
 
+## Shipping now vs. on the way (founder-set boundary)
+
+- **Shipping now** = everything in the primary modules above. Each
+  evaluation is recorded against the student, so exam-by-exam results
+  accumulate per student as a matter of course.
+- **On the way (do NOT promise on the site)**: the student-performance
+  dashboard (student + whole-class views) and intelligent insights
+  ("where this student should focus"). Direction is real, mechanism not
+  settled — context only, so the site never over-claims.
+- Existing site copy that violates this and must be softened in the
+  content pass: "topic-level mastery & analytics" (pricing bullets),
+  "Every mark, mapped to mastery" (feature card), mastery claims in the
+  roles copy and chat answers.
+
 ## Positioning rule (founder-set)
 
 AI-first under the hood, **never "AI on the face."** The product (and the

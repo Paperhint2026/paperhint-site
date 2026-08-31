@@ -103,6 +103,16 @@ sellable — but the *reason to buy* is the loop above. Mission framing:
 
 ---
 
+## Shipping vs. roadmap
+
+Everything in the loop and modules above **ships now**. Evaluations are
+recorded per student, so results naturally accumulate exam over exam.
+The performance **dashboard** and **intelligent insights** (student and
+class views, "focus here" guidance) are the stated direction — not yet
+figured out, and deliberately **not promised on the site**. My current
+copy claims "mastery analytics" in places; the content pass strips that
+down to what ships.
+
 ## What this means for the website (pending your go)
 
 1. **Hero** — sub-copy leads with AI evaluation + creation; the "NEW"

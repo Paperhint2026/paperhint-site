@@ -536,13 +536,21 @@
     var grad = document.createElementNS(SVGNS,'linearGradient');
     grad.setAttribute('id','rbgrad'); grad.setAttribute('gradientUnits','userSpaceOnUse');
     grad.setAttribute('x1',0); grad.setAttribute('y1',0); grad.setAttribute('x2',TW); grad.setAttribute('y2',0);
-    for (i = 0; i < N; i++){
-      var a = document.createElementNS(SVGNS,'stop');
-      a.setAttribute('offset', i/N); a.setAttribute('stop-color', SEG[i].c);
-      var b = document.createElementNS(SVGNS,'stop');
-      b.setAttribute('offset', (i+1)/N); b.setAttribute('stop-color', SEG[i].c);
-      grad.appendChild(a); grad.appendChild(b);
+    /* flat through each slide; a short crossfade only at the joints —
+       orange melts into violet right where the segments shake hands */
+    var BLEND = 0.05 / N;
+    function stop(off, col){
+      var st = document.createElementNS(SVGNS,'stop');
+      st.setAttribute('offset', Math.max(0, Math.min(1, off)));
+      st.setAttribute('stop-color', col);
+      grad.appendChild(st);
     }
+    stop(0, SEG[0].c);
+    for (i = 1; i < N; i++){
+      stop(i/N - BLEND, SEG[i-1].c);
+      stop(i/N + BLEND, SEG[i].c);
+    }
+    stop(1, SEG[N-1].c);
     defs.appendChild(grad); svg.appendChild(defs);
     var sw = innerWidth < 700 ? 26 : 40;
     var echo = document.createElementNS(SVGNS,'path');

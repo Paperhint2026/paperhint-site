@@ -28,9 +28,9 @@
   #deck{position:fixed;inset:0;overflow:hidden}
   #track{position:absolute;top:0;left:0;height:100%;display:flex;
     transition:transform .85s cubic-bezier(.3,.8,.24,1);will-change:transform}
-  .slide{position:relative;width:100vw;height:100%;flex:0 0 100vw;
+  .slide{position:relative;z-index:2;width:100vw;height:100%;flex:0 0 100vw;
     display:flex;flex-direction:column;justify-content:center;align-items:center;
-    padding:6vh 7vw 22vh;text-align:center}
+    padding:6vh 6vw;text-align:center}
   .slide .inner{max-width:920px;position:relative;z-index:3}
 
   .kicker{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;
@@ -46,7 +46,10 @@
     background:var(--surface);border:1px solid var(--line-soft);
     border-radius:0 24px 24px 24px;text-align:left;
     padding:clamp(28px,4.5vh,52px) clamp(26px,4vw,56px);
-    max-width:min(880px,90vw);width:100%;
+    width:min(880px,90vw);max-width:none;
+    /* every card is the same box — content centers inside it */
+    min-height:min(600px,74vh);
+    display:flex;flex-direction:column;justify-content:flex-start;
     box-shadow:0 30px 70px -34px rgba(20,32,26,.22);
   }
   .inner.card .kicker{
@@ -144,7 +147,8 @@
   .m-grid s.c2{background:color-mix(in srgb,var(--violet) 14%, transparent);color:var(--violet);border-color:transparent}
 
   /* mascots */
-  .mascot{position:absolute;z-index:2;pointer-events:none;filter:drop-shadow(0 6px 14px rgba(20,32,26,.14))}
+  .inner.card .mascot.fill{top:auto;bottom:16px;right:30px;width:98px}
+  .mascot{position:absolute;z-index:4;pointer-events:none;filter:drop-shadow(0 6px 14px rgba(20,32,26,.14))}
 
   /* ===== slide 1 intro: rosette drops + spins, wordmark expands ===== */
   .s1 .inner{display:flex;flex-direction:column;align-items:center}
@@ -221,7 +225,8 @@
   .navbtn[disabled]{opacity:0;pointer-events:none}
   #prev{left:18px}#next{right:18px}
   @media (max-width:640px){
-    .slide{padding:4vh 6vw 24vh}
+    .slide{padding:4vh 5vw}
+    .inner.card{min-height:min(560px,70vh)}
     .lockup{height:60px}.lockup .mark{width:50px;height:50px;flex-basis:50px}
     .word b{font-size:42px}
     .row{gap:12px;padding:10px 0}
@@ -258,6 +263,8 @@
     <section class="slide">
       <div class="inner card">
         <span class="kicker">The week today</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-09.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-07.png" width="78" style="top:-47px;right:54px" alt="">
         <h1>Count the hours your school already spends</h1>
         <div class="rows">
           <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><div class="rt"><b>Correction</b><span>evenings and Sundays, after every exam — the same red pen, class after class</span></div></div>
@@ -267,13 +274,13 @@
         </div>
         <p class="note">Every one of these is already paid for — in teacher-hours.</p>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-07.png" width="96" style="left:9vw;bottom:26vh" alt="">
     </section>
 
     <!-- 3 · the scattered spend -->
     <section class="slide">
       <div class="inner card">
         <span class="kicker">The scattered spend</span>
+        <img class="mascot" src="../assets/img/stickers/char-14.png" width="78" style="top:-47px;right:86px" alt="">
         <h1>You already pay for all of it — in pieces</h1>
         <div class="rows">
           <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="rt"><b>Correction days</b><span>extra staff-hours bought back, every exam</span></div></div>
@@ -284,19 +291,23 @@
         </div>
         <p class="sub" style="margin-top:26px">Five spends. None of them talking to each other.</p>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-14.png" width="100" style="right:10vw;bottom:23vh" alt="">
     </section>
 
     <!-- 4 · the idea -->
     <section class="slide">
       <div class="inner card">
         <span class="kicker">The idea</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-13.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-03.png" width="78" style="top:-47px;right:60px" alt="">
         <h1>One place — because it's all the same paper</h1>
-        <p class="sub">The answer sheet, the attendance register, the question paper — Paperhint works from the paper your school already produces. Nothing new to type, nothing to change on day one.</p>
-        <p class="note">Exams stay on pen and paper — Paperhint isn't an exam portal. It reads the exam you already run. A phone and a browser, no new hardware.</p>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></span><div class="rt"><b>The answer sheet</b><span>photographed with the app — marked, recorded, returned</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg></span><div class="rt"><b>The attendance register</b><span>the same sheet you keep today, scanned in</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><div class="rt"><b>The question paper</b><span>drafted here, printed as always — exams stay on pen and paper</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="rt"><b>Nothing to migrate</b><span>day one changes nothing — a phone and a browser, no new hardware</span></div></div>
+        </div>
+        <p class="note">Paperhint isn't a digital exam portal. It reads the exam you already run.</p>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-03.png" width="104" style="left:11vw;bottom:22vh" alt="">
-      <img class="mascot" src="../assets/img/stickers/char-12.png" width="88" style="right:12vw;bottom:28vh" alt="">
     </section>
 
     <!-- 5 · why AI as a layer -->
@@ -344,6 +355,7 @@
     <section class="slide">
       <div class="inner card">
         <span class="kicker">At the teacher's desk</span>
+        <img class="mascot" src="../assets/img/stickers/char-02.png" width="78" style="top:-47px;right:56px" alt="">
         <h1>The teaching job, brought together</h1>
         <div class="rows">
           <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.94 15.5a2 2 0 0 0-1.44-1.44L2.37 12.5a.5.5 0 0 1 0-.96L8.5 9.94a2 2 0 0 0 1.44-1.44l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96l-6.13 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/></svg></span><div class="rt"><b>Teaching notes &amp; copilot</b><span>notes you can actually teach with — drafted, simplified, extended</span></div></div>
@@ -358,13 +370,13 @@
           <div class="m-line"><b>&#8721; Scored on rubric</b> recorded to each student<span>18/20</span></div>
         </div>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-02.png" width="100" style="right:9vw;bottom:24vh" alt="">
     </section>
 
     <!-- 7 · the admin job, together -->
     <section class="slide">
       <div class="inner card">
         <span class="kicker">In the school office</span>
+        <img class="mascot" src="../assets/img/stickers/char-05.png" width="78" style="top:-47px;right:68px" alt="">
         <h1>The administrative job, brought together</h1>
         <div class="rows">
           <div class="row hero-row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg></span><div class="rt"><b>Attendance scanning</b><span>the paper register you already use, scanned in — live today</span></div></div>
@@ -378,28 +390,31 @@
           <div class="m-line"><b>&#8594; IX&#8209;A &middot; Physics</b> allotted to R.&#8202;Nair<span>&#10003;</span></div>
         </div>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-05.png" width="100" style="left:9vw;bottom:24vh" alt="">
     </section>
 
     <!-- 8 · around the classroom -->
     <section class="slide">
       <div class="inner card">
         <span class="kicker">Around the classroom</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-10.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-17.png" width="78" style="top:-47px;right:74px" alt="">
         <h1>Students and parents, without asking twice</h1>
         <div class="rows">
           <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><div class="rt"><b>Student records</b><span>every evaluation recorded, exam over exam — a record that builds itself</span></div></div>
           <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><div class="rt"><b>Parent notifications</b><span>homework, marks and absences — the moment they happen</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><div class="rt"><b>Notes, where students look</b><span>the notes a teacher shares are right there for the class</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="rt"><b>The same rubric for everyone</b><span>fair marks — every answer scored the same way for the whole class</span></div></div>
         </div>
         <p class="note">Two personas run the product — teachers and the office. Everyone else simply sees their own school.</p>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-17.png" width="98" style="right:11vw;bottom:26vh" alt="">
-      <img class="mascot" src="../assets/img/stickers/char-10.png" width="86" style="left:12vw;bottom:22vh" alt="">
     </section>
 
     <!-- 9 · the arithmetic -->
     <section class="slide">
       <div class="inner card">
         <span class="kicker">What you save</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-21.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-12.png" width="78" style="top:-47px;right:62px" alt="">
         <h1>Count it in your numbers, not ours</h1>
         <div class="rows">
           <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="rt"><b>Correction hours</b><span>sections &times; exams &times; evenings of red pen — becomes minutes of review and approval</span></div></div>
@@ -415,6 +430,8 @@
     <section class="slide">
       <div class="inner card">
         <span class="kicker">Why partner with us</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-19.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-16.png" width="78" style="top:-47px;right:70px" alt="">
         <h1>Founding schools shape Paper<em class="wm">h</em>int</h1>
         <div class="rows">
           <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div class="rt"><b>Built with schools</b><span>teachers-first, not ERP-first — day one changes nothing, so adoption actually survives</span></div></div>
@@ -423,13 +440,14 @@
           <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="rt"><b>Founding pricing</b><span>set together, per student — and it stays yours</span></div></div>
         </div>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-16.png" width="98" style="right:10vw;bottom:24vh" alt="">
     </section>
 
     <!-- 11 · where we are -->
     <section class="slide">
       <div class="inner card">
         <span class="kicker">Where we are</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-04.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-20.png" width="78" style="top:-47px;right:58px" alt="">
         <h1>Founding schools, onboarded hands-on</h1>
         <div class="rows">
           <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg></span><div class="rt"><b>Live today</b><span>attendance scanning already runs in schools</span></div></div>
@@ -439,7 +457,6 @@
         </div>
         <p class="note">Bring one class and one exam — we'll run them through Paperhint in front of you.</p>
       </div>
-      <img class="mascot" src="../assets/img/stickers/char-20.png" width="104" style="right:10vw;bottom:23vh" alt="">
     </section>
 
     <!-- 12 · close -->

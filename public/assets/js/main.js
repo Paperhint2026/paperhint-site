@@ -502,15 +502,8 @@
       anchor = lock ? lock.lastElementChild : null;
     }
     var drop = parseFloat(wrap.getAttribute('data-drop')) || 66;
-    /* The band's SIZE is its own (tied to the column width), and its
-       PLACEMENT follows the lockup — so moving the lockup down the page
-       slides the loop down with it instead of inflating it. */
-    var hero = wrap.parentNode.getBoundingClientRect();
-    var H = Math.round(Math.max(420, Math.min(W * 0.38, 620)));
-    var sweep = anchor
-      ? Math.round(anchor.getBoundingClientRect().bottom - hero.top + drop)
-      : Math.round(H * 0.95);
-    return { W: W, H: H, top: Math.round(sweep - H * 0.95) };
+    var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + drop) : Math.round(W * 0.5);
+    return { W: W, H: Math.max(300, Math.min(H, 1100)) };
   }
 
   /* enters upper-left, sweeps under the lockup, curls a loop in the right
@@ -594,7 +587,7 @@
         H = Math.max(110, Math.round(g.W * 0.3));
         d = sweepPath(g.W, H);
       } else {
-        wrap.style.top = g.top + 'px';
+        wrap.style.top = '';
         H = g.H;
         d = loopPath(g.W, H);
       }
@@ -1252,21 +1245,7 @@
       });
     }, { rootMargin: '0px 0px -18% 0px', threshold: 0.12 });
 
-    /* Observe only once layout has settled. On first paint the display
-       font hasn't loaded and the hero measures short, so blocks below it
-       are briefly inside the viewport — the observer would fire for them
-       and they'd be revealed before the reader ever scrolls. */
-    function observeAll() {
-      items.forEach(function (el) { io.observe(el); });
-    }
-    var ready = (document.fonts && document.fonts.ready) || Promise.resolve();
-    var started = false;
-    function start() {
-      if (started) return; started = true;
-      requestAnimationFrame(function () { requestAnimationFrame(observeAll); });
-    }
-    ready.then(start);
-    setTimeout(start, 1200);          /* fallback if fonts never resolve */
+    items.forEach(function (el) { io.observe(el); });
   }
 
 

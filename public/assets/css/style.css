@@ -300,11 +300,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* the hero owns the first screen, so everything after it is genuinely
    scrolled to — the reveal animations never fire on load */
 .hero{
-  position:relative;padding:132px 0 100px;
-  /* the hero owns the first screen and the lockup rides its centre, so
-     the band follows the lockup down and section two starts right after
-     it — below the fold, with no dead space between */
-  min-height:88svh;display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+  /* The band fills the hero's lower half, so the lockup sits ABOVE the
+     geometric centre — that's what reads as centred. Its top scales with
+     the viewport; the band follows it down and section two starts after. */
+  padding:clamp(132px, 19vh, 216px) 0 100px;
+  min-height:88svh;
 }
 .hero-content{position:relative;z-index:4;text-align:center;width:min(585px,92vw)}
 .tagline{

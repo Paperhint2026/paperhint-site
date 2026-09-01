@@ -416,15 +416,14 @@ h1.display em{
    NEAT paints the canvas; .hero-gradient is the no-JS fallback. */
 .hero-stage{position:relative;height:0;z-index:0}
 .stage-glow{
-  position:absolute;z-index:0;left:50%;
-  /* 47vw base × the 1.38 scale below = 65% of the viewport width */
+  position:absolute;z-index:0;left:0;
+  /* anchored at the left edge; 47vw × the 1.38 scale below carries it
+     about 65% across, so it runs from the left to the centre */
   top:-40px;width:47vw;height:560px;overflow:hidden;pointer-events:none;
-  /* the wash's internal composition is untouched — the whole stage is
-     simply scaled up and lifted so it reaches the centre of the hero */
-  transform:translateX(-50%) scale(1.38);transform-origin:50% 34%;
-  /* the box no longer spans the page, so its sides are feathered out */
-  -webkit-mask:linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-  mask:linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  transform:scale(1.38);transform-origin:0% 34%;
+  /* full strength at the left edge, dissolving as it nears the middle */
+  -webkit-mask:linear-gradient(90deg, #000 0%, #000 58%, transparent 100%);
+  mask:linear-gradient(90deg, #000 0%, #000 58%, transparent 100%);
   filter:saturate(.9);opacity:.5;
 }
 [data-theme="dark"] .stage-glow{opacity:.28;filter:saturate(.7)}

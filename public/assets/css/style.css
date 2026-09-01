@@ -301,9 +301,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
    scrolled to — the reveal animations never fire on load */
 .hero{
   position:relative;padding:132px 0 100px;
-  /* extra room falls BELOW the lockup, so the ribbon keeps the geometry
-     it was tuned to and only the fold moves */
-  min-height:100svh;
+  /* the hero owns the first screen and the lockup rides its centre, so
+     the band follows the lockup down and section two starts right after
+     it — below the fold, with no dead space between */
+  min-height:88svh;display:flex;flex-direction:column;justify-content:center;
 }
 .hero-content{position:relative;z-index:4;text-align:center;width:min(585px,92vw)}
 .tagline{

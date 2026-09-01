@@ -502,8 +502,15 @@
       anchor = lock ? lock.lastElementChild : null;
     }
     var drop = parseFloat(wrap.getAttribute('data-drop')) || 66;
-    var H = anchor ? Math.round(anchor.getBoundingClientRect().bottom - box.top + drop) : Math.round(W * 0.5);
-    return { W: W, H: Math.max(300, Math.min(H, 1100)) };
+    /* The band's SIZE is its own (tied to the column width), and its
+       PLACEMENT follows the lockup — so moving the lockup down the page
+       slides the loop down with it instead of inflating it. */
+    var hero = wrap.parentNode.getBoundingClientRect();
+    var H = Math.round(Math.max(420, Math.min(W * 0.38, 620)));
+    var sweep = anchor
+      ? Math.round(anchor.getBoundingClientRect().bottom - hero.top + drop)
+      : Math.round(H * 0.95);
+    return { W: W, H: H, top: Math.round(sweep - H * 0.95) };
   }
 
   /* enters upper-left, sweeps under the lockup, curls a loop in the right
@@ -587,7 +594,7 @@
         H = Math.max(110, Math.round(g.W * 0.3));
         d = sweepPath(g.W, H);
       } else {
-        wrap.style.top = '';
+        wrap.style.top = g.top + 'px';
         H = g.H;
         d = loopPath(g.W, H);
       }

@@ -1331,8 +1331,8 @@
           '<div class="cta-copy"><h2></h2><p></p>' +
             '<a class="btn btn-ink btn-lg" href="/contact?type=demo">Book a demo</a></div>' +
           '<div class="cta-gang" aria-hidden="true"><picture>' +
-            '<source srcset="assets/img/stickers/friends-group.webp" type="image/webp">' +
-            '<img loading="lazy" src="assets/img/stickers/friends-group.png" alt="" width="1000" height="667">' +
+            '<source srcset="/assets/img/stickers/friends-group.webp" type="image/webp">' +
+            '<img loading="lazy" src="/assets/img/stickers/friends-group.png" alt="" width="1000" height="667">' +
           '</picture></div>' +
         '</div>';
       mount.querySelector('h2').textContent = h;

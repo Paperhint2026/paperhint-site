@@ -42,6 +42,10 @@
   .note{margin-top:26px;font-size:14px;color:var(--muted)}
 
   /* ===== one folder card per slide, the band flows behind it ===== */
+  /* card slides pin the card's top to one constant line — taller cards
+     grow downward only, so titles never shift between slides */
+  .slide:has(.inner.card){justify-content:flex-start;
+    padding-top:max(7vh, calc((100dvh - min(600px, 74vh)) / 2))}
   .inner.card{
     background:var(--surface);border:1px solid var(--line-soft);
     border-radius:0 24px 24px 24px;text-align:left;

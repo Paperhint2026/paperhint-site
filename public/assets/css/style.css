@@ -417,8 +417,8 @@ h1.display em{
 .hero-stage{position:relative;height:0;z-index:0}
 .stage-glow{
   position:absolute;z-index:0;left:50%;transform:translateX(-50%);
-  top:-40px;width:min(1500px,132vw);height:560px;overflow:hidden;pointer-events:none;
-  filter:saturate(.85);opacity:.45;
+  top:-70px;width:min(1860px,154vw);height:820px;overflow:hidden;pointer-events:none;
+  filter:saturate(.95);opacity:.65;
 }
 [data-theme="dark"] .stage-glow{opacity:.28;filter:saturate(.7)}
 .hero-gradient{
@@ -437,8 +437,35 @@ h1.display em{
   100%{transform:translate(2%,-2%) scale(1.03)}
 }
 #neat-canvas{position:absolute;inset:0;width:100%;height:100%;isolation:isolate;display:block}
+/* the Amplemarket cone: a tapered beam — wide mouth at the left,
+   converging to a point at the right — with the palette spinning inside */
+.stage-cone{
+  position:absolute;left:-5%;top:7%;width:97%;height:86%;z-index:1;
+  clip-path:polygon(0% 0%, 100% 46.5%, 100% 53.5%, 0% 100%);
+}
+.stage-cone::before{
+  content:"";position:absolute;left:-55%;top:50%;width:210%;aspect-ratio:1;
+  transform:translateY(-50%) rotate(0deg);border-radius:50%;
+  background:conic-gradient(from 20deg at 50% 50%,
+    color-mix(in srgb,var(--emerald) 50%, transparent),
+    color-mix(in srgb,var(--yellow) 44%, transparent),
+    color-mix(in srgb,var(--orange) 46%, transparent),
+    color-mix(in srgb,var(--violet) 44%, transparent),
+    color-mix(in srgb,var(--emerald) 50%, transparent));
+  filter:blur(26px);opacity:.85;
+  animation:coneSpin 28s linear infinite;
+}
+@keyframes coneSpin{to{transform:translateY(-50%) rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.stage-cone::before{animation:none}}
+/* the frosted veil above the cone — diffuses everything beneath it */
+.stage-veil{
+  position:absolute;inset:0;z-index:2;
+  backdrop-filter:blur(20px) saturate(1.12);
+  -webkit-backdrop-filter:blur(20px) saturate(1.12);
+}
+[data-theme="dark"] .stage-cone{opacity:.4}
 .stage-glow::after{
-  content:"";position:absolute;inset:0;z-index:2;
+  content:"";position:absolute;inset:0;z-index:3;
   background:
     radial-gradient(58% 52% at 50% 8%, var(--bg) 0%, color-mix(in srgb,var(--bg) 62%, transparent) 52%, transparent 78%),
     linear-gradient(180deg, var(--bg) 0%, transparent 26%, transparent 72%, var(--bg) 100%);

@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Paperhint — Founding-school pitch</title>
+<link rel="icon" href="../assets/img/Logo/paperhint-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FCFBF8;--surface:#FFFFFF;--ink:#14201A;--ink-soft:#3D4F47;--muted:#68766E;
+    --emerald:#0B8A5C;--emerald-tint:#E3F1EA;--yellow:#FFD84D;--orange:#FF8A3D;--violet:#7C5CFF;
+    --line-soft:#E8E4D8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+    font-family:'Geist',-apple-system,sans-serif;font-weight:400}
+  em{font-family:'Merriweather',serif;font-style:italic;font-weight:500}
+  /* film grain, same as the site */
+  body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  #deck{position:fixed;inset:0;overflow:hidden}
+  #track{position:absolute;top:0;left:0;height:100%;display:flex;
+    transition:transform .85s cubic-bezier(.3,.8,.24,1);will-change:transform}
+  .slide{position:relative;width:100vw;height:100%;flex:0 0 100vw;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:6vh 7vw 22vh;text-align:center}
+  .slide .inner{max-width:920px;position:relative;z-index:3}
+
+  .kicker{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--emerald);margin-bottom:22px}
+  .kicker::before{content:"";width:22px;height:2px;background:var(--emerald);border-radius:2px}
+  h1{font-weight:500;font-size:clamp(34px,5vw,58px);letter-spacing:-.04em;line-height:1.06;text-wrap:balance}
+  .sub{margin:18px auto 0;font-size:clamp(16px,1.6vw,21px);line-height:1.45;letter-spacing:-.02em;
+    color:var(--ink-soft);max-width:640px;text-wrap:balance}
+  .note{margin-top:26px;font-size:14px;color:var(--muted)}
+
+  /* stat / feature rows */
+  .rows{margin:34px auto 0;max-width:660px;text-align:left;display:flex;flex-direction:column;gap:10px}
+  .row{display:flex;align-items:baseline;gap:14px;background:var(--surface);
+    border:1px solid var(--line-soft);border-radius:14px;padding:13px 18px;
+    box-shadow:0 1px 0 rgba(20,32,26,.03)}
+  .row b{font-weight:500;font-size:clamp(14px,1.5vw,17px);white-space:nowrap}
+  .row b i{font-style:normal;display:inline-block;width:9px;height:9px;border-radius:99px;
+    background:var(--tint,var(--emerald));margin-right:9px;transform:translateY(-1px)}
+  .row span{color:var(--ink-soft);font-size:clamp(12.5px,1.3vw,14.5px);line-height:1.4}
+  .row.hero-row{border-color:color-mix(in srgb,var(--emerald) 35%, var(--line-soft));
+    background:color-mix(in srgb,var(--emerald) 5%, var(--surface))}
+  .chip-board{margin:34px auto 0;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:700px}
+  .chip{background:var(--surface);border:1px solid var(--line-soft);border-radius:99px;
+    padding:10px 18px;font-size:clamp(13px,1.4vw,15.5px);color:var(--ink-soft)}
+  .chip s{text-decoration:none;color:var(--ink);font-weight:500}
+
+  /* mascots */
+  .mascot{position:absolute;z-index:2;pointer-events:none;filter:drop-shadow(0 6px 14px rgba(20,32,26,.14))}
+
+  /* ===== slide 1 intro: rosette drops + spins, wordmark expands ===== */
+  .s1 .inner{display:flex;flex-direction:column;align-items:center}
+  .lockup{display:flex;align-items:center;gap:0;height:86px}
+  .lockup .mark{width:72px;height:72px;flex:0 0 72px;opacity:0;
+    animation:pitchDrop 1s cubic-bezier(.25,.9,.3,1.15) .25s forwards}
+  .word{display:flex;overflow:hidden;max-width:0;opacity:0;
+    animation:wordOpen 1s cubic-bezier(.25,.9,.25,1) 1.25s forwards}
+  .word b{font-weight:500;font-size:64px;letter-spacing:-.045em;white-space:nowrap;padding-left:18px}
+  .word b em{color:var(--emerald)}
+  @keyframes pitchDrop{
+    0%{opacity:1;transform:translateY(-60vh) rotate(-540deg)}
+    100%{opacity:1;transform:translateY(0) rotate(0deg)}
+  }
+  @keyframes wordOpen{0%{max-width:0;opacity:0}30%{opacity:1}100%{max-width:480px;opacity:1}}
+  .s1 .pill,.s1 h1,.s1 .sub,.s1 .note{opacity:0;animation:riseIn .8s cubic-bezier(.25,.8,.25,1) forwards}
+  .s1 .pill{animation-delay:2.15s}.s1 h1{animation-delay:2.3s}
+  .s1 .sub{animation-delay:2.45s}.s1 .note{animation-delay:2.6s}
+  @keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  .pill{display:inline-flex;align-items:center;gap:9px;margin:40px 0 22px;
+    background:var(--surface);border:1px solid var(--line-soft);border-radius:99px;
+    padding:9px 18px;font-size:14.5px;font-weight:500;color:var(--ink-soft)}
+  .pill .tag{background:var(--ink);color:var(--bg);border-radius:99px;padding:3px 10px;font-size:11px;letter-spacing:.06em}
+
+  /* slide reveal (non-intro slides) */
+  .slide .inner>*{opacity:0;transform:translateY(20px);
+    transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+  .slide.on .inner>*{opacity:1;transform:none}
+  .slide.on .inner>*:nth-child(2){transition-delay:.08s}
+  .slide.on .inner>*:nth-child(3){transition-delay:.16s}
+  .slide.on .inner>*:nth-child(4){transition-delay:.24s}
+  .s1 .inner>*{opacity:1;transform:none;transition:none}
+
+  /* ribbon rides the track — continuity across every slide */
+  #ribbon{position:absolute;top:0;left:0;height:100%;z-index:1;pointer-events:none;overflow:visible}
+  #ribbon path{fill:none;stroke-linecap:round}
+  .rb-echo{opacity:.32}
+  .rb-text{font-family:'Geist',sans-serif;font-weight:500;font-size:18px;fill:var(--bg)}
+  .rb-text .kw{font-family:'Merriweather',serif;font-style:italic;font-size:18.5px;fill:var(--yellow)}
+
+  /* HUD */
+  #hud{position:fixed;right:26px;bottom:20px;z-index:50;font-size:13px;color:var(--muted);
+    font-weight:500;letter-spacing:.06em;user-select:none}
+  #dots{position:fixed;left:26px;bottom:22px;z-index:50;display:flex;gap:7px}
+  #dots i{width:7px;height:7px;border-radius:99px;background:var(--line-soft);cursor:pointer;transition:.3s}
+  #dots i.on{background:var(--emerald);transform:scale(1.25)}
+  #hint{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:50;
+    font-size:12.5px;color:var(--muted);opacity:0;animation:riseIn .8s ease 3s forwards}
+  @media (max-width:640px){
+    .slide{padding:4vh 6vw 24vh}
+    .lockup{height:60px}.lockup .mark{width:50px;height:50px;flex-basis:50px}
+    .word b{font-size:42px}
+    .rows{gap:8px}.row{flex-direction:column;gap:3px;padding:11px 15px}
+    .row b{white-space:normal}
+    #hint{display:none}
+    .mascot{transform:scale(.7)}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+  <div id="track">
+    <svg id="ribbon" aria-hidden="true"></svg>
+
+    <!-- 1 · title -->
+    <section class="slide s1">
+      <div class="inner">
+        <div class="lockup">
+          <img class="mark" src="../assets/img/Logo/paperhint-mark.svg" alt="" width="72" height="72">
+          <span class="word"><b>Paper<em>h</em>int</b></span>
+        </div>
+        <span class="pill"><span class="tag">PITCH</span> Teaching is the job. Paperwork isn't.</span>
+        <h1>Every teacher deserves<br>a second pair of <em>h</em>ands</h1>
+        <p class="sub">The founding-school pitch — how one platform hands the week back to your teachers and your office.</p>
+        <p class="note">Paperhint · 2026 · for schools we're building with</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-22.png" width="110" style="right:8vw;bottom:24vh" alt="">
+    </section>
+
+    <!-- 2 · where the week goes -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">The week today</span>
+        <h1>Count the hours your school already spends</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><b><i></i>Correction</b><span>evenings and Sundays, after every exam — the same red pen, class after class</span></div>
+          <div class="row" style="--tint:var(--violet)"><b><i></i>Question papers</b><span>evenings to set, every term, every subject, every set</span></div>
+          <div class="row" style="--tint:var(--orange)"><b><i></i>Registers</b><span>attendance and marks copied by hand into books nobody opens twice</span></div>
+          <div class="row" style="--tint:var(--yellow)"><b><i></i>Parents</b><span>a WhatsApp group somebody maintains after hours</span></div>
+        </div>
+        <p class="note">Every one of these is already paid for — in teacher-hours.</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-07.png" width="96" style="left:9vw;bottom:26vh" alt="">
+    </section>
+
+    <!-- 3 · the scattered spend -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">The scattered spend</span>
+        <h1>You already pay for all of it — in pieces</h1>
+        <div class="chip-board">
+          <span class="chip"><s>Printing</s> — papers and sets, term after term</span>
+          <span class="chip"><s>Correction days</s> — extra staff-hours every exam</span>
+          <span class="chip"><s>An ERP</s> — that nobody feeds after August</span>
+          <span class="chip"><s>Message packs</s> — for circulars and reminders</span>
+          <span class="chip"><s>Materials</s> — living in personal folders and pen drives</span>
+        </div>
+        <p class="sub" style="margin-top:30px">Five spends. None of them talking to each other.</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-14.png" width="100" style="right:10vw;bottom:23vh" alt="">
+    </section>
+
+    <!-- 4 · the idea -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">The idea</span>
+        <h1>One place — because it's all the same paper</h1>
+        <p class="sub">The answer sheet, the attendance register, the question paper — Paperhint works from the paper your school already produces. Nothing new to type, nothing to change on day one.</p>
+        <p class="note">A phone and a browser. No scanners, no new hardware.</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-03.png" width="104" style="left:11vw;bottom:22vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-12.png" width="88" style="right:12vw;bottom:28vh" alt="">
+    </section>
+
+    <!-- 5 · why AI as a layer -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">Why AI — as a layer, not a product</span>
+        <h1>One intelligence under every module</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><b><i></i>It drafts</b><span>teaching notes, question papers and homework — for your syllabus</span></div>
+          <div class="row" style="--tint:var(--violet)"><b><i></i>It marks</b><span>every answer against its question, on your rubric, the same for every student</span></div>
+          <div class="row" style="--tint:var(--orange)"><b><i></i>It tells</b><span>parents the moment homework lands or an absence is read</span></div>
+          <div class="row" style="--tint:var(--yellow)"><b><i></i>You approve</b><span>everything — the teacher reviews and signs off, always</span></div>
+        </div>
+        <p class="note">You'll rarely see the word "AI" in the product. You'll see finished paperwork.</p>
+      </div>
+    </section>
+
+    <!-- 6 · the teaching job, together -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">At the teacher's desk</span>
+        <h1>The teaching job, brought together</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--orange)"><b><i></i>Teaching notes &amp; copilot</b><span>notes you can actually teach with — drafted, simplified, extended</span></div>
+          <div class="row" style="--tint:var(--violet)"><b><i></i>Homework &amp; assignments</b><span>assigned in a minute, home the same minute</span></div>
+          <div class="row" style="--tint:var(--yellow)"><b><i></i>Shared library</b><span>one teacher's notes, every teacher's shelf — scoped to the school's email</span></div>
+          <div class="row hero-row" style="--tint:var(--emerald)"><b><i></i>Papers &amp; evaluation</b><span>set the paper, photograph the sheets, get back marked answers on your rubric</span></div>
+        </div>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-02.png" width="100" style="right:9vw;bottom:24vh" alt="">
+    </section>
+
+    <!-- 7 · the admin job, together -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">In the school office</span>
+        <h1>The administrative job, brought together</h1>
+        <div class="rows">
+          <div class="row hero-row" style="--tint:var(--emerald)"><b><i></i>Attendance scanning</b><span>the paper register you already use, scanned in — live today</span></div>
+          <div class="row" style="--tint:var(--orange)"><b><i></i>Resource planning</b><span>allotments worked out with automation, an office copilot for changes</span></div>
+          <div class="row" style="--tint:var(--violet)"><b><i></i>Admin portal</b><span>classes, sections, students, teachers, subjects — one place</span></div>
+          <div class="row" style="--tint:var(--yellow)"><b><i></i>A new year, one move</b><span>batch promotion; subject books flow to every department teacher</span></div>
+        </div>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-05.png" width="100" style="left:9vw;bottom:24vh" alt="">
+    </section>
+
+    <!-- 8 · around the classroom -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">Around the classroom</span>
+        <h1>Students and parents, without asking twice</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><b><i></i>Student records</b><span>every evaluation recorded, exam over exam — a record that builds itself</span></div>
+          <div class="row" style="--tint:var(--violet)"><b><i></i>Parent notifications</b><span>homework, marks and absences — the moment they happen</span></div>
+        </div>
+        <p class="note">Two personas run the product — teachers and the office. Everyone else simply sees their own school.</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-17.png" width="98" style="right:11vw;bottom:26vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-10.png" width="86" style="left:12vw;bottom:22vh" alt="">
+    </section>
+
+    <!-- 9 · the arithmetic -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">What you save</span>
+        <h1>Count it in your numbers, not ours</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><b><i></i>Correction hours</b><span>sections &times; exams &times; evenings of red pen — becomes minutes of review and approval</span></div>
+          <div class="row" style="--tint:var(--violet)"><b><i></i>Paper-setting evenings</b><span>every drafted paper, blueprint and key hands an evening back</span></div>
+          <div class="row" style="--tint:var(--orange)"><b><i></i>The scattered spends</b><span>printing sets, message packs, an unfed ERP — folded into one per-student licence</span></div>
+          <div class="row" style="--tint:var(--yellow)"><b><i></i>The hours nobody bills</b><span>registers copied, records chased, parents messaged after hours</span></div>
+        </div>
+        <p class="note">Bring your numbers to the demo — we'll do this arithmetic on your school, live.</p>
+      </div>
+    </section>
+
+    <!-- 10 · why partner with us -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">Why partner with us</span>
+        <h1>Founding schools shape Paperhint</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><b><i></i>Built with schools</b><span>teachers-first, not ERP-first — day one changes nothing, so adoption actually survives</span></div>
+          <div class="row" style="--tint:var(--violet)"><b><i></i>A direct line</b><span>founders onboard you hands-on; what your staff asks for lands on the roadmap</span></div>
+          <div class="row" style="--tint:var(--orange)"><b><i></i>One ecosystem</b><span>custom solutions to bring the applications your school already runs into one place</span></div>
+          <div class="row" style="--tint:var(--yellow)"><b><i></i>Founding pricing</b><span>set together, per student — and it stays yours</span></div>
+        </div>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-16.png" width="98" style="right:10vw;bottom:24vh" alt="">
+    </section>
+
+    <!-- 11 · where we are -->
+    <section class="slide">
+      <div class="inner">
+        <span class="kicker">Where we are</span>
+        <h1>Founding schools, onboarded hands-on</h1>
+        <p class="sub">Pricing is per student, and we set it together with our founding schools. Bring one class and one exam — we'll run them through Paperhint in front of you, so you see your school in it, not a sample one.</p>
+        <p class="note">Attendance scanning is live today; evaluation, papers, notes and the portal are in founding-school hands.</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-20.png" width="104" style="right:10vw;bottom:23vh" alt="">
+    </section>
+
+    <!-- 12 · close -->
+    <section class="slide">
+      <div class="inner">
+        <h1 style="font-size:clamp(40px,6vw,72px)">Teaching is the job.<br><em>P</em>aperwork isn't.</h1>
+        <p class="sub" style="margin-top:26px">paperhint.com &nbsp;·&nbsp; hello@paperhint.com</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-06.png" width="92" style="left:14vw;bottom:24vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-08.png" width="104" style="left:24vw;bottom:21vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-15.png" width="96" style="right:24vw;bottom:23vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-23.png" width="88" style="right:14vw;bottom:26vh" alt="">
+    </section>
+  </div>
+</div>
+
+<div id="dots"></div>
+<div id="hud">1 / 10</div>
+<div id="hint">→ arrow keys, scroll or swipe</div>
+
+<script>
+(function(){
+  var track = document.getElementById('track');
+  var slides = [].slice.call(document.querySelectorAll('.slide'));
+  var N = slides.length, cur = 0;
+  var hud = document.getElementById('hud');
+  var dots = document.getElementById('dots');
+
+  /* ---------- ribbon: one path across the whole deck ---------- */
+  var svg = document.getElementById('ribbon');
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  /* band height per slide boundary (fractions of viewport height) —
+     low, under the content, varying so it visibly flows */
+  var YS = [0.80, 0.66, 0.82, 0.62, 0.78, 0.68, 0.84, 0.64, 0.80, 0.66, 0.82, 0.70, 0.78];
+  var COLORS = ['#14201A','#0B8A5C','#FF8A3D','#7C5CFF','#0B8A5C','#14201A','#7C5CFF','#FF8A3D','#0B8A5C','#FF8A3D','#7C5CFF','#14201A'];
+  var WORDS = 'Teaching is the job — Paperhint drafts the teaching notes, sets the question papers, keeps the parents posted, and marks every answer sheet · ';
+  var tp, unitLen = 0, totalLen = 0;
+
+  function buildRibbon(){
+    var W = innerWidth, H = innerHeight, TW = W * N;
+    svg.setAttribute('width', TW); svg.setAttribute('height', H);
+    svg.setAttribute('viewBox', '0 0 ' + TW + ' ' + H);
+    svg.innerHTML = '';
+    var d = 'M ' + (-90) + ' ' + (YS[0]*H);
+    for (var i = 0; i < N; i++){
+      var x0 = i*W, x1 = (i+1)*W;
+      var y0 = YS[i]*H, y1 = YS[i+1 < YS.length ? i+1 : YS.length-1]*H;
+      /* a dip inside the slide, then out at the boundary height —
+         horizontal tangents at boundaries keep it seamless */
+      var dip = Math.min(H*0.92, Math.max(y0,y1) + H*0.07);
+      d += ' C ' + (x0+W*0.28) + ' ' + dip + ', ' + (x0+W*0.72) + ' ' + dip + ', ' + x1 + ' ' + y1;
+    }
+    d += ' L ' + (TW+90) + ' ' + (YS[N-1]*H);
+    var defs = document.createElementNS(SVGNS,'defs');
+    var grad = document.createElementNS(SVGNS,'linearGradient');
+    grad.setAttribute('id','rbgrad'); grad.setAttribute('gradientUnits','userSpaceOnUse');
+    grad.setAttribute('x1',0); grad.setAttribute('y1',0); grad.setAttribute('x2',TW); grad.setAttribute('y2',0);
+    for (var c = 0; c < N; c++){
+      var st = document.createElementNS(SVGNS,'stop');
+      st.setAttribute('offset', ((c + 0.5) / N));
+      st.setAttribute('stop-color', COLORS[c]);
+      grad.appendChild(st);
+    }
+    defs.appendChild(grad); svg.appendChild(defs);
+    var sw = innerWidth < 700 ? 26 : 40;
+    var echo = document.createElementNS(SVGNS,'path');
+    echo.setAttribute('class','rb-echo'); echo.setAttribute('d', d);
+    echo.setAttribute('stroke','url(#rbgrad)'); echo.setAttribute('stroke-width', sw);
+    echo.setAttribute('transform','translate(9,12)');
+    var main = document.createElementNS(SVGNS,'path');
+    main.setAttribute('d', d); main.setAttribute('stroke','url(#rbgrad)');
+    main.setAttribute('stroke-width', sw); main.setAttribute('id','rbpath');
+    svg.appendChild(echo); svg.appendChild(main);
+    /* marquee text riding the path */
+    var text = document.createElementNS(SVGNS,'text');
+    text.setAttribute('class','rb-text'); text.setAttribute('dy','6');
+    tp = document.createElementNS(SVGNS,'textPath');
+    tp.setAttribute('href','#rbpath'); tp.setAttribute('startOffset','0');
+    text.appendChild(tp); svg.appendChild(text);
+    totalLen = main.getTotalLength();
+    tp.textContent = WORDS;
+    unitLen = tp.getComputedTextLength();
+    var reps = Math.ceil((totalLen + unitLen) / unitLen) + 1;
+    tp.textContent = new Array(reps + 1).join(WORDS);
+  }
+
+  var off = 0, last = 0, frame = 0;
+  function tick(t){
+    if (!last) last = t;
+    var dt = Math.min(80, t - last); last = t;
+    off -= dt * 0.028;
+    if (off <= -unitLen) off += unitLen;
+    /* startOffset re-lays-out every glyph on a ~9000px path — update at
+       ~20fps so the deck stays light while the band still glides */
+    if (tp && (++frame % 3 === 0)) tp.setAttribute('startOffset', off);
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- navigation ---------- */
+  function go(n){
+    cur = Math.max(0, Math.min(N-1, n));
+    track.style.transform = 'translateX(' + (-cur * 100) + 'vw)';
+    hud.textContent = (cur+1) + ' / ' + N;
+    [].forEach.call(dots.children, function(d,i){ d.classList.toggle('on', i===cur); });
+    slides.forEach(function(s,i){ s.classList.toggle('on', i===cur); });
+    if (history.replaceState) history.replaceState(null,'','#'+(cur+1));
+  }
+  for (var i=0;i<N;i++){
+    var dot=document.createElement('i');
+    (function(n){ dot.addEventListener('click',function(){ go(n); }); })(i);
+    dots.appendChild(dot);
+  }
+  addEventListener('keydown', function(e){
+    if (e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') { e.preventDefault(); go(cur+1); }
+    if (e.key==='ArrowLeft'||e.key==='PageUp') { e.preventDefault(); go(cur-1); }
+    if (e.key==='Home') go(0);
+    if (e.key==='End') go(N-1);
+  });
+  /* horizontal scroll / trackpad — accumulate then step, with cooldown */
+  var acc=0, cool=0;
+  addEventListener('wheel', function(e){
+    e.preventDefault();
+    var now=Date.now(); if (now<cool) return;
+    var d = Math.abs(e.deltaX)>Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    acc += d;
+    if (Math.abs(acc)>90){ go(cur + (acc>0?1:-1)); acc=0; cool=now+650; }
+  }, {passive:false});
+  /* touch swipe */
+  var tx=null;
+  addEventListener('touchstart', function(e){ tx=e.touches[0].clientX; }, {passive:true});
+  addEventListener('touchend', function(e){
+    if (tx===null) return;
+    var dx=e.changedTouches[0].clientX-tx; tx=null;
+    if (Math.abs(dx)>50) go(cur + (dx<0?1:-1));
+  }, {passive:true});
+
+  /* ---------- boot ---------- */
+  buildRibbon();
+  requestAnimationFrame(tick);
+  var h = parseInt((location.hash||'').slice(1),10);
+  go(isNaN(h)?0:h-1);
+  addEventListener('resize', function(){
+    clearTimeout(buildRibbon._t);
+    buildRibbon._t = setTimeout(function(){ buildRibbon(); go(cur); }, 180);
+  });
+})();
+</script>
+</body>
+</html>

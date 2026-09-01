@@ -82,6 +82,13 @@ advanced, productively.
      copilot** assisting the office through these tasks conversationally
      (the admin-side counterpart of the teacher's copilot).
 
+## Positioning truth (founder, Sep 2026)
+- Paperhint is **not a digital examination portal**. Exams stay on pen
+  and paper — printing papers and sets is unavoidable and fine. The
+  product drafts the question paper and reads the written exam; it never
+  asks the school to move examinations on-screen. Never list printing
+  as a cost Paperhint removes.
+
 ## Personas (founder-set)
 
 - The product is built for **two primary personas: teachers and admins**.

@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Paperhint — Founding-school pitch</title>
+<link rel="icon" href="../assets/img/Logo/paperhint-mark.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/img/Logo/paperhint-mark.svg" as="image" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FCFBF8;--surface:#FFFFFF;--ink:#14201A;--ink-soft:#3D4F47;--muted:#68766E;
+    --emerald:#0B8A5C;--emerald-tint:#E3F1EA;--yellow:#FFD84D;--orange:#FF8A3D;--violet:#7C5CFF;
+    --line-soft:#E8E4D8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+    font-family:'Geist',-apple-system,sans-serif;font-weight:400}
+  em{font-family:'Merriweather',serif;font-style:italic;font-weight:500}
+  em.wm{color:var(--emerald)}
+  /* film grain, same as the site */
+  body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  #deck{position:fixed;inset:0;overflow:hidden}
+  #track{position:absolute;top:0;left:0;height:100%;display:flex;
+    transition:transform .85s cubic-bezier(.3,.8,.24,1);will-change:transform}
+  .slide{position:relative;z-index:2;width:100vw;height:100%;flex:0 0 100vw;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:6vh 6vw;text-align:center}
+  .slide .inner{max-width:920px;position:relative;z-index:3}
+
+  .kicker{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--emerald);margin-bottom:22px}
+  .kicker::before{content:"";width:22px;height:2px;background:var(--emerald);border-radius:2px}
+  h1{font-weight:500;font-size:clamp(34px,5vw,58px);letter-spacing:-.04em;line-height:1.06;text-wrap:balance}
+  .sub{margin:18px auto 0;font-size:clamp(16px,1.6vw,21px);line-height:1.45;letter-spacing:-.02em;
+    color:var(--ink-soft);max-width:640px;text-wrap:balance}
+  .note{margin-top:26px;font-size:14px;color:var(--muted)}
+
+  /* ===== one folder card per slide, the band flows behind it ===== */
+  /* card slides pin the card's top to one constant line — taller cards
+     grow downward only, so titles never shift between slides */
+  .slide:has(.inner.card){justify-content:flex-start;
+    padding-top:max(7vh, calc((100dvh - min(600px, 74vh)) / 2))}
+  .inner.card{
+    background:var(--surface);border:1px solid var(--line-soft);
+    border-radius:0 24px 24px 24px;text-align:left;
+    padding:clamp(28px,4.5vh,52px) clamp(26px,4vw,56px);
+    width:min(880px,90vw);max-width:none;
+    /* every card is the same box — content centers inside it */
+    min-height:min(600px,74vh);
+    display:flex;flex-direction:column;justify-content:flex-start;
+    box-shadow:0 30px 70px -34px rgba(20,32,26,.22);
+  }
+  .inner.card .kicker{
+    position:absolute;top:-28px;left:-1px;height:29px;margin:0;
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--surface);border:1px solid var(--line-soft);border-bottom:none;
+    border-radius:12px 20px 0 0;padding:2px 34px 0 16px;
+    clip-path:polygon(0 0,calc(100% - 20px) 0,100% 100%,0 100%);
+    font-size:11.5px;letter-spacing:.1em;
+  }
+  .inner.card .kicker::before{width:8px;height:8px;border-radius:99px;background:var(--emerald)}
+  .inner.card h1{font-size:clamp(27px,3.3vw,42px)}
+  .inner.card .sub{margin-left:0;max-width:620px}
+  /* rows are quiet lines, not boxes */
+  .rows{margin:28px 0 0;display:flex;flex-direction:column}
+  .row{display:flex;align-items:flex-start;gap:15px;padding:12px 2px;border-bottom:1px solid var(--line-soft)}
+  .row:last-child{border-bottom:none}
+  .row .ic{flex:0 0 36px;height:36px;border-radius:11px;display:grid;place-items:center;
+    background:color-mix(in srgb,var(--tint,var(--emerald)) 12%, transparent);color:var(--tint,var(--emerald))}
+  .row .ic svg{width:17px;height:17px}
+  .row .rt{display:flex;flex-direction:column;gap:2px}
+  .row b{font-weight:500;font-size:clamp(14px,1.5vw,17px);letter-spacing:-.01em}
+  .row .rt>span{color:var(--ink-soft);font-size:clamp(12.5px,1.3vw,14.5px);line-height:1.45}
+  .row.hero-row b{color:var(--emerald)}
+  .chip-board{margin:28px 0 0;display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:color-mix(in srgb,var(--emerald) 4%, var(--surface));
+    border:1px solid var(--line-soft);border-radius:99px;
+    padding:10px 18px;font-size:clamp(13px,1.4vw,15px);color:var(--ink-soft)}
+  .chip s{text-decoration:none;color:var(--ink);font-weight:500}
+
+  /* ===== the AI-layer architecture ===== */
+  .arch{margin:30px 0 6px;position:relative}
+  .arch-tier{position:relative;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .arch-label{display:block;text-align:center;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .arch-group{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .arch-group>i{font-style:normal;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .arch-group .mods{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .arch-tier{align-items:flex-start;justify-content:center;gap:34px;flex-wrap:nowrap}
+  .arch-stem{display:block;width:0;height:24px;margin:6px auto;
+    border-left:2px dashed color-mix(in srgb,var(--emerald) 45%, transparent)}
+  .arch-mod{background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;
+    padding:9px 13px;font-size:clamp(11.5px,1.2vw,13.5px);font-weight:500;position:relative;
+    border-top:3px solid var(--tint,var(--emerald))}
+  .arch-ai{position:relative;margin:2px auto 0;background:var(--ink);color:var(--bg);
+    border-radius:16px;padding:16px 26px;text-align:center;max-width:640px;
+    font-size:clamp(13px,1.4vw,16px);font-weight:500;letter-spacing:-.01em}
+  .arch-ai em{color:var(--yellow)}
+  .arch-ai small{display:block;margin-top:4px;font-weight:400;font-size:.82em;color:color-mix(in srgb,var(--bg) 70%, transparent)}
+  .arch-src{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .arch-src .arch-mod{border-top:none;border-bottom:3px solid var(--tint,var(--emerald));
+    background:color-mix(in srgb,var(--tint,var(--emerald)) 5%, var(--surface));font-weight:400;color:var(--ink-soft)}
+  .arch-src .arch-mod b{color:var(--ink);font-weight:500}
+  .arch-links{position:absolute;left:50%;width:0;border-left:2px dashed color-mix(in srgb,var(--emerald) 45%, transparent);height:24px}
+  .arch .up{transform:translateX(-50%)}
+  .arch-approve{position:absolute;right:22px;bottom:-15px;transform:rotate(-3deg);
+    background:var(--yellow);color:var(--ink);border-radius:99px;padding:7px 14px;
+    font-size:12px;font-weight:500;box-shadow:0 6px 16px -8px rgba(20,32,26,.4)}
+  .arch .sit{position:absolute;pointer-events:none;filter:drop-shadow(0 5px 10px rgba(20,32,26,.18))}
+
+  /* staggered reveal: every direct child, then rows/chips/modules one by one */
+  .slide:not(.s1) .inner>*{opacity:0;transform:translateY(20px);
+    transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+  .slide.on:not(.s1) .inner>*{opacity:1;transform:none}
+  .slide.on:not(.s1) .inner>*:nth-child(2){transition-delay:.09s}
+  .slide.on:not(.s1) .inner>*:nth-child(3){transition-delay:.18s}
+  .slide.on:not(.s1) .inner>*:nth-child(4){transition-delay:.27s}
+  .slide.on:not(.s1) .inner>*:nth-child(5){transition-delay:.36s}
+  .row,.chip,.arch-mod{opacity:0;transform:translateY(14px);
+    transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+  .slide.on .row,.slide.on .chip,.slide.on .arch-mod{opacity:1;transform:none}
+  .slide.on :is(.row,.chip,.arch-mod):nth-child(1){transition-delay:.30s}
+  .slide.on :is(.row,.chip,.arch-mod):nth-child(2){transition-delay:.39s}
+  .slide.on :is(.row,.chip,.arch-mod):nth-child(3){transition-delay:.48s}
+  .slide.on :is(.row,.chip,.arch-mod):nth-child(4){transition-delay:.57s}
+  .slide.on :is(.row,.chip,.arch-mod):nth-child(5){transition-delay:.66s}
+  .slide.on :is(.row,.chip,.arch-mod):nth-child(6){transition-delay:.75s}
+
+  /* tiny application mocks */
+  .mock{margin-top:24px;border-radius:12px;padding:12px 13px;
+    background:color-mix(in srgb,var(--emerald) 5%, var(--bg));border:1px solid var(--line-soft);
+    display:flex;flex-direction:column;gap:6px;opacity:0;transform:translateY(14px);
+    transition:opacity .55s ease .5s,transform .55s cubic-bezier(.2,.7,.2,1) .5s}
+  .slide.on .mock{opacity:1;transform:none}
+  .m-line{display:flex;gap:10px;align-items:center;background:var(--surface);
+    border:1px solid var(--line-soft);border-radius:9px;padding:7px 12px;
+    font-size:12.5px;color:var(--ink-soft)}
+  .m-line b{font-weight:500;color:var(--ink);white-space:nowrap}
+  .m-line span{margin-left:auto;font-weight:500;color:var(--emerald);white-space:nowrap}
+  .m-line .bad{color:#E23D2E}
+  .m-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+  .m-grid s{text-decoration:none;height:26px;border-radius:6px;background:var(--surface);
+    border:1px solid var(--line-soft);font-size:9.5px;display:grid;place-items:center;color:var(--muted);font-weight:500}
+  .m-grid s.c1{background:var(--emerald-tint);color:var(--emerald);border-color:transparent}
+  .m-grid s.c2{background:color-mix(in srgb,var(--violet) 14%, transparent);color:var(--violet);border-color:transparent}
+
+  /* mascots */
+  .inner.card .mascot.fill{top:auto;bottom:16px;right:30px;width:98px}
+  .mascot{position:absolute;z-index:4;pointer-events:none;filter:drop-shadow(0 6px 14px rgba(20,32,26,.14))}
+
+  /* ===== slide 1 intro: rosette drops + spins, wordmark expands ===== */
+  .s1 .inner{display:flex;flex-direction:column;align-items:center}
+  .lockup{display:flex;align-items:center;gap:0;height:86px}
+  .lockup .mark{width:72px;height:72px;flex:0 0 72px;opacity:0;
+    background:var(--emerald);
+    -webkit-mask:url(../assets/img/Logo/paperhint-mark.svg) center/contain no-repeat;
+    mask:url(../assets/img/Logo/paperhint-mark.svg) center/contain no-repeat;
+    animation:none}
+  body.boot .lockup .mark{animation:pitchDrop 2s cubic-bezier(.3,.75,.3,1) .1s forwards}
+  body.flown .lockup .mark{opacity:0;transition:opacity .25s}
+  .word{display:flex;overflow:hidden;max-width:0;opacity:0}
+  body.boot .word{animation:wordOpen 1s cubic-bezier(.25,.9,.25,1) 1.9s forwards}
+  .word b{font-weight:500;font-size:64px;letter-spacing:-.045em;white-space:nowrap;padding-left:18px}
+  .word b em{color:var(--emerald)}
+  @keyframes pitchDrop{
+    0%{opacity:1;transform:translateY(-64vh) rotate(-540deg)}
+    42%{opacity:1;transform:translateY(17vh) rotate(0deg)}
+    62%{opacity:1;transform:translateY(17vh) rotate(0deg)}
+    100%{opacity:1;transform:translateY(0) rotate(0deg)}
+  }
+  @keyframes wordOpen{0%{max-width:0;opacity:0}30%{opacity:1}100%{max-width:480px;opacity:1}}
+  .s1 .pill,.s1 h1,.s1 .sub,.s1 .note{opacity:0}
+  body.boot .s1 .pill,body.boot .s1 h1,body.boot .s1 .sub,body.boot .s1 .note{
+    animation:riseIn .8s cubic-bezier(.25,.8,.25,1) forwards}
+  body.boot .s1 .pill{animation-delay:2.7s}body.boot .s1 h1{animation-delay:2.85s}
+  body.boot .s1 .sub{animation-delay:3s}body.boot .s1 .note{animation-delay:3.15s}
+  @keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  .pill{display:inline-flex;align-items:center;gap:9px;margin:40px 0 22px;
+    background:var(--surface);border:1px solid var(--line-soft);border-radius:99px;
+    padding:9px 18px;font-size:14.5px;font-weight:500;color:var(--ink-soft)}
+  .pill .tag{background:var(--ink);color:var(--bg);border-radius:99px;padding:3px 10px;font-size:11px;letter-spacing:.06em}
+
+  /* ribbon rides the track — continuity across every slide */
+  #ribbon{position:absolute;top:0;left:0;height:100%;z-index:1;pointer-events:none;overflow:visible}
+  #ribbon path{fill:none;stroke-linecap:round}
+  .rb-echo{opacity:.32}
+  .rb-text{font-family:'Geist',sans-serif;font-weight:500;font-size:18px;fill:var(--bg)}
+  .rb-text .kw{font-family:'Merriweather',serif;font-style:italic;font-size:18.5px;fill:var(--yellow)}
+
+  /* deck rosette: rides every slide, takes the segment's color, spins a
+     half-turn per slide like the site's scroll-spin */
+  #deckmark{position:fixed;top:26px;left:28px;width:34px;height:34px;z-index:55;
+    background:var(--emerald);
+    -webkit-mask:url(../assets/img/Logo/paperhint-mark.svg) center/contain no-repeat;
+    mask:url(../assets/img/Logo/paperhint-mark.svg) center/contain no-repeat;
+    transition:transform .85s cubic-bezier(.3,.8,.24,1), background .85s ease, opacity .5s ease;
+    opacity:0;pointer-events:none}
+  #deckmark.show{opacity:1}
+
+  /* boot order: band fades in after the lockup and text, stickers next,
+     controls last */
+  #ribbon{opacity:0;transition:opacity 1.1s ease}
+  body.bandin #ribbon{opacity:1}
+  .mascot{opacity:0;transition:opacity .7s ease}
+  body.bandin .mascot{opacity:1;transition-delay:.5s}
+  #hud,#dots{opacity:0;transition:opacity .8s ease}
+  body.ready #hud,body.ready #dots{opacity:1}
+  body:not(.ready) .navbtn{opacity:0;pointer-events:none}
+
+  /* HUD */
+  #hud{position:fixed;right:26px;bottom:20px;z-index:50;font-size:13px;color:var(--muted);
+    font-weight:500;letter-spacing:.06em;user-select:none}
+  #dots{position:fixed;left:26px;bottom:22px;z-index:50;display:flex;gap:7px}
+  #dots i{width:7px;height:7px;border-radius:99px;background:var(--line-soft);cursor:pointer;transition:.3s}
+  #dots i.on{background:var(--emerald);transform:scale(1.25)}
+  /* lucide chevrons for slide nav */
+  .navbtn{position:fixed;top:50%;transform:translateY(-50%);z-index:52;
+    width:42px;height:42px;border-radius:99px;border:1px solid var(--line-soft);
+    background:var(--surface);color:var(--ink-soft);display:grid;place-items:center;
+    cursor:pointer;transition:.25s;box-shadow:0 8px 20px -12px rgba(20,32,26,.25)}
+  .navbtn:hover{color:var(--emerald);border-color:var(--emerald);transform:translateY(-50%) scale(1.06)}
+  .navbtn svg{width:20px;height:20px}
+  .navbtn[disabled]{opacity:0;pointer-events:none}
+  #prev{left:18px}#next{right:18px}
+  @media (max-width:640px){
+    .slide{padding:4vh 5vw}
+    .inner.card{min-height:min(560px,70vh)}
+    .lockup{height:60px}.lockup .mark{width:50px;height:50px;flex-basis:50px}
+    .word b{font-size:42px}
+    .row{gap:12px;padding:10px 0}
+    .row .ic{flex-basis:32px;height:32px}
+    .inner.card{max-width:94vw}
+    .arch-approve{position:static;transform:none;display:inline-block;margin-top:10px}
+    .arch-tier{flex-wrap:wrap;gap:18px}
+    .navbtn{display:none}
+    .mascot{transform:scale(.7)}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+  <div id="track">
+    <svg id="ribbon" aria-hidden="true"></svg>
+
+    <!-- 1 · title -->
+    <section class="slide s1">
+      <div class="inner">
+        <div class="lockup">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="word"><b>Paper<em>h</em>int</b></span>
+        </div>
+        <span class="pill"><span class="tag">PITCH</span> Teaching is the job. Paperwork isn't.</span>
+        <h1>Every teacher deserves<br>a second pair of <em>h</em>ands</h1>
+        <p class="sub">The founding-school pitch — how one platform hands the week back to your teachers and your office.</p>
+        <p class="note">Paperhint · 2026 · for schools we're building with</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-22.png" width="110" style="right:8vw;bottom:24vh" alt="">
+    </section>
+
+    <!-- 2 · where the week goes -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">The week today</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-09.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-07.png" width="78" style="top:-47px;right:54px" alt="">
+        <h1>Count the hours your school already spends</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><div class="rt"><b>Correction</b><span>evenings and Sundays, after every exam — the same red pen, class after class</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><div class="rt"><b>Question papers</b><span>evenings to set, every term, every subject, every set</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><div class="rt"><b>Registers</b><span>attendance and marks copied by hand into books nobody opens twice</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><div class="rt"><b>Parents</b><span>a WhatsApp group somebody maintains after hours</span></div></div>
+        </div>
+        <p class="note">Every one of these is already paid for — in teacher-hours.</p>
+      </div>
+    </section>
+
+    <!-- 3 · the scattered spend -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">The scattered spend</span>
+        <img class="mascot" src="../assets/img/stickers/char-14.png" width="78" style="top:-47px;right:86px" alt="">
+        <h1>You already pay for all of it — in pieces</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="rt"><b>Correction days</b><span>extra staff-hours bought back, every exam</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span><div class="rt"><b>An ERP</b><span>that nobody feeds after August</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><div class="rt"><b>Message packs</b><span>for circulars, reminders and results</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span><div class="rt"><b>Materials</b><span>living in personal folders and pen drives</span></div></div>
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><div class="rt"><b>A register</b><span>for every record, copied by hand</span></div></div>
+        </div>
+        <p class="sub" style="margin-top:26px">Five spends. None of them talking to each other.</p>
+      </div>
+    </section>
+
+    <!-- 4 · the idea -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">The idea</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-13.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-03.png" width="78" style="top:-47px;right:60px" alt="">
+        <h1>One place — because it's all the same paper</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></span><div class="rt"><b>The answer sheet</b><span>photographed with the app — marked, recorded, returned</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg></span><div class="rt"><b>The attendance register</b><span>the same sheet you keep today, scanned in</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><div class="rt"><b>The question paper</b><span>drafted here, printed as always — exams stay on pen and paper</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="rt"><b>Nothing to migrate</b><span>day one changes nothing — a phone and a browser, no new hardware</span></div></div>
+        </div>
+        <p class="note">Paperhint isn't a digital exam portal. It reads the exam you already run.</p>
+      </div>
+    </section>
+
+    <!-- 5 · why AI as a layer -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">Why AI — as a layer, not a product</span>
+        <h1>One intelligence under every module</h1>
+        <div class="arch">
+          <div class="arch-tier">
+            <div class="arch-group"><i>In teaching</i>
+              <div class="mods">
+                <span class="arch-mod" style="--tint:var(--orange)">Teaching notes</span>
+                <span class="arch-mod" style="--tint:var(--violet)">Question papers</span>
+                <span class="arch-mod" style="--tint:var(--yellow)">Homework</span>
+                <span class="arch-mod" style="--tint:var(--emerald)">Evaluation</span>
+              </div>
+            </div>
+            <div class="arch-group"><i>In administration</i>
+              <div class="mods">
+                <span class="arch-mod" style="--tint:var(--emerald)">Attendance</span>
+                <span class="arch-mod" style="--tint:var(--orange)">Allotment</span>
+                <span class="arch-mod" style="--tint:var(--violet)">Portal</span>
+              </div>
+            </div>
+          </div>
+          <i class="arch-stem"></i>
+          <div class="arch-ai">
+            The <em>AI</em> layer — one intelligence, never a feature
+            <small>drafts for the syllabus &middot; marks on the rubric &middot; reads the registers &middot; plans the allotments &middot; tells the parents</small>
+            <img class="sit" src="../assets/img/stickers/char-02.png" width="46" style="left:26px;top:-41px" alt="">
+            <img class="sit" src="../assets/img/stickers/char-05.png" width="44" style="right:34px;top:-39px" alt="">
+            <span class="arch-approve">you approve &#8635;</span>
+          </div>
+          <i class="arch-stem"></i>
+          <div class="arch-src">
+            <span class="arch-mod" style="--tint:var(--emerald)"><b>The paper you already produce</b> &nbsp;answer sheets &middot; registers &middot; written exams</span>
+            <span class="arch-mod" style="--tint:var(--violet)"><b>Your context</b> &nbsp;syllabus &middot; subject books &middot; library &middot; rubric</span>
+          </div>
+        </div>
+        <p class="note">You'll rarely see the word "AI" in the product. You'll see finished paperwork.</p>
+      </div>
+    </section>
+
+    <!-- 6 · the teaching job, together -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">At the teacher's desk</span>
+        <img class="mascot" src="../assets/img/stickers/char-02.png" width="78" style="top:-47px;right:56px" alt="">
+        <h1>The teaching job, brought together</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.94 15.5a2 2 0 0 0-1.44-1.44L2.37 12.5a.5.5 0 0 1 0-.96L8.5 9.94a2 2 0 0 0 1.44-1.44l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96l-6.13 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/></svg></span><div class="rt"><b>Teaching notes &amp; copilot</b><span>notes you can actually teach with — drafted, simplified, extended</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span><div class="rt"><b>Homework &amp; assignments</b><span>assigned in a minute, home the same minute</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg></span><div class="rt"><b>Shared library</b><span>one teacher's notes, every teacher's shelf — scoped to the school's email</span></div></div>
+          <div class="row hero-row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></span><div class="rt"><b>Papers &amp; evaluation</b><span>set the paper, photograph the sheets, get back marked answers on your rubric</span></div></div>
+        </div>
+        <div class="mock">
+          <div class="m-line"><b>&#9998; Paper set</b> Ch 4&ndash;5 &middot; blueprint + answer key<span>&#10003;</span></div>
+          <div class="m-line"><b>&#10003; Q1</b> Laws of reflection<span>5/5</span></div>
+          <div class="m-line"><b class="bad">&#10007; Q3</b> Numerical &mdash; step missed<span>3/5</span></div>
+          <div class="m-line"><b>&#8721; Scored on rubric</b> recorded to each student<span>18/20</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · the admin job, together -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">In the school office</span>
+        <img class="mascot" src="../assets/img/stickers/char-05.png" width="78" style="top:-47px;right:68px" alt="">
+        <h1>The administrative job, brought together</h1>
+        <div class="rows">
+          <div class="row hero-row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg></span><div class="rt"><b>Attendance scanning</b><span>the paper register you already use, scanned in — live today</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div class="rt"><b>Resource planning</b><span>allotments worked out with automation, an office copilot for changes</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span><div class="rt"><b>Admin portal</b><span>classes, sections, students, teachers, subjects — one place</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg></span><div class="rt"><b>A new year, one move</b><span>batch promotion; subject books flow to every department teacher</span></div></div>
+        </div>
+        <div class="mock">
+          <div class="m-grid"><s>Mon</s><s>Tue</s><s>Wed</s><s>Thu</s><s>Fri</s>
+            <s class="c1">42/44</s><s class="c1">44/44</s><s class="c2">41/44</s><s class="c1">43/44</s><s class="c1">44/44</s></div>
+          <div class="m-line"><b>&#8594; IX&#8209;A &middot; Physics</b> allotted to R.&#8202;Nair<span>&#10003;</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · around the classroom -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">Around the classroom</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-10.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-17.png" width="78" style="top:-47px;right:74px" alt="">
+        <h1>Students and parents, without asking twice</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><div class="rt"><b>Student records</b><span>every evaluation recorded, exam over exam — a record that builds itself</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><div class="rt"><b>Parent notifications</b><span>homework, marks and absences — the moment they happen</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><div class="rt"><b>Notes, where students look</b><span>the notes a teacher shares are right there for the class</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="rt"><b>The same rubric for everyone</b><span>fair marks — every answer scored the same way for the whole class</span></div></div>
+        </div>
+        <p class="note">Two personas run the product — teachers and the office. Everyone else simply sees their own school.</p>
+      </div>
+    </section>
+
+    <!-- 9 · the arithmetic -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">What you save</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-21.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-12.png" width="78" style="top:-47px;right:62px" alt="">
+        <h1>Count it in your numbers, not ours</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="rt"><b>Correction hours</b><span>sections &times; exams &times; evenings of red pen — becomes minutes of review and approval</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><div class="rt"><b>Paper-setting evenings</b><span>every drafted paper, blueprint and key hands an evening back</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg></span><div class="rt"><b>The scattered spends</b><span>message packs, an unfed ERP, one-job tools — folded into one per-student licence</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><div class="rt"><b>The hours nobody bills</b><span>registers copied, records chased, parents messaged after hours</span></div></div>
+        </div>
+        <p class="note">Bring your numbers to the demo — we'll do this arithmetic on your school, live.</p>
+      </div>
+    </section>
+
+    <!-- 10 · why partner with us -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">Why partner with us</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-19.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-16.png" width="78" style="top:-47px;right:70px" alt="">
+        <h1>Founding schools shape Paper<em class="wm">h</em>int</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div class="rt"><b>Built with schools</b><span>teachers-first, not ERP-first — your school's way of working shapes what every school gets</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><div class="rt"><b>A direct line</b><span>founders onboard you hands-on; what your staff asks for lands on the roadmap</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg></span><div class="rt"><b>Custom modules</b><span>built for how your school actually runs — and they bring the applications you already use into one ecosystem</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="rt"><b>Founding pricing</b><span>set together, per student — and it stays yours</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · where we are -->
+    <section class="slide">
+      <div class="inner card">
+        <span class="kicker">Where we are</span>
+        <img class="mascot fill" src="../assets/img/stickers/char-04.png" alt="">
+        <img class="mascot" src="../assets/img/stickers/char-20.png" width="78" style="top:-47px;right:58px" alt="">
+        <h1>Founding schools, onboarded hands-on</h1>
+        <div class="rows">
+          <div class="row" style="--tint:var(--emerald)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg></span><div class="rt"><b>Live today</b><span>attendance scanning already runs in schools</span></div></div>
+          <div class="row" style="--tint:var(--violet)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div class="rt"><b>In founding hands</b><span>evaluation, question papers, notes and the portal — with our first schools now</span></div></div>
+          <div class="row" style="--tint:var(--orange)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span><div class="rt"><b>Hands-on onboarding</b><span>we set up one of your classes before the demo — you see your school, not a sample</span></div></div>
+          <div class="row" style="--tint:var(--yellow)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="rt"><b>Founding pricing</b><span>per student, set together — and it stays yours</span></div></div>
+        </div>
+        <p class="note">Bring one class and one exam — we'll run them through Paperhint in front of you.</p>
+      </div>
+    </section>
+
+    <!-- 12 · close -->
+    <section class="slide">
+      <div class="inner">
+        <h1 style="font-size:clamp(40px,6vw,72px)">Teaching is the job.<br><em>P</em>aperwork isn't.</h1>
+        <p class="sub" style="margin-top:26px">paperhint.com &nbsp;·&nbsp; hello@paperhint.com</p>
+      </div>
+      <img class="mascot" src="../assets/img/stickers/char-06.png" width="92" style="left:14vw;bottom:24vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-08.png" width="104" style="left:24vw;bottom:21vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-15.png" width="96" style="right:24vw;bottom:23vh" alt="">
+      <img class="mascot" src="../assets/img/stickers/char-23.png" width="88" style="right:14vw;bottom:26vh" alt="">
+    </section>
+  </div>
+</div>
+
+<div id="deckmark" aria-hidden="true"></div>
+<div id="dots"></div>
+<div id="hud">1 / 10</div>
+<button id="prev" class="navbtn" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+<button id="next" class="navbtn" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+
+<script>
+(function(){
+  var track = document.getElementById('track');
+  var slides = [].slice.call(document.querySelectorAll('.slide'));
+  var N = slides.length, cur = 0;
+  var hud = document.getElementById('hud');
+  var dots = document.getElementById('dots');
+
+  /* ---------- ribbon: flat-colored segments, one per slide, joined at
+     the edges — a dip hands off to a climb, a climb to a twirl ---------- */
+  var svg = document.getElementById('ribbon');
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var YS = [0.74, 0.78, 0.22, 0.80, 0.72, 0.20, 0.78, 0.24, 0.80, 0.74, 0.22, 0.80, 0.76];
+  var SEG = [
+    {c:'#14201A', t:'dip'},  {c:'#0B8A5C', t:'s'},    {c:'#FF8A3D', t:'twirl'},
+    {c:'#7C5CFF', t:'dip'},  {c:'#0B8A5C', t:'s'},    {c:'#14201A', t:'s'},
+    {c:'#FF8A3D', t:'twirl'},{c:'#7C5CFF', t:'s'},    {c:'#0B8A5C', t:'dip'},
+    {c:'#FF8A3D', t:'s'},    {c:'#7C5CFF', t:'s'},    {c:'#14201A', t:'dip'}
+  ];
+  var WORDS = 'Teaching is the job — Paperhint drafts the teaching notes, sets the question papers, keeps the parents posted, and marks every answer sheet · ';
+  var tps = [];
+
+  function segD(x0, y0, x1, y1, t, W, H){
+    if (t === 's')
+      return ' C ' + (x0+.42*W) + ' ' + y0 + ', ' + (x0+.58*W) + ' ' + y1 + ', ' + x1 + ' ' + y1;
+    if (t === 'twirl'){
+      var ym = (y0+y1)/2, r = H*0.095, cx = x0+0.56*W;
+      return ' C ' + (x0+.2*W) + ' ' + y0 + ', ' + (x0+.3*W) + ' ' + (ym+r) + ', ' + (cx-r*1.2) + ' ' + (ym+r) +
+             ' C ' + (cx+r*1.9) + ' ' + (ym+r) + ', ' + (cx+r*1.9) + ' ' + (ym-r*1.9) + ', ' + cx + ' ' + (ym-r*1.6) +
+             ' C ' + (cx-r*1.9) + ' ' + (ym-r*1.3) + ', ' + (cx-r*1.2) + ' ' + (ym+r*0.4) + ', ' + (cx+r*0.8) + ' ' + (ym+r*0.3) +
+             ' C ' + (x0+.8*W) + ' ' + (ym+r*0.1) + ', ' + (x0+.86*W) + ' ' + y1 + ', ' + x1 + ' ' + y1;
+    }
+    var yd = Math.min(H*0.94, Math.max(y0,y1) + H*0.12);
+    return ' C ' + (x0+.24*W) + ' ' + y0 + ', ' + (x0+.32*W) + ' ' + yd + ', ' + (x0+.5*W) + ' ' + yd +
+           ' C ' + (x0+.68*W) + ' ' + yd + ', ' + (x0+.76*W) + ' ' + y1 + ', ' + x1 + ' ' + y1;
+  }
+
+  function buildRibbon(){
+    var W = innerWidth, H = innerHeight, TW = W * N;
+    svg.setAttribute('width', TW); svg.setAttribute('height', H);
+    svg.setAttribute('viewBox', '0 0 ' + TW + ' ' + H);
+    svg.innerHTML = '';
+    tps = [];
+    /* ONE thread from start to end — flat per-slide colors via HARD
+       gradient stops at each slide edge (no blending) */
+    var d = 'M -90 ' + (YS[0]*H) + ' L 0 ' + (YS[0]*H);
+    for (var i = 0; i < N; i++)
+      d += segD(i*W, YS[i]*H, (i+1)*W, YS[i+1]*H, SEG[i].t, W, H);
+    d += ' L ' + (TW+90) + ' ' + (YS[N]*H);
+    var defs = document.createElementNS(SVGNS,'defs');
+    var grad = document.createElementNS(SVGNS,'linearGradient');
+    grad.setAttribute('id','rbgrad'); grad.setAttribute('gradientUnits','userSpaceOnUse');
+    grad.setAttribute('x1',0); grad.setAttribute('y1',0); grad.setAttribute('x2',TW); grad.setAttribute('y2',0);
+    /* flat through each slide; a short crossfade only at the joints —
+       orange melts into violet right where the segments shake hands */
+    var BLEND = 0.05 / N;
+    function stop(off, col){
+      var st = document.createElementNS(SVGNS,'stop');
+      st.setAttribute('offset', Math.max(0, Math.min(1, off)));
+      st.setAttribute('stop-color', col);
+      grad.appendChild(st);
+    }
+    stop(0, SEG[0].c);
+    for (i = 1; i < N; i++){
+      stop(i/N - BLEND, SEG[i-1].c);
+      stop(i/N + BLEND, SEG[i].c);
+    }
+    stop(1, SEG[N-1].c);
+    defs.appendChild(grad); svg.appendChild(defs);
+    var sw = innerWidth < 700 ? 32 : 52;
+    var echo = document.createElementNS(SVGNS,'path');
+    echo.setAttribute('class','rb-echo'); echo.setAttribute('d', d);
+    echo.setAttribute('stroke','url(#rbgrad)'); echo.setAttribute('stroke-width', sw);
+    echo.setAttribute('transform','translate(9,12)');
+    var main = document.createElementNS(SVGNS,'path');
+    main.setAttribute('d', d); main.setAttribute('stroke','url(#rbgrad)');
+    main.setAttribute('stroke-width', sw); main.setAttribute('id','rbpath');
+    svg.appendChild(echo); svg.appendChild(main);
+    var text = document.createElementNS(SVGNS,'text');
+    text.setAttribute('class','rb-text'); text.setAttribute('dy','6');
+    var t = document.createElementNS(SVGNS,'textPath');
+    t.setAttribute('href','#rbpath'); t.setAttribute('startOffset','0');
+    t.textContent = WORDS;
+    text.appendChild(t); svg.appendChild(text);
+    var ul = t.getComputedTextLength();
+    var reps = Math.ceil((main.getTotalLength() + ul) / ul) + 1;
+    t.textContent = new Array(reps+1).join(WORDS);
+    tps = [{tp:t, unit:ul}];
+  }
+
+  var off = 0, last = 0, frame = 0;
+  function tick(t){
+    if (!last) last = t;
+    var dt = Math.min(80, t - last); last = t;
+    off -= dt * 0.028;
+    /* startOffset re-lays-out every glyph — ~20fps keeps the deck light */
+    if (++frame % 3 === 0 && tps[0]){
+      if (off <= -tps[0].unit) off += tps[0].unit;
+      tps[0].tp.setAttribute('startOffset', off);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- navigation ---------- */
+  var mark = document.getElementById('deckmark');
+  var flown = false;
+  function go(n){
+    cur = Math.max(0, Math.min(N-1, n));
+    track.style.transform = 'translateX(' + (-cur * 100) + 'vw)';
+    if (cur > 0 && !flown){
+      flown = true;
+      document.body.classList.add('flown');
+      var lm = document.querySelector('.lockup .mark');
+      var r = lm && lm.getBoundingClientRect();
+      if (r && r.width){
+        mark.style.transition = 'none';
+        mark.style.transform = 'translate(' + (r.left - 28) + 'px,' + (r.top - 26) + 'px) scale(' + (r.width / 34) + ') rotate(0deg)';
+        mark.classList.add('show');
+        void mark.offsetWidth;
+        mark.style.transition = '';
+      }
+    }
+    mark.classList.toggle('show', cur > 0);
+    mark.style.transform = 'rotate(' + (cur * 180) + 'deg)';
+    mark.style.background = SEG[cur].c;
+    document.getElementById('prev').toggleAttribute('disabled', cur===0);
+    document.getElementById('next').toggleAttribute('disabled', cur===N-1);
+    hud.textContent = (cur+1) + ' / ' + N;
+    [].forEach.call(dots.children, function(d,i){ d.classList.toggle('on', i===cur); });
+    slides.forEach(function(s,i){ s.classList.toggle('on', i===cur); });
+    if (history.replaceState) history.replaceState(null,'','#'+(cur+1));
+  }
+  for (var i=0;i<N;i++){
+    var dot=document.createElement('i');
+    (function(n){ dot.addEventListener('click',function(){ go(n); }); })(i);
+    dots.appendChild(dot);
+  }
+  document.getElementById('prev').addEventListener('click', function(){ go(cur-1); });
+  document.getElementById('next').addEventListener('click', function(){ go(cur+1); });
+  addEventListener('keydown', function(e){
+    if (e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') { e.preventDefault(); go(cur+1); }
+    if (e.key==='ArrowLeft'||e.key==='PageUp') { e.preventDefault(); go(cur-1); }
+    if (e.key==='Home') go(0);
+    if (e.key==='End') go(N-1);
+  });
+  /* horizontal scroll / trackpad — accumulate then step, with cooldown */
+  var acc=0, cool=0;
+  addEventListener('wheel', function(e){
+    e.preventDefault();
+    var now=Date.now(); if (now<cool) return;
+    var d = Math.abs(e.deltaX)>Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    acc += d;
+    if (Math.abs(acc)>90){ go(cur + (acc>0?1:-1)); acc=0; cool=now+650; }
+  }, {passive:false});
+  /* touch swipe */
+  var tx=null;
+  addEventListener('touchstart', function(e){ tx=e.touches[0].clientX; }, {passive:true});
+  addEventListener('touchend', function(e){
+    if (tx===null) return;
+    var dx=e.changedTouches[0].clientX-tx; tx=null;
+    if (Math.abs(dx)>50) go(cur + (dx<0?1:-1));
+  }, {passive:true});
+
+  /* ---------- boot ---------- */
+  buildRibbon();
+  requestAnimationFrame(tick);
+  var h = parseInt((location.hash||'').slice(1),10);
+  go(isNaN(h)?0:h-1);
+  var instant = cur > 0;
+  if (instant){ flown = true; document.body.classList.add('flown'); }
+  var booted = false;
+  function boot(){
+    if (booted) return; booted = true;
+    document.body.classList.add('boot');
+    setTimeout(function(){ document.body.classList.add('bandin'); }, instant ? 0 : 3300);
+    setTimeout(function(){ document.body.classList.add('ready');  }, instant ? 0 : 4100);
+  }
+  if (document.readyState === 'complete') boot();
+  else { addEventListener('load', boot); setTimeout(boot, 1800); }
+  addEventListener('resize', function(){
+    clearTimeout(buildRibbon._t);
+    buildRibbon._t = setTimeout(function(){ buildRibbon(); go(cur); }, 180);
+  });
+})();
+</script>
+</body>
+</html>

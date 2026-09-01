@@ -297,7 +297,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .btn-ivory:hover{transform:translateY(-1px)}
 
 /* ---------------- hero ---------------- */
-.hero{position:relative;padding:132px 0 100px}
+/* the hero owns the first screen, so everything after it is genuinely
+   scrolled to — the reveal animations never fire on load */
+.hero{
+  position:relative;padding:132px 0 100px;
+  /* extra room falls BELOW the lockup, so the ribbon keeps the geometry
+     it was tuned to and only the fold moves */
+  min-height:100svh;
+}
 .hero-content{position:relative;z-index:4;text-align:center;width:min(585px,92vw)}
 .tagline{
   display:inline-flex;align-items:center;gap:10px;
@@ -416,15 +423,16 @@ h1.display em{
    NEAT paints the canvas; .hero-gradient is the no-JS fallback. */
 .hero-stage{position:relative;height:0;z-index:0}
 .stage-glow{
-  position:absolute;z-index:0;left:50%;
-  /* 47vw base × the 1.38 scale below = 65% of the viewport width */
+  position:absolute;z-index:0;left:0;
+  /* anchored at the left edge; 47vw × the 1.38 scale below reaches 65%
+     of the way across, so it grows from the left toward the centre */
   top:-40px;width:47vw;height:560px;overflow:hidden;pointer-events:none;
   /* the wash's internal composition is untouched — the whole stage is
      simply scaled up and lifted so it reaches the centre of the hero */
-  transform:translateX(-50%) scale(1.38);transform-origin:50% 34%;
-  /* the box no longer spans the page, so its sides are feathered out */
-  -webkit-mask:linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-  mask:linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  transform:scale(1.38);transform-origin:0% 34%;
+  /* full-strength at the left edge, dissolving as it nears the centre */
+  -webkit-mask:linear-gradient(90deg, #000 0%, #000 58%, transparent 100%);
+  mask:linear-gradient(90deg, #000 0%, #000 58%, transparent 100%);
   filter:saturate(.9);opacity:.5;
 }
 [data-theme="dark"] .stage-glow{opacity:.28;filter:saturate(.7)}

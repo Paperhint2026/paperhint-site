@@ -1245,7 +1245,21 @@
       });
     }, { rootMargin: '0px 0px -18% 0px', threshold: 0.12 });
 
-    items.forEach(function (el) { io.observe(el); });
+    /* Observe only once layout has settled. On first paint the display
+       font hasn't loaded and the hero measures short, so blocks below it
+       are briefly inside the viewport — the observer would fire for them
+       and they'd be revealed before the reader ever scrolls. */
+    function observeAll() {
+      items.forEach(function (el) { io.observe(el); });
+    }
+    var ready = (document.fonts && document.fonts.ready) || Promise.resolve();
+    var started = false;
+    function start() {
+      if (started) return; started = true;
+      requestAnimationFrame(function () { requestAnimationFrame(observeAll); });
+    }
+    ready.then(start);
+    setTimeout(start, 1200);          /* fallback if fonts never resolve */
   }
 
 

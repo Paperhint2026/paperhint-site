@@ -16,13 +16,13 @@
   var SHEET = [
     { f: 'char-02.png', w: 214, h: 201, kind: 'circle' },  /* orange circle, walking */
     { f: 'char-07.png', w: 194, h: 207, kind: 'tri'    },  /* yellow triangle */
-    { f: 'char-23.png', w: 200, h: 210, kind: 'rect'   },  /* pink arrow */
-    { f: 'char-10.png', w: 168, h: 193, kind: 'circle' },  /* teal hexagon */
-    { f: 'char-11.png', w: 240, h: 230, kind: 'circle' },  /* yellow star */
+    { f: 'char-22.png', w: 200, h: 210, kind: 'rect'   },  /* pink arrow */
+    { f: 'char-12.png', w: 168, h: 193, kind: 'circle' },  /* teal hexagon */
+    { f: 'char-10.png', w: 240, h: 230, kind: 'circle' },  /* yellow star */
     { f: 'char-03.png', w: 113, h: 210, kind: 'rect'   },  /* black capsule */
     { f: 'char-08.png', w: 240, h: 230, kind: 'rect'   },  /* red square */
     { f: 'char-06.png', w: 164, h: 215, kind: 'rect'   },  /* blue rectangle */
-    { f: 'char-21.png', w: 172, h: 210, kind: 'rect'   },  /* yellow plus */
+    { f: 'char-20.png', w: 172, h: 210, kind: 'rect'   },  /* yellow plus */
     { f: 'char-14.png', w: 254, h: 209, kind: 'circle' }   /* orange trapezoid */
   ];
 

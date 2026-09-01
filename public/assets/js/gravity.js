@@ -14,22 +14,22 @@
   /* die-cut characters carved out of the founder's sticker sheet
      (assets/img/stickers/char-NN.png — transparent, heart + animated strip excluded) */
   var SHEET = [
-    { f: 'char-02.png', w: 200, h: 175, kind: 'circle' },  /* orange running */
-    { f: 'char-07.png', w: 172, h: 190, kind: 'tri'    },  /* yellow triangle */
-    { f: 'char-22.png', w: 139, h: 176, kind: 'rect'   },  /* pink arrow */
-    { f: 'char-12.png', w: 163, h: 184, kind: 'circle' },  /* teal hexagon */
-    { f: 'char-10.png', w: 190, h: 190, kind: 'circle' },  /* yellow star */
-    { f: 'char-03.png', w: 107, h: 210, kind: 'rect'   },  /* black capsule */
-    { f: 'char-08.png', w: 181, h: 184, kind: 'rect'   },  /* red square */
-    { f: 'char-06.png', w: 157, h: 201, kind: 'rect'   },  /* blue rectangle */
-    { f: 'char-20.png', w: 143, h: 174, kind: 'rect'   },  /* yellow plus */
-    { f: 'char-14.png', w: 217, h: 164, kind: 'circle' }   /* orange trapezoid */
+    { f: 'char-02.png', w: 214, h: 201, kind: 'circle' },  /* orange circle, walking */
+    { f: 'char-07.png', w: 194, h: 207, kind: 'tri'    },  /* yellow triangle */
+    { f: 'char-23.png', w: 200, h: 210, kind: 'rect'   },  /* pink arrow */
+    { f: 'char-10.png', w: 168, h: 193, kind: 'circle' },  /* teal hexagon */
+    { f: 'char-11.png', w: 240, h: 230, kind: 'circle' },  /* yellow star */
+    { f: 'char-03.png', w: 113, h: 210, kind: 'rect'   },  /* black capsule */
+    { f: 'char-08.png', w: 240, h: 230, kind: 'rect'   },  /* red square */
+    { f: 'char-06.png', w: 164, h: 215, kind: 'rect'   },  /* blue rectangle */
+    { f: 'char-21.png', w: 172, h: 210, kind: 'rect'   },  /* yellow plus */
+    { f: 'char-14.png', w: 254, h: 209, kind: 'circle' }   /* orange trapezoid */
   ];
 
-  /* scale to a comfortable on-screen size */
+  /* scale to a comfortable on-screen size (die-cut copies live in stickers/fall/) */
   var CHARS = SHEET.map(function (c) {
     var k = 82 / Math.max(c.w, c.h);
-    return { src: 'assets/img/stickers/' + c.f, w: Math.round(c.w * k), h: Math.round(c.h * k), kind: c.kind };
+    return { src: '/assets/img/stickers/fall/' + c.f, w: Math.round(c.w * k), h: Math.round(c.h * k), kind: c.kind };
   });
 
   var layer, engine, bodies = [], els = [], M;

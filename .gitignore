@@ -4,9 +4,14 @@
 *.tmp
 *.log
 node_modules/
+.astro/
+site/
+dist/
 .vercel/
 .env
 .env.local
+.env.*
+!.env.example
 *.local
 docs/paperhint-cost-calculator.html
 docs/paperhint-cost-model.xlsx

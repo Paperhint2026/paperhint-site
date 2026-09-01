@@ -178,14 +178,6 @@
     padding:9px 18px;font-size:14.5px;font-weight:500;color:var(--ink-soft)}
   .pill .tag{background:var(--ink);color:var(--bg);border-radius:99px;padding:3px 10px;font-size:11px;letter-spacing:.06em}
 
-  /* slide reveal (non-intro slides) */
-  .slide .inner>*{opacity:0;transform:translateY(20px);
-    transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
-  .slide.on .inner>*{opacity:1;transform:none}
-  .slide.on .inner>*:nth-child(2){transition-delay:.08s}
-  .slide.on .inner>*:nth-child(3){transition-delay:.16s}
-  .slide.on .inner>*:nth-child(4){transition-delay:.24s}
-
   /* ribbon rides the track — continuity across every slide */
   #ribbon{position:absolute;top:0;left:0;height:100%;z-index:1;pointer-events:none;overflow:visible}
   #ribbon path{fill:none;stroke-linecap:round}

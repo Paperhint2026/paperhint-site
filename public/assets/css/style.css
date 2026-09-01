@@ -417,8 +417,8 @@ h1.display em{
 .hero-stage{position:relative;height:0;z-index:0}
 .stage-glow{
   position:absolute;z-index:0;left:50%;transform:translateX(-50%);
-  top:-70px;width:min(1860px,154vw);height:820px;overflow:hidden;pointer-events:none;
-  filter:saturate(.95);opacity:.65;
+  top:-150px;width:min(1860px,154vw);height:880px;overflow:hidden;pointer-events:none;
+  filter:saturate(1);opacity:.72;
 }
 [data-theme="dark"] .stage-glow{opacity:.28;filter:saturate(.7)}
 .hero-gradient{
@@ -440,19 +440,43 @@ h1.display em{
 /* the Amplemarket cone: a tapered beam — wide mouth at the left,
    converging to a point at the right — with the palette spinning inside */
 .stage-cone{
-  position:absolute;left:-5%;top:7%;width:97%;height:86%;z-index:1;
-  clip-path:polygon(0% 0%, 100% 46.5%, 100% 53.5%, 0% 100%);
+  /* the stage runs wider than the viewport, so the cone is inset to put
+     its mouth ON the left edge of the screen and its point short of the
+     right; tilted down like light spilling across the page */
+  position:absolute;left:10%;top:-6%;width:72%;height:104%;z-index:1;
+  transform:rotate(6deg);transform-origin:0% 45%;
+  /* the taper is a MASK, not a clip — clip-path cuts after the blur and
+     leaves hard geometry. An angular wedge (apex right of centre) times a
+     radial dissolve at the apex gives soft edges and a point that melts
+     away well before the right edge. */
+  --apex:96% 50%;
+  -webkit-mask:
+    conic-gradient(from 0deg at var(--apex),
+      transparent 236deg, rgba(0,0,0,.5) 252deg, #000 264deg,
+      #000 276deg, rgba(0,0,0,.5) 288deg, transparent 304deg),
+    radial-gradient(closest-side circle at var(--apex),
+      transparent 0%, rgba(0,0,0,.35) 16%, #000 52%, #000 100%),
+    linear-gradient(90deg, #000 0%, #000 34%, rgba(0,0,0,.62) 72%, rgba(0,0,0,.25) 92%, transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask:
+    conic-gradient(from 0deg at var(--apex),
+      transparent 236deg, rgba(0,0,0,.5) 252deg, #000 264deg,
+      #000 276deg, rgba(0,0,0,.5) 288deg, transparent 304deg),
+    radial-gradient(closest-side circle at var(--apex),
+      transparent 0%, rgba(0,0,0,.35) 16%, #000 52%, #000 100%),
+    linear-gradient(90deg, #000 0%, #000 34%, rgba(0,0,0,.62) 72%, rgba(0,0,0,.25) 92%, transparent 100%);
+  mask-composite:intersect;
 }
 .stage-cone::before{
   content:"";position:absolute;left:-55%;top:50%;width:210%;aspect-ratio:1;
   transform:translateY(-50%) rotate(0deg);border-radius:50%;
   background:conic-gradient(from 20deg at 50% 50%,
-    color-mix(in srgb,var(--emerald) 50%, transparent),
-    color-mix(in srgb,var(--yellow) 44%, transparent),
-    color-mix(in srgb,var(--orange) 46%, transparent),
-    color-mix(in srgb,var(--violet) 44%, transparent),
-    color-mix(in srgb,var(--emerald) 50%, transparent));
-  filter:blur(26px);opacity:.85;
+    color-mix(in srgb,var(--emerald) 72%, transparent),
+    color-mix(in srgb,var(--yellow) 66%, transparent),
+    color-mix(in srgb,var(--orange) 70%, transparent),
+    color-mix(in srgb,var(--violet) 66%, transparent),
+    color-mix(in srgb,var(--emerald) 72%, transparent));
+  filter:blur(18px);opacity:1;
   animation:coneSpin 28s linear infinite;
 }
 @keyframes coneSpin{to{transform:translateY(-50%) rotate(360deg)}}
@@ -467,8 +491,8 @@ h1.display em{
 .stage-glow::after{
   content:"";position:absolute;inset:0;z-index:3;
   background:
-    radial-gradient(58% 52% at 50% 8%, var(--bg) 0%, color-mix(in srgb,var(--bg) 62%, transparent) 52%, transparent 78%),
-    linear-gradient(180deg, var(--bg) 0%, transparent 26%, transparent 72%, var(--bg) 100%);
+    radial-gradient(44% 40% at 50% 4%, var(--bg) 0%, color-mix(in srgb,var(--bg) 46%, transparent) 54%, transparent 80%),
+    linear-gradient(180deg, var(--bg) 0%, transparent 15%, transparent 84%, var(--bg) 100%);
 }
 .trust{margin-top:92px;position:relative;z-index:4;text-align:center}
 .trust p{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}

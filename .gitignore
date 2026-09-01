@@ -8,3 +8,5 @@ node_modules/
 .env
 .env.local
 *.local
+docs/paperhint-cost-calculator.html
+docs/paperhint-cost-model.xlsx

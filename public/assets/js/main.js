@@ -41,13 +41,15 @@
      underneath and stay visible if this never loads or throws. */
   var neat = null;
 
+  /* sampled from the mascot die-cuts themselves, so the wash and the
+     characters share one palette */
   var NEAT_COLORS = [
-    { color: '#FF8A3D', enabled: true },
-    { color: '#FFD84D', enabled: true },
-    { color: '#7C5CFF', enabled: true },
-    { color: '#0B8A5C', enabled: true },
-    { color: '#31D492', enabled: true },
-    { color: '#9AA3FF', enabled: false }
+    { color: '#FC6200', enabled: true },   /* orange circle  · char-02 */
+    { color: '#FCB600', enabled: true },   /* yellow star    · char-10 */
+    { color: '#FC467E', enabled: true },   /* pink arrow     · char-22 */
+    { color: '#00A89A', enabled: true },   /* teal hexagon   · char-12 */
+    { color: '#0B8A5C', enabled: true },   /* brand emerald            */
+    { color: '#0054FC', enabled: false }   /* blue rectangle · char-06 */
   ];
 
   function initNeat() {

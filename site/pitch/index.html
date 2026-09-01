@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Paperhint — Founding-school pitch</title>
 <link rel="icon" href="../assets/img/Logo/paperhint-mark.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/img/Logo/paperhint-mark.svg" as="image" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital,wght@1,500&display=swap" rel="stylesheet">
@@ -152,9 +153,10 @@
     background:var(--emerald);
     -webkit-mask:url(../assets/img/Logo/paperhint-mark.svg) center/contain no-repeat;
     mask:url(../assets/img/Logo/paperhint-mark.svg) center/contain no-repeat;
-    animation:pitchDrop 1s cubic-bezier(.25,.9,.3,1.15) .2s forwards}
-  .word{display:flex;overflow:hidden;max-width:0;opacity:0;
-    animation:wordOpen 1s cubic-bezier(.25,.9,.25,1) 1.25s forwards}
+    animation:none}
+  body.boot .lockup .mark{animation:pitchDrop 1s cubic-bezier(.25,.9,.3,1.15) .1s forwards}
+  .word{display:flex;overflow:hidden;max-width:0;opacity:0}
+  body.boot .word{animation:wordOpen 1s cubic-bezier(.25,.9,.25,1) 1.15s forwards}
   .word b{font-weight:500;font-size:64px;letter-spacing:-.045em;white-space:nowrap;padding-left:18px}
   .word b em{color:var(--emerald)}
   @keyframes pitchDrop{
@@ -162,9 +164,11 @@
     100%{opacity:1;transform:translateY(0) rotate(0deg)}
   }
   @keyframes wordOpen{0%{max-width:0;opacity:0}30%{opacity:1}100%{max-width:480px;opacity:1}}
-  .s1 .pill,.s1 h1,.s1 .sub,.s1 .note{opacity:0;animation:riseIn .8s cubic-bezier(.25,.8,.25,1) forwards}
-  .s1 .pill{animation-delay:2.15s}.s1 h1{animation-delay:2.3s}
-  .s1 .sub{animation-delay:2.45s}.s1 .note{animation-delay:2.6s}
+  .s1 .pill,.s1 h1,.s1 .sub,.s1 .note{opacity:0}
+  body.boot .s1 .pill,body.boot .s1 h1,body.boot .s1 .sub,body.boot .s1 .note{
+    animation:riseIn .8s cubic-bezier(.25,.8,.25,1) forwards}
+  body.boot .s1 .pill{animation-delay:2.05s}body.boot .s1 h1{animation-delay:2.2s}
+  body.boot .s1 .sub{animation-delay:2.35s}body.boot .s1 .note{animation-delay:2.5s}
   @keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
   .pill{display:inline-flex;align-items:center;gap:9px;margin:40px 0 22px;
     background:var(--surface);border:1px solid var(--line-soft);border-radius:99px;
@@ -610,8 +614,15 @@
   var h = parseInt((location.hash||'').slice(1),10);
   go(isNaN(h)?0:h-1);
   var instant = cur > 0;
-  setTimeout(function(){ document.body.classList.add('bandin'); }, instant ? 0 : 2700);
-  setTimeout(function(){ document.body.classList.add('ready');  }, instant ? 0 : 3500);
+  var booted = false;
+  function boot(){
+    if (booted) return; booted = true;
+    document.body.classList.add('boot');
+    setTimeout(function(){ document.body.classList.add('bandin'); }, instant ? 0 : 2600);
+    setTimeout(function(){ document.body.classList.add('ready');  }, instant ? 0 : 3400);
+  }
+  if (document.readyState === 'complete') boot();
+  else { addEventListener('load', boot); setTimeout(boot, 1800); }
   addEventListener('resize', function(){
     clearTimeout(buildRibbon._t);
     buildRibbon._t = setTimeout(function(){ buildRibbon(); go(cur); }, 180);

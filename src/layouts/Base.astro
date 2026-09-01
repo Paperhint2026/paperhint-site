@@ -1,0 +1,62 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+const {
+  title,
+  description,
+  canonical,
+  ogImage = 'https://paperhint.com/assets/img/og-cover.png',
+  noindex = false,
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+{noindex && <meta name="robots" content="noindex">}
+<!-- seo -->
+<link rel="canonical" href={canonical}>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Paperhint">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={ogImage}>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+<meta name="twitter:image" content={ogImage}>
+<meta name="theme-color" content="#FCFBF8">
+<!-- /seo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital,wght@1,500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/assets/img/Logo/favicon.svg">
+<link rel="stylesheet" href="/assets/css/style.css">
+<noscript><style>
+  /* no JS: the bar simply stays open */
+  .nav-inner.nav-shrink{width:min(1180px,92vw);
+    -webkit-mask-position:left center,right center,center;mask-position:left center,right center,center;
+    -webkit-mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%;
+    mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%;
+    pointer-events:auto}
+  .nav-inner.nav-shrink>*{opacity:1;pointer-events:auto}
+  .nav-inner.nav-boot{animation:none}
+</style></noscript>
+<slot name="head" />
+</head>
+<body>
+<slot />
+<slot name="scripts">
+  <script src="/assets/js/main.js" is:inline></script>
+</slot>
+</body>
+</html>

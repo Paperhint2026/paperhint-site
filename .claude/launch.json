@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "paperhint-site",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4180", "--directory", "site"],
-      "port": 4180
+      "name": "paperhint-astro",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 4321
     }
   ]
 }

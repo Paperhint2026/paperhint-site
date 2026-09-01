@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Chat from '../components/Chat.astro';
+import ProductSpec from '../components/ProductSpec.astro';
+import Capabilities from '../components/Capabilities.astro';
+---
+<Base
+  title="Paperhint — Answer Sheet Evaluation & Question Paper Software for Schools"
+  description="Paperhint drafts teaching notes, question papers and homework for your syllabus, keeps parents in the loop — and marks answer sheets scanned from a phone."
+  canonical="https://paperhint.com/"
+>
+<Fragment slot="head">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Paperhint",
+      "url": "https://paperhint.com",
+      "logo": "https://paperhint.com/assets/img/Logo/paperhint-mark.svg",
+      "email": "hello@paperhint.com"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Paperhint",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "description": "School software that evaluates scanned answer sheets against a rubric, drafts question papers, homework and teaching notes for the syllabus, and notifies parents automatically."
+    }
+  ]
+}
+</script>
+</Fragment>
+
+<Nav />
+
+<!-- ============ hero ============ -->
+<header class="hero">
+  <!-- hero band: one looping ribbon, path computed by main.js, text rides it -->
+  <div class="hero-ribbon" data-shape="loop" aria-hidden="true">
+    <svg preserveAspectRatio="none" focusable="false">
+      <path class="ribbon-echo"/>
+      <path class="ribbon-line"/>
+      <path class="bowl-line" id="ribbon-path" fill="none" stroke="none"/>
+      <text class="bowl-marquee"><textPath href="#ribbon-path" data-speed="26"></textPath></text>
+    </svg>
+  </div>
+
+  <div class="wrap hero-content">
+    <a class="tagline" href="#capabilities"><span class="tag">NEW</span> Teaching is the job. Paperwork isn’t. <i>→</i></a>
+
+    <h1 class="display">Every teacher deserves <span class="h1-line2">a second pair of <em>h</em>ands<svg class="ai-note" viewBox="0 0 64 44" aria-hidden="true"><path style="--len:40" d="M13 7 C 8.5 8, 7.5 10, 7.6 15 L7.4 29 C 7.3 34, 8.5 36, 13 37"/><path style="--len:70" d="M18 35 C 20.5 26, 23.5 15, 26.3 8.5 C 29 15.5, 31.5 26, 33.6 35 M20.8 26.5 L31 26.2"/><path style="--len:46" d="M41 9.4 L49 8.8 M45.2 9.2 L44.6 35 M40.6 35.6 L48.6 35"/><path style="--len:40" d="M53 7 C 57.5 8, 58.5 10, 58.4 15 L58.6 29 C 58.7 34, 57.5 36, 53 37"/></svg></span></h1>
+
+    <p class="hero-sub">
+      From drafting teaching notes to marking every answer sheet —
+      Paperhint handles the week's paperwork, and parents stay in the loop.
+    </p>
+
+    <form class="hero-capture" novalidate>
+      <input type="email" name="email" placeholder="Enter your school email" aria-label="Your school email" autocomplete="email" required>
+      <button class="btn btn-primary" type="submit">Book a demo</button>
+    </form>
+    <p class="hero-note">Loved by teachers · Built for Indian schools</p>
+
+  </div>
+
+  <div class="hero-stage" aria-hidden="true">
+    <div class="stage-glow"><div class="hero-gradient"></div><canvas id="neat-canvas"></canvas></div>
+  </div>
+</header>
+
+<!-- ============ interactive product spec ============ -->
+<ProductSpec />
+
+<!-- ============ role capabilities · folders ============ -->
+<Capabilities />
+
+<section class="cta">
+  <div class="wrap">
+    <div data-component="cta-banner"></div>
+  </div>
+</section>
+
+<!-- ============ footer ============ -->
+
+<Footer />
+<Chat />
+
+<Fragment slot="scripts">
+  <script src="/assets/js/main.js" is:inline></script>
+  <script src="/assets/js/gravity.js" is:inline></script>
+</Fragment>
+</Base>

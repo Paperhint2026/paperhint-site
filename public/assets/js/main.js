@@ -1180,7 +1180,7 @@
       if (!d) return;
       panel.innerHTML =
         '<div class="rf-lead"><h3>' + d.lead + '</h3>' +
-        '<a class="btn btn-ghost" href="contact.html?type=demo">' + d.cta + '</a></div>' +
+        '<a class="btn btn-ghost" href="/contact?type=demo">' + d.cta + '</a></div>' +
         '<div class="rf-items">' + d.items.map(function (it) {
           return '<div class="rf-item"><b>' + it[0] + '</b><p>' + it[1] + '</p></div>';
         }).join('') + '</div>';
@@ -1262,7 +1262,7 @@
         return;
       }
       form.classList.remove('invalid');
-      location.href = 'contact.html?type=demo&email=' + encodeURIComponent(v);
+      location.href = '/contact?type=demo&email=' + encodeURIComponent(v);
     });
     input.addEventListener('input', function () { form.classList.remove('invalid'); });
   }
@@ -1329,7 +1329,7 @@
         '</div>' +
         '<div class="cta-inner">' +
           '<div class="cta-copy"><h2></h2><p></p>' +
-            '<a class="btn btn-ink btn-lg" href="contact.html?type=demo">Book a demo</a></div>' +
+            '<a class="btn btn-ink btn-lg" href="/contact?type=demo">Book a demo</a></div>' +
           '<div class="cta-gang" aria-hidden="true"><picture>' +
             '<source srcset="assets/img/stickers/friends-group.webp" type="image/webp">' +
             '<img loading="lazy" src="assets/img/stickers/friends-group.png" alt="" width="1000" height="667">' +

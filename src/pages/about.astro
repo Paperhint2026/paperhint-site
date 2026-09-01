@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Chat from '../components/Chat.astro';
+---
+<Base
+  title="About Paperhint — School Software Built with Teachers"
+  description="Why we built Paperhint: school management software that gives teachers their evenings back — timetables, marks, notes and parent updates without the spreadsheets."
+  canonical="https://paperhint.com/about"
+>
+<Nav />
+
+<header class="page-hero">
+  <!-- gratitude ribbon: same engine as home, its own words and pace -->
+  <div class="hero-ribbon" data-speed="34" data-drop="420" style="--band:#FF8A3D;--band-echo:var(--yellow);--band-text:#10201A;--band-kw:#FFFFFF"
+       data-words="*Thank* *you* to the teachers, the staff rooms and the last bell · to *report* *cards* written by hand · to the *schools* *that* *raised* *us* · this one is for the *evenings* we owe you ·"
+       aria-hidden="true">
+    <svg preserveAspectRatio="none" focusable="false">
+      <path class="ribbon-echo"/>
+      <path class="ribbon-line"/>
+      <path class="bowl-line" id="about-band" fill="none" stroke="none"/>
+      <text class="bowl-marquee"><textPath href="#about-band" data-speed="34"></textPath></text>
+    </svg>
+  </div>
+
+  <div class="wrap hero-content">
+    <span class="tagline"><span class="tag">ABOUT</span> Note from the founders <i>·</i></span>
+    <h1 class="display">Why <em>w</em>e built this</h1>
+  </div>
+</header>
+
+<section class="section-pad" style="padding-top:26px">
+  <div class="wrap">
+    <article class="letter reveal">
+      <div class="cr-gang-solo" aria-hidden="true">
+        <picture>
+          <source srcset="assets/img/stickers/classroom-gang.webp" type="image/webp">
+          <img src="assets/img/stickers/classroom-gang.png" alt="" width="1100" height="608">
+        </picture>
+      </div>
+      <p>Dear schools that raised us,</p>
+
+      <p>We were your students once. We sat in your classrooms, lined up in your
+      corridors, and carried home the report cards you wrote by hand. Long
+      before Paperhint was an idea, you were already doing the work &mdash;
+      quietly, year after year.</p>
+
+      <p>And because we were there, we saw what it cost. We watched our teachers
+      stay back after the last bell to redraw a timetable someone's absence had
+      broken. We saw marks copied from register to register until midnight, notes
+      photocopied until the ink gave out, and principals holding entire academic
+      years together with little more than patience and a filing cabinet. Years
+      later we came back as visitors, and nothing had changed &mdash; the same
+      invisible work, still carried by hand.</p>
+
+      <p>Somewhere in those visits the thought took hold: the people who gave us
+      everything were spending their evenings on work no one ever thanked them
+      for. We wanted to give something back &mdash; not a tribute, but time.
+      That is when this idea found us.</p>
+
+      <p>Paperhint is our way of returning what you spent on us. The answer
+      sheets that mark themselves against your rubric, the question paper
+      drafted in minutes for your syllabus, the parent who hears about homework
+      the moment it's assigned &mdash;
+      every one of these is an evening handed back to someone who once handed
+      theirs to us.</p>
+
+      <p>If your school still runs on the invisible machine, let us show you the
+      same term running on one page. It would be an honour.</p>
+
+      <p class="letter-sign">&mdash; with gratitude, the Paperhint team</p>
+      <span class="fold" aria-hidden="true"></span>
+      <!-- Founder: refine freely — this is drafted from your telling of the story -->
+    </article>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div data-component="cta-banner"></div>
+  </div>
+</section>
+
+
+<Footer />
+<Chat />
+<div class="toast" role="status" aria-live="polite"></div>
+</Base>

@@ -1314,11 +1314,11 @@
     if (stamp) stamp.value = String(Date.now());
 
     var DONE = {
-      demo:        ['Demo booked.', 'A founder reads this today and replies within one working day. Before we call, we set up one of your classes so the demo runs on your school — dig out one class’s answer sheets, the question paper and its marking scheme.'],
-      pilot:       ['You’re in the queue.', 'A founder replies within one working day with a time for a demo on your own class.'],
-      pricing:     ['Pricing, coming your way.', 'We price per student, set together with founding schools. A founder replies within one working day with times to talk through your numbers.'],
-      partnership: ['Read by a founder.', 'Partnership notes don’t go through a queue — one of us replies within one working day.'],
-      support:     ['We’re on it.', 'A founder reads every support note and replies within one working day — usually much faster.']
+      demo:        ['Received.', 'A Paperhint representative will reach out within one working day to set up your demo.'],
+      pilot:       ['Received.', 'A Paperhint representative will reach out within one working day.'],
+      pricing:     ['Received.', 'A Paperhint representative will reach out within one working day to talk through pricing.'],
+      partnership: ['Received.', 'A Paperhint representative will reach out within one working day.'],
+      support:     ['Received.', 'A Paperhint representative will reach out within one working day — sooner if it’s blocking a class.']
     };
 
     form.addEventListener('submit', function (e) {
@@ -1348,7 +1348,7 @@
           done.innerHTML =
             '<img src="/assets/img/stickers/char-07.png" alt="" width="84" height="84">' +
             '<h3></h3><p></p>' +
-            '<p class="form-done-echo">We’ve sent a note to <b></b>' + (r.body.acked === false ? ' — if it doesn’t arrive, reply to any email from us.' : '.') + '</p>' +
+            '<p class="form-done-echo">We’ve sent an acknowledgement to <b></b>' + (r.body.acked === false ? ' — if it doesn’t arrive, reply to any email from us.' : '.') + '</p>' +
             '<a class="btn btn-ghost" href="/">Back to Paperhint</a>';
           done.querySelector('h3').textContent = t[0];
           done.querySelector('p').textContent = t[1];

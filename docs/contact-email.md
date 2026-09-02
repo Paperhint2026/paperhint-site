@@ -9,24 +9,24 @@ lives in `initContact()` in `public/assets/js/main.js`.
 | Trigger | To | Subject | Reply-to |
 |---|---|---|---|
 | Any valid submission | founders (`CONTACT_TO`) | `[Demo] Greenfield Public School — Priya Nair` | the enquirer |
-| Any valid submission | the enquirer | scenario-specific (below) | — |
+| Any valid submission | the enquirer | We’ve received your enquiry — Paperhint | — |
 
 Founder notification carries every field, the chips they picked, their
 message verbatim, a `wa.me` link if they left a number, and a one-click
 "Reply to Priya" button (mailto, subject pre-filled).
 
-## Scenarios (enquiry type → acknowledgement)
+## The acknowledgement
 
-| `etype` | Subject | The three steps |
-|---|---|---|
-| `demo` | Your Paperhint demo — what happens next | read properly → we set up your class beforehand → demo runs on your paper (bring one exam's sheets, paper, marking scheme, register photo) |
-| `pilot` | Your founding-school application — what happens next | read properly → demo on your own class → founding-school terms |
-| `pricing` | Paperhint pricing — how we set it | per student, one licence → set together in the founding window → a call, not a quote |
-| `partnership` | Partnering with Paperhint — next step | read by a founder → what partnering means (roadmap + custom modules) → a conversation |
-| `support` | We've got your message — Paperhint support | same working day → "urgent" in the subject if blocking → nothing is lost meanwhile |
-
-Unknown/missing type falls back to `demo`. The hero email capture lands
-on the contact page with `?email=` and goes through the same form.
+One plain template for every enquiry type — deliberately not a
+walkthrough. Subject **"We’ve received your enquiry — Paperhint"**; body:
+*Thanks, {first name}. We’ve received your {demo / pricing / partnership
+/ pilot} enquiry [for {school}]. A Paperhint representative will reach
+out to you within one working day. There’s nothing you need to do until
+then — if you have anything to add, just reply to this email.* Plus an
+optional WhatsApp line when `CONTACT_WHATSAPP` is set. Support enquiries
+say "your message" instead of "enquiry". Unknown/missing type falls back
+to demo. The hero email capture lands on the contact page with `?email=`
+and goes through the same form.
 
 ## Edge cases
 

@@ -164,93 +164,30 @@ function founderEmail(d, o) {
   return { from: o.from, to: o.to, reply_to: d.email, subject, html, text };
 }
 
-/* one acknowledgement per scenario — each mirrors the contact page's
-   "what happens next", in the site's voice */
-const SCENARIOS = {
-  demo: {
-    subject: 'Your Paperhint demo — what happens next',
-    kicker: 'Demo booked',
-    title: (d) => `Thanks, ${first(d)}. We’ll set up ${d.school ? esc(d.school) : 'your school'} before we call.`,
-    steps: [
-      ['We read it properly', 'A founder reads your note today and replies within one working day — not a bot, not a sales team.'],
-      ['We set up your class beforehand', 'Your class names, your subjects, one section — so the demo shows your school, not a sample one.'],
-      ['The demo runs on your paper', 'Bring one class’s answer sheets from a real exam, its question paper and marking scheme, and a photo of the attendance register. We photograph the sheets live and mark them on your rubric in front of you.']
-    ],
-    ask: 'One thing to do now: dig out that exam. The demo is only as convincing as the paper you bring.'
-  },
-  pilot: {
-    subject: 'Your founding-school application — what happens next',
-    kicker: 'Founding school',
-    title: (d) => `Thanks, ${first(d)}. Let’s see ${d.school ? esc(d.school) : 'your school'} running in Paperhint.`,
-    steps: [
-      ['We read it properly', 'A founder replies within one working day.'],
-      ['A demo on your own class', 'We set up one of your classes beforehand and run a real exam of yours through Paperhint in front of you.'],
-      ['Founding-school terms', 'Pricing per student, set together, in writing — with onboarding we do alongside you.']
-    ],
-    ask: 'Have one class’s answer sheets and question paper ready for the demo.'
-  },
-  pricing: {
-    subject: 'Paperhint pricing — how we set it',
-    kicker: 'Pricing',
-    title: (d) => `Thanks, ${first(d)}. Here’s how pricing works right now.`,
-    steps: [
-      ['Per student, one licence', 'One price per enrolled student covers every account the school needs — admins, teachers, students and parent access.'],
-      ['Set together, in the founding window', 'We’re pricing with our founding schools rather than publishing a rate card. It’s pro-rated to your academic year, and the founding rate stays yours.'],
-      ['A call, not a quote', 'A founder will reply within one working day with two or three times to talk through your numbers — sections, students, exams per term.']
-    ],
-    ask: 'If you can, have your enrolment and section counts handy for that call.'
-  },
-  partnership: {
-    subject: 'Partnering with Paperhint — next step',
-    kicker: 'Partnership',
-    title: (d) => `Thanks, ${first(d)}. A founder will pick this up personally.`,
-    steps: [
-      ['Read by a founder', 'Partnership notes don’t go through a queue. One of us reads it and replies within one working day.'],
-      ['What partnering means here', 'Founding schools shape the product: your school’s way of working lands on the roadmap, and we build custom modules for how you actually run — bringing the applications you already use into one place.'],
-      ['Then a conversation', 'We’ll suggest a time to talk it through properly.']
-    ],
-    ask: ''
-  },
-  support: {
-    subject: 'We’ve got your message — Paperhint support',
-    kicker: 'Support',
-    title: (d) => `Thanks, ${first(d)}. We’re on it.`,
-    steps: [
-      ['Same working day', 'A founder reads every support note and replies within one working day — usually much faster.'],
-      ['If it’s blocking a class', 'Reply to this email with “urgent” in the subject and we’ll jump on it.'],
-      ['Meanwhile', 'Anything that’s already been marked, drafted or scanned is safe — nothing is lost while we look.']
-    ],
-    ask: ''
-  }
-};
-
+/* the acknowledgement is deliberately plain: received, and a person
+   will be in touch. Details are for the conversation, not the auto-reply. */
 function acknowledgement(d, o) {
-  const sc = SCENARIOS[d.type] || SCENARIOS.demo;
-  const steps = sc.steps.map(([h, p], i) =>
-    `<tr><td style="padding:0 14px 0 0;vertical-align:top;width:28px">
-       <div style="width:26px;height:26px;border-radius:999px;background:#E3F1EA;color:#0B8A5C;font:600 13px/26px Georgia,serif;text-align:center">${i + 1}</div></td>
-     <td style="padding:0 0 16px;vertical-align:top">
-       <div style="font-weight:600;font-size:15px;color:#14201A">${h}</div>
-       <div style="font-size:14.5px;line-height:1.55;color:#3D4F47;margin-top:3px">${p}</div></td></tr>`).join('');
-  const wa = o.whatsapp ? `<p style="margin:18px 0 0;font-size:14px;color:#3D4F47">Prefer WhatsApp? <a href="https://wa.me/${o.whatsapp}" style="color:#0B8A5C">Message us here</a>.</p>` : '';
+  const subject = 'We’ve received your enquiry — Paperhint';
+  const what = d.type === 'support' ? 'message' : d.typeLabel.toLowerCase() + ' enquiry';
+  const school = d.school ? ` for <b style="font-weight:600">${esc(d.school)}</b>` : '';
+  const wa = o.whatsapp ? ` If it’s quicker, you can also reach us on <a href="https://wa.me/${o.whatsapp}" style="color:#0B8A5C">WhatsApp</a>.` : '';
   const html = shell({
-    preheader: sc.subject,
-    kicker: sc.kicker,
-    title: sc.title(d),
-    body: `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:8px">${steps}</table>` +
-          (sc.ask ? `<div style="margin-top:8px;padding:14px 16px;background:#FFF8E1;border-radius:12px;font-size:14.5px;line-height:1.5;color:#14201A">${sc.ask}</div>` : '') + wa,
+    preheader: 'Received — a Paperhint representative will reach out shortly.',
+    kicker: 'Received',
+    title: `Thanks, ${first(d)}.`,
+    body: `<p style="margin:0 0 12px;font-size:16px;line-height:1.6;color:#14201A">We’ve received your ${what}${school}.</p>
+           <p style="margin:0;font-size:16px;line-height:1.6;color:#3D4F47">A Paperhint representative will reach out to you within one working day. There’s nothing you need to do until then — if you have anything to add, just reply to this email.${wa}</p>`,
     cta: null,
-    foot: `You’re getting this because you wrote to us at paperhint.com. Just reply to this email to reach us.`
+    foot: 'You’re getting this because you wrote to us at paperhint.com.'
   });
   const text = [
-    sc.subject, '',
-    strip(sc.title(d)), '',
-    ...sc.steps.map(([h, p], i) => `${i + 1}. ${h}\n   ${p}`),
-    sc.ask ? `\n${sc.ask}` : '',
-    o.whatsapp ? `\nWhatsApp: https://wa.me/${o.whatsapp}` : '',
-    '\n— Paperhint · Teaching is the job. Paperwork isn’t.'
-  ].join('\n');
-  return { from: o.from, to: [d.email], reply_to: undefined, subject: sc.subject, html, text };
+    `Thanks, ${d.name ? d.name.split(' ')[0] : 'there'}.`, '',
+    `We’ve received your ${strip(what)}${d.school ? ' for ' + d.school : ''}.`,
+    'A Paperhint representative will reach out to you within one working day. There’s nothing you need to do until then — if you have anything to add, just reply to this email.',
+    o.whatsapp ? `WhatsApp: https://wa.me/${o.whatsapp}` : '',
+    '', '— Paperhint · Teaching is the job. Paperwork isn’t.'
+  ].filter(l => l !== null).join('\n');
+  return { from: o.from, to: [d.email], subject, html, text };
 }
 
 /* ---------------- template shell ---------------- */
@@ -295,4 +232,4 @@ function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<'
 function strip(h) { return String(h).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&'); }
 
 /* exported for previews/tests */
-export { founderEmail, acknowledgement, SCENARIOS };
+export { founderEmail, acknowledgement, TYPES };

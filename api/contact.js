@@ -17,8 +17,15 @@
 
 const RESEND_URL = 'https://api.resend.com/emails';
 /* hosted brand assets for the emails — star die-cut + pre-rendered ribbon */
-const ASSETS = (process.env.EMAIL_ASSET_BASE || 'https://paperhint.com').replace(/\/$/, '');
-const IMG = { ribbon: ASSETS + '/assets/img/email/ribbon-emerald.png' };
+/* www, not the apex: paperhint.com 308-redirects and Gmail's image proxy
+   won't follow it, so the ribbon rendered as a broken image */
+const ASSETS = (process.env.EMAIL_ASSET_BASE || 'https://www.paperhint.com').replace(/\/$/, '');
+const IMG = {
+  mark:   ASSETS + '/assets/img/email/mark-emerald.png',
+  /* animated GIF: the marquee scrolls in Gmail and Apple Mail; Outlook
+     desktop shows the first frame, which reads as the static ribbon */
+  ribbon: ASSETS + '/assets/img/email/ribbon-emerald.gif'
+};
 const MIN_FORM_SECONDS = 2.5;           /* faster than this is a bot */
 const MAX = { name: 120, email: 200, phone: 40, school: 160, message: 4000 };
 
@@ -62,14 +69,7 @@ export default async function handler(req, res) {
     const expected = ['RESEND_API_KEY', 'CONTACT_TO', 'CONTACT_FROM', 'CONTACT_WHATSAPP'];
     const present = Object.fromEntries(expected.map(k => [k, Boolean(process.env[k])]));
     const nearMiss = Object.keys(process.env).filter(k => /resend|contact/i.test(k) && !expected.includes(k));
-    /* TEMPORARY: names only, never values — which custom vars reach the
-       function at all? Platform vars are filtered out. Remove once green. */
-    const SYS = /^(VERCEL|AWS|LAMBDA|NODE|PATH|HOME|PWD|TZ|LANG|LC_|_|SHLVL|TERM|EDGE|NOW_|X_|TMPDIR|OLDPWD|INIT_CWD|npm_)/;
-    const custom = Object.keys(process.env).filter(k => !SYS.test(k)).sort();
-    return json(res, 503, { ok: false, error: 'Email is not configured yet.', present, nearMiss,
-      env: process.env.VERCEL_ENV || null, branch: process.env.VERCEL_GIT_COMMIT_REF || null,
-      commit: (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7) || null,
-      totalEnvKeys: Object.keys(process.env).length, customEnvNames: custom });
+    return json(res, 503, { ok: false, error: 'Email is not configured yet.', present, env: process.env.VERCEL_ENV || null });
   }
 
   const from = process.env.CONTACT_FROM || 'Paperhint <hello@paperhint.com>';
@@ -233,8 +233,11 @@ function shell(t) {
 <tr><td align="center" style="padding:32px 16px 40px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
   <tr><td style="padding:0 0 0 2px">
-    <div style="padding:0 0 12px;font-size:22px;font-weight:600;letter-spacing:-.02em;color:#14201A">
-      Paper<span style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:500;color:#0B8A5C">h</span>int</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="padding:0 0 12px"><tr>
+      <td valign="middle" style="padding:0 9px 0 0"><img src="${IMG.mark}" width="26" height="26" alt="" style="display:block;width:26px;height:26px"></td>
+      <td valign="middle" style="font-size:22px;font-weight:600;letter-spacing:-.02em;color:#14201A;white-space:nowrap">
+        Paper<span style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:500;color:#0B8A5C">h</span>int</td>
+    </tr></table>
   </td></tr>
   <tr><td style="border:1px solid #E8E4D8;border-radius:0 22px 22px 22px;background:#FFFFFF">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">

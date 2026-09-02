@@ -52,7 +52,7 @@ and goes through the same form.
    - `CONTACT_TO` — the inbox that receives enquiries (default `support@paperhint.com`; must be a real mailbox at your mail provider)
    - `CONTACT_FROM` — `Paperhint <hello@paperhint.com>` once verified
    - `CONTACT_WHATSAPP` — founders' number, digits with country code (optional; adds a WhatsApp line to acknowledgements)
-   - `EMAIL_ASSET_BASE` — where the emails load their images from (default `https://paperhint.com`); the star die-cut and the pre-rendered ribbon (`public/assets/img/email/ribbon-emerald.png`) ship with the site, so they resolve once it's deployed
+   - `EMAIL_ASSET_BASE` — where the emails load their images from (default `https://www.paperhint.com`; **must be the www host** — the apex 308-redirects and Gmail's image proxy won't follow it, which renders images broken); the star die-cut and the pre-rendered ribbon (`public/assets/img/email/ribbon-emerald.png`) ship with the site, so they resolve once it's deployed
 4. Redeploy. Submit the form once from the live site and check both inboxes.
 
 ## Testing locally

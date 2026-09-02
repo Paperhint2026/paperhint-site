@@ -62,7 +62,14 @@ export default async function handler(req, res) {
     const expected = ['RESEND_API_KEY', 'CONTACT_TO', 'CONTACT_FROM', 'CONTACT_WHATSAPP'];
     const present = Object.fromEntries(expected.map(k => [k, Boolean(process.env[k])]));
     const nearMiss = Object.keys(process.env).filter(k => /resend|contact/i.test(k) && !expected.includes(k));
-    return json(res, 503, { ok: false, error: 'Email is not configured yet.', present, nearMiss, env: process.env.VERCEL_ENV || null });
+    /* TEMPORARY: names only, never values — which custom vars reach the
+       function at all? Platform vars are filtered out. Remove once green. */
+    const SYS = /^(VERCEL|AWS|LAMBDA|NODE|PATH|HOME|PWD|TZ|LANG|LC_|_|SHLVL|TERM|EDGE|NOW_|X_|TMPDIR|OLDPWD|INIT_CWD|npm_)/;
+    const custom = Object.keys(process.env).filter(k => !SYS.test(k)).sort();
+    return json(res, 503, { ok: false, error: 'Email is not configured yet.', present, nearMiss,
+      env: process.env.VERCEL_ENV || null, branch: process.env.VERCEL_GIT_COMMIT_REF || null,
+      commit: (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7) || null,
+      totalEnvKeys: Object.keys(process.env).length, customEnvNames: custom });
   }
 
   const from = process.env.CONTACT_FROM || 'Paperhint <hello@paperhint.com>';

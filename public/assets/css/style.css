@@ -1092,6 +1092,7 @@ footer .wrap{position:relative;z-index:2}
   .hero-ribbon{top:104px}
   .hero{padding-top:132px;padding-bottom:calc(24vw + 30px)}
   .nav-inner{--cap:56px;padding:12px 18px 12px calc(var(--cap) / 2 - 15px);gap:12px}
+  .form-card{padding:24px 18px}   /* phones: give the fields the width back */
   .brand{font-size:18px}
   .foot-grid{grid-template-columns:1fr;gap:28px}
   .foot-word{font-size:clamp(52px,17vw,90px)}

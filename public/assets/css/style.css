@@ -542,7 +542,6 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 .nav-cta{display:inline-flex;align-items:center;gap:6px}
 .nav-cta .theme-btn{width:40px;height:40px;border-radius:999px;margin:0}
 .nav-cta .btn{border-radius:999px;height:40px;padding:0 18px}   /* founder-set: 40px */
-@media (max-width:960px){.nav-login{display:none}}
 
 /* ---------------- product spec / interactive ---------------- */
 .spec{padding:44px 0 88px} /* top padding = horizontal seam lane for the ribbons */
@@ -1061,7 +1060,7 @@ footer .wrap{position:relative;z-index:2}
 /* ---------------- responsive ---------------- */
 @media (max-width:960px){
   .nav-links{display:none}
-  .nav-inner>.theme-btn,.nav-inner>.btn-primary{display:none}   /* both live in the menu */
+  .nav-cta{display:none}   /* theme, login and demo all live in the menu on phones */
   .nav-burger{display:flex;margin-left:auto}
   .nav-menu{display:flex}
   .doodle{display:none}

@@ -52,6 +52,7 @@ and goes through the same form.
    - `CONTACT_TO` — founders' inbox(es), comma-separated (default `hello@paperhint.com`)
    - `CONTACT_FROM` — `Paperhint <hello@paperhint.com>` once verified
    - `CONTACT_WHATSAPP` — founders' number, digits with country code (optional; adds a WhatsApp line to acknowledgements)
+   - `EMAIL_ASSET_BASE` — where the emails load their images from (default `https://paperhint.com`); the star die-cut and the pre-rendered ribbon (`public/assets/img/email/ribbon-emerald.png`) ship with the site, so they resolve once it's deployed
 4. Redeploy. Submit the form once from the live site and check both inboxes.
 
 ## Testing locally

@@ -168,7 +168,9 @@ function founderEmail(d, o) {
    will be in touch. Details are for the conversation, not the auto-reply. */
 function acknowledgement(d, o) {
   const subject = 'We’ve received your enquiry — Paperhint';
-  const what = d.type === 'support' ? 'message' : d.typeLabel.toLowerCase() + ' enquiry';
+  const WHAT = { demo: 'demo request', pilot: 'founding-school application', pricing: 'pricing enquiry',
+                 partnership: 'partnership enquiry', support: 'message' };
+  const what = WHAT[d.type] || 'enquiry';
   const school = d.school ? ` for <b style="font-weight:600">${esc(d.school)}</b>` : '';
   const wa = o.whatsapp ? ` If it’s quicker, you can also reach us on <a href="https://wa.me/${o.whatsapp}" style="color:#0B8A5C">WhatsApp</a>.` : '';
   const html = shell({

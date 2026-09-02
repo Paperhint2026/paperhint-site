@@ -56,7 +56,14 @@ export default async function handler(req, res) {
   if (problems.length) return json(res, 400, { ok: false, error: problems.join(' ') });
 
   const key = process.env.RESEND_API_KEY;
-  if (!key) return json(res, 503, { ok: false, error: 'Email is not configured yet.' });
+  if (!key) {
+    /* diagnostics: which expected variables are present (names only,
+       never values), plus any env names that look like near-misses */
+    const expected = ['RESEND_API_KEY', 'CONTACT_TO', 'CONTACT_FROM', 'CONTACT_WHATSAPP'];
+    const present = Object.fromEntries(expected.map(k => [k, Boolean(process.env[k])]));
+    const nearMiss = Object.keys(process.env).filter(k => /resend|contact/i.test(k) && !expected.includes(k));
+    return json(res, 503, { ok: false, error: 'Email is not configured yet.', present, nearMiss, env: process.env.VERCEL_ENV || null });
+  }
 
   const from = process.env.CONTACT_FROM || 'Paperhint <hello@paperhint.com>';
   const to = (process.env.CONTACT_TO || 'hello@paperhint.com').split(',').map(s => s.trim()).filter(Boolean);

@@ -13,6 +13,8 @@ const {
   ogImage = 'https://paperhint.com/assets/img/og-cover.png',
   noindex = false,
 } = Astro.props;
+/* cache-buster: every deploy gets fresh CSS/JS on phones */
+const v = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || String(Date.now())).slice(0, 7);
 ---
 <!doctype html>
 <html lang="en">
@@ -40,7 +42,7 @@ const {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital,wght@1,500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/assets/img/Logo/favicon.svg">
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href={`/assets/css/style.css?v=${v}`}>
 <noscript><style>
   /* no JS: the bar simply stays open */
   .nav-inner.nav-shrink{width:min(1180px,92vw);
@@ -56,7 +58,7 @@ const {
 <body>
 <slot />
 <slot name="scripts">
-  <script src="/assets/js/main.js" is:inline></script>
+  <script src={`/assets/js/main.js?v=${v}`} is:inline></script>
 </slot>
 </body>
 </html>

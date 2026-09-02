@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import Chat from '../components/Chat.astro';
 import ProductSpec from '../components/ProductSpec.astro';
 import Capabilities from '../components/Capabilities.astro';
+/* cache-buster: every deploy gets fresh CSS/JS on phones */
+const v = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || String(Date.now())).slice(0, 7);
 ---
 <Base
   title="Paperhint — Answer Sheet Evaluation & Question Paper Software for Schools"
@@ -90,7 +92,7 @@ import Capabilities from '../components/Capabilities.astro';
 <Chat />
 
 <Fragment slot="scripts">
-  <script src="/assets/js/main.js" is:inline></script>
-  <script src="/assets/js/gravity.js" is:inline></script>
+  <script src={`/assets/js/main.js?v=${v}`} is:inline></script>
+  <script src={`/assets/js/gravity.js?v=${v}`} is:inline></script>
 </Fragment>
 </Base>

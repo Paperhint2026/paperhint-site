@@ -1308,13 +1308,61 @@
     var emailField = document.getElementById('f-email');
     if (email && emailField) emailField.value = email;
 
+    /* stamp when the form rendered — the endpoint treats anything
+       submitted faster than a human could type as a bot */
+    var stamp = form.querySelector('input[name="_t"]');
+    if (stamp) stamp.value = String(Date.now());
+
+    var DONE = {
+      demo:        ['Demo booked.', 'A founder reads this today and replies within one working day. Before we call, we set up one of your classes so the demo runs on your school — dig out one class’s answer sheets, the question paper and its marking scheme.'],
+      pilot:       ['You’re in the queue.', 'A founder replies within one working day with a time for a demo on your own class.'],
+      pricing:     ['Pricing, coming your way.', 'We price per student, set together with founding schools. A founder replies within one working day with times to talk through your numbers.'],
+      partnership: ['Read by a founder.', 'Partnership notes don’t go through a queue — one of us replies within one working day.'],
+      support:     ['We’re on it.', 'A founder reads every support note and replies within one working day — usually much faster.']
+    };
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      /* Front-end only for now — no endpoint wired up yet. */
-      form.reset();
-      var first = form.querySelector('.etype input');
-      if (first) first.checked = true;
-      toast('Thanks — we’ll be in touch within one working day.');
+      var btn = form.querySelector('button[type="submit"]');
+      var fd = new FormData(form);
+      var payload = {
+        etype: fd.get('etype') || 'demo',
+        name: fd.get('name'), role: fd.get('role'), email: fd.get('email'),
+        phone: fd.get('phone'), school: fd.get('school'), size: fd.get('size'),
+        message: fd.get('message'), website: fd.get('website'), _t: fd.get('_t'),
+        reasons: Array.prototype.map.call(form.querySelectorAll('.reason-chip.on'), function (c) { return c.textContent.trim(); }),
+        page: location.pathname + location.search, source: 'contact-form'
+      };
+      var idle = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Sending\u2026';
+      form.classList.remove('has-error');
+
+      fetch('/api/contact', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      }).then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
+        .then(function (r) {
+          if (!r.body || !r.body.ok) throw new Error((r.body && r.body.error) || 'Something went wrong.');
+          var t = DONE[payload.etype] || DONE.demo;
+          var done = document.createElement('div');
+          done.className = 'form-done';
+          done.innerHTML =
+            '<img src="/assets/img/stickers/char-07.png" alt="" width="84" height="84">' +
+            '<h3></h3><p></p>' +
+            '<p class="form-done-echo">We’ve sent a note to <b></b>' + (r.body.acked === false ? ' — if it doesn’t arrive, reply to any email from us.' : '.') + '</p>' +
+            '<a class="btn btn-ghost" href="/">Back to Paperhint</a>';
+          done.querySelector('h3').textContent = t[0];
+          done.querySelector('p').textContent = t[1];
+          done.querySelector('b').textContent = payload.email;
+          form.replaceWith(done);
+        })
+        .catch(function (err) {
+          btn.disabled = false; btn.textContent = idle;
+          form.classList.add('has-error');
+          var note = form.querySelector('.form-error');
+          if (!note) { note = document.createElement('p'); note.className = 'form-error'; btn.insertAdjacentElement('afterend', note); }
+          note.innerHTML = (err.message || 'Something went wrong.') +
+            ' You can also write to us directly at <a href="mailto:hello@paperhint.com">hello@paperhint.com</a>.';
+        });
     });
   }
 

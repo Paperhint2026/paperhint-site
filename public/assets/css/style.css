@@ -527,6 +527,19 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 
 .reveal.in{opacity:1;transform:none}
 
+/* contact form: sent state + error line */
+.form-done{position:relative;text-align:center;padding:38px 28px 34px;background:var(--surface);
+  border:1px solid var(--line-soft);border-radius:0 var(--radius-lg) var(--radius-lg) var(--radius-lg);box-shadow:var(--shadow)}
+.form-done img{display:block;margin:0 auto 10px}
+.form-done h3{font-family:var(--font-display);font-weight:500;font-size:26px;letter-spacing:-.03em;margin-bottom:8px}
+.form-done p{color:var(--ink-soft);font-size:16px;line-height:1.5;max-width:46ch;margin:0 auto}
+.form-done .form-done-echo{margin-top:12px;font-size:14px;color:var(--muted)}
+.form-done .btn{margin-top:22px}
+.form-error{margin-top:12px;font-size:14px;color:#B3261E;line-height:1.5}
+.form-error a{color:inherit;text-decoration:underline}
+.nav-login{margin-right:-4px}
+@media (max-width:960px){.nav-login{display:none}}
+
 /* ---------------- product spec / interactive ---------------- */
 .spec{padding:44px 0 88px} /* top padding = horizontal seam lane for the ribbons */
 .spec-shell{

@@ -18,10 +18,7 @@
 const RESEND_URL = 'https://api.resend.com/emails';
 /* hosted brand assets for the emails — star die-cut + pre-rendered ribbon */
 const ASSETS = (process.env.EMAIL_ASSET_BASE || 'https://paperhint.com').replace(/\/$/, '');
-const IMG = {
-  star:   ASSETS + '/assets/img/stickers/char-10.png',
-  ribbon: ASSETS + '/assets/img/email/ribbon-emerald.png'
-};
+const IMG = { ribbon: ASSETS + '/assets/img/email/ribbon-emerald.png' };
 const MIN_FORM_SECONDS = 2.5;           /* faster than this is a bot */
 const MAX = { name: 120, email: 200, phone: 40, school: 160, message: 4000 };
 
@@ -155,9 +152,8 @@ function founderEmail(d, o) {
     : '';
   const html = shell({
     preheader: `${d.typeLabel} — ${d.school || d.email}`,
-    badge: 'New enquiry',
     title: `${esc(d.school || 'A school')} wants to talk`,
-    note: null, ribbon: false, star: true,
+    note: null, ribbon: false,
     body: table(rows) + chips + msg,
     cta: { href: `mailto:${d.email}?subject=${encodeURIComponent('Re: Paperhint — ' + d.typeLabel)}`, label: 'Reply to ' + (d.name ? d.name.split(' ')[0] : 'them') },
     foot: 'Sent by the contact form on paperhint.com. Reply to this email to answer them directly.'
@@ -182,13 +178,11 @@ function acknowledgement(d, o) {
   const wa = o.whatsapp ? ` If it’s quicker, you can also reach us on <a href="https://wa.me/${o.whatsapp}" style="color:#0B8A5C;font-weight:600">WhatsApp</a>.` : '';
   const html = shell({
     preheader: 'Received — a Paperhint representative will reach out shortly.',
-    badge: 'Received',
     title: `Thanks, ${first(d)}.`,
     note: 'Nice one — your week just got a second pair of hands.',
     body: `<p style="margin:0 0 12px;font-size:16px;line-height:1.6;color:#14201A">We’ve received your ${what}${school}.</p>
            <p style="margin:0;font-size:16px;line-height:1.6;color:#3D4F47">A Paperhint representative will reach out to you <b style="font-weight:600;color:#14201A">within one working day</b>. There’s nothing you need to do until then — if you have anything to add, just reply to this email.${wa}</p>`,
     ribbon: true,
-    star: true,
     cta: null,
     foot: 'You’re getting this because you wrote to us at paperhint.com.'
   });
@@ -209,14 +203,13 @@ function shell(t) {
   const cta = t.cta
     ? `<a href="${t.cta.href}" style="display:inline-block;margin-top:22px;padding:12px 22px;background:#14201A;color:#FAF7F0;text-decoration:none;border-radius:999px;font-weight:600;font-size:14px">${t.cta.label}</a>`
     : '';
-  const star = t.star
-    ? `<td align="right" valign="bottom" style="padding:0 6px 0 0"><img src="${IMG.star}" width="64" height="61" alt="" style="display:block;width:64px;height:auto"></td>`
-    : '';
   const note = t.note
-    ? `<p style="margin:-6px 0 18px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;line-height:1.4;color:#0B8A5C">${esc(t.note)}</p>`
+    ? `<p style="margin:-4px 0 18px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;line-height:1.4;color:#0B8A5C">${esc(t.note)}</p>`
     : '';
+  /* the ribbon is part of the card: its own row, edge to edge, finishing
+     the card with the rounded bottom corners */
   const ribbon = t.ribbon
-    ? `<tr><td style="padding:22px 0 0"><img src="${IMG.ribbon}" width="560" alt="Teaching is the job — Paperhint drafts the notes, sets the papers, keeps parents posted, and marks every answer sheet" style="display:block;width:100%;max-width:560px;height:auto"></td></tr>`
+    ? `<tr><td style="padding:18px 0 0;background:#FFFFFF;border-radius:0 0 22px 22px"><img src="${IMG.ribbon}" width="558" alt="Teaching is the job — Paperhint drafts the notes, sets the papers, keeps parents posted, and marks every answer sheet" style="display:block;width:100%;max-width:558px;height:auto;border-radius:0 0 22px 22px"></td></tr>`
     : '';
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>${esc(t.preheader)}</title></head>
@@ -226,21 +219,20 @@ function shell(t) {
 <tr><td align="center" style="padding:32px 16px 40px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
   <tr><td style="padding:0 0 0 2px">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td valign="bottom" style="padding:0 0 10px;font-size:22px;font-weight:600;letter-spacing:-.02em;color:#14201A">
-        Paper<span style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:500;color:#0B8A5C">h</span>int</td>
-      ${star}
-    </tr></table>
+    <div style="padding:0 0 12px;font-size:22px;font-weight:600;letter-spacing:-.02em;color:#14201A">
+      Paper<span style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:500;color:#0B8A5C">h</span>int</div>
   </td></tr>
-  <tr><td style="background:#FFFFFF;border:1px solid #E8E4D8;border-radius:0 22px 22px 22px;padding:28px 30px 26px">
-    <span style="display:inline-block;padding:6px 12px 6px 10px;border-radius:999px;background:#E3F1EA;color:#0B8A5C;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase">
-      <span style="display:inline-block;width:16px;height:16px;border-radius:999px;background:#0B8A5C;color:#FFFFFF;font-size:11px;line-height:16px;text-align:center;vertical-align:-3px;margin-right:6px">&#10003;</span>${esc(t.badge)}</span>
-    <h1 style="margin:16px 0 10px;font-size:26px;line-height:1.15;letter-spacing:-.03em;font-weight:600;color:#14201A">${t.title}</h1>
-    ${note}
-    ${t.body}
-    ${cta}
+  <tr><td style="border:1px solid #E8E4D8;border-radius:0 22px 22px 22px;background:#FFFFFF">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:30px 30px ${t.ribbon ? '8px' : '26px'}">
+        <h1 style="margin:0 0 10px;font-size:26px;line-height:1.15;letter-spacing:-.03em;font-weight:600;color:#14201A">${t.title}</h1>
+        ${note}
+        ${t.body}
+        ${cta}
+      </td></tr>
+      ${ribbon}
+    </table>
   </td></tr>
-  ${ribbon}
   <tr><td style="padding:18px 6px 0;font-size:12px;line-height:1.55;color:#68766E">
     ${esc(t.foot)}<br>
     <span style="color:#14201A;font-weight:600">Teaching is the job.</span> <span style="color:#14201A">Paperwork isn’t.</span> &nbsp;·&nbsp; <a href="https://paperhint.com" style="color:#68766E">paperhint.com</a>

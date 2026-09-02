@@ -49,7 +49,7 @@ and goes through the same form.
    testing).
 3. Vercel env vars:
    - `RESEND_API_KEY` — required
-   - `CONTACT_TO` — founders' inbox(es), comma-separated (default `hello@paperhint.com`)
+   - `CONTACT_TO` — the inbox that receives enquiries (default `support@paperhint.com`; must be a real mailbox at your mail provider)
    - `CONTACT_FROM` — `Paperhint <hello@paperhint.com>` once verified
    - `CONTACT_WHATSAPP` — founders' number, digits with country code (optional; adds a WhatsApp line to acknowledgements)
    - `EMAIL_ASSET_BASE` — where the emails load their images from (default `https://paperhint.com`); the star die-cut and the pre-rendered ribbon (`public/assets/img/email/ribbon-emerald.png`) ship with the site, so they resolve once it's deployed

@@ -6,7 +6,7 @@
  *
  * Env (Vercel → Settings → Environment Variables):
  *   RESEND_API_KEY   required — https://resend.com/api-keys
- *   CONTACT_TO       founders' inbox(es), comma-separated   default hello@paperhint.com
+ *   CONTACT_TO       inbox(es) that receive enquiries, comma-separated   default support@paperhint.com
  *   CONTACT_FROM     verified sender                        default Paperhint <hello@paperhint.com>
  *   CONTACT_WHATSAPP founders' WhatsApp number (digits)     optional, shown in the acknowledgement
  *
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
   }
 
   const from = process.env.CONTACT_FROM || 'Paperhint <hello@paperhint.com>';
-  const to = (process.env.CONTACT_TO || 'hello@paperhint.com').split(',').map(s => s.trim()).filter(Boolean);
+  const to = (process.env.CONTACT_TO || 'support@paperhint.com').split(',').map(s => s.trim()).filter(Boolean);
   const whatsapp = (process.env.CONTACT_WHATSAPP || '').replace(/\D/g, '');
 
   const notify = founderEmail(data, { from, to });

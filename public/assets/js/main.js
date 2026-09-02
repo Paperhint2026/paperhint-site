@@ -1361,7 +1361,7 @@
           var note = form.querySelector('.form-error');
           if (!note) { note = document.createElement('p'); note.className = 'form-error'; btn.insertAdjacentElement('afterend', note); }
           note.innerHTML = (err.message || 'Something went wrong.') +
-            ' You can also write to us directly at <a href="mailto:hello@paperhint.com">hello@paperhint.com</a>.';
+            ' You can also write to us directly at <a href="mailto:support@paperhint.com">support@paperhint.com</a>.';
         });
     });
   }

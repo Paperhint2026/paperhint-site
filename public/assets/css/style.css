@@ -851,6 +851,7 @@ footer .wrap{position:relative;z-index:2}
   font-family:var(--font-display);font-weight:500;letter-spacing:-.045em;
   font-size:clamp(72px,14vw,210px);line-height:.9;text-align:center;
   color:var(--line);user-select:none;
+  padding-bottom:.12em;   /* the p's descender clears the base rule */
 }
 .foot-word em{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:.94em;letter-spacing:0;color:var(--emerald)}
 .foot-base{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line-soft);padding-top:24px;margin-top:10px;font-size:13px;color:var(--muted)}

@@ -220,8 +220,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 }
 .brand{display:flex;align-items:center;gap:10px;white-space:nowrap;flex:none;font-family:var(--font-display);font-weight:500;font-size:21px;letter-spacing:-.02em}
 /* the h of hint: small Merriweather italic, tucked flush into the Geist word */
-.brand .hint em{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:.94em;letter-spacing:0;margin-right:.5px}
-.brand .hint{color:var(--emerald)}
+.brand .hint em{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:.94em;letter-spacing:0;margin-right:.5px;color:var(--emerald)}
+.brand .hint{color:inherit}
 .brand .mark{width:30px;height:30px;display:grid;place-items:center;color:var(--emerald)}
 .brand .mark svg{width:27px;height:27px}
 /* boot: the collapsed rosette drops in from above the viewport… */
@@ -258,6 +258,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   transition:opacity .3s ease, transform .35s cubic-bezier(.3,.8,.24,1), visibility .3s;
 }
 .nav-menu a{padding:13px 16px;border-radius:12px;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)}
+.nav-menu .btn{border-radius:999px}   /* menu links keep 12px; its CTAs stay pills */
 .nav-menu a:hover{background:var(--emerald-tint)}
 .nav-menu .btn{margin-top:6px;justify-content:center}
 .nav-menu .menu-theme{
@@ -283,7 +284,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 [data-theme="dark"] .theme-btn .moon{display:block}
 .btn{
   display:inline-flex;align-items:center;gap:8px;justify-content:center;
-  padding:10px 18px;border-radius:11px;
+  padding:10px 18px;border-radius:999px;   /* every CTA is a pill */
   font-family:var(--font-display);font-weight:500;font-size:14.5px;letter-spacing:.005em;
   transition:.25s;white-space:nowrap;
 }
@@ -539,6 +540,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 .form-error a{color:inherit;text-decoration:underline}
 /* the two nav actions read as one group: tight gap, pill shapes */
 .nav-cta{display:inline-flex;align-items:center;gap:6px}
+.nav-cta .theme-btn{width:40px;height:40px;border-radius:999px;margin:0}
 .nav-cta .btn{border-radius:999px;height:40px;padding:0 18px}   /* founder-set: 40px */
 @media (max-width:960px){.nav-login{display:none}}
 
@@ -845,10 +847,12 @@ footer .wrap{position:relative;z-index:2}
 .foot-grid ul a{font-size:14.5px;color:var(--ink-soft);transition:.2s}
 .foot-grid ul a:hover{color:var(--emerald)}
 .foot-word{
-  font-family:var(--font-display);font-weight:500;letter-spacing:-.045em;text-transform:lowercase;
-  font-size:clamp(70px,13vw,190px);line-height:.9;text-align:center;
-  color:var(--ink);opacity:.1;user-select:none;
+  /* the same wordmark as the nav, oversized: light grey with only the h in green */
+  font-family:var(--font-display);font-weight:500;letter-spacing:-.045em;
+  font-size:clamp(72px,14vw,210px);line-height:.9;text-align:center;
+  color:var(--line);user-select:none;
 }
+.foot-word em{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:.94em;letter-spacing:0;color:var(--emerald)}
 .foot-base{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line-soft);padding-top:24px;margin-top:10px;font-size:13px;color:var(--muted)}
 
 /* ---------------- about: the founder's letter ---------------- */

@@ -1,6 +1,10 @@
+---
+/* cache-buster: the component must not go stale on a deploy */
+const v = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || String(Date.now())).slice(0, 7);
+---
 <!-- Ask Paperhint. Everything (markup, styles, stories, behaviour) lives in
      the custom element: public/assets/js/ask-paperhint.js
      Set endpoint="/api/chat" to use the real brain; without it the element
      answers from its own canned map. -->
 <ask-paperhint endpoint="/api/chat" contact-endpoint="/api/contact"></ask-paperhint>
-<script src="/assets/js/ask-paperhint.js" is:inline defer></script>
+<script src={`/assets/js/ask-paperhint.js?v=${v}`} is:inline defer></script>

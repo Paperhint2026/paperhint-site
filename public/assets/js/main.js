@@ -981,7 +981,12 @@
     function add(kind, html) {
       var el = document.createElement('div');
       el.className = 'chat-msg ' + kind;
-      if (kind.indexOf('typing') > -1) el.innerHTML = '<i></i><i></i><i></i>';
+      if (kind.indexOf('typing') > -1) {
+        var spin = root.querySelector('.chat-head .ph-mark').cloneNode(true);
+        spin.setAttribute('class', 'ph-mark spin');
+        el.appendChild(spin);
+        el.appendChild(document.createTextNode('Thinking\u2026'));
+      }
       else el.textContent = html;
       log.appendChild(el);
       log.scrollTop = log.scrollHeight;

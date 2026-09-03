@@ -1121,10 +1121,15 @@
       var d = ROLES[key];
       if (!d) return;
       var page = ROLE_PAGE[key];
+      /* the role's own line now leads deeper into the site rather than
+         jumping straight to the contact form: the demo ask lives on the
+         role page, once they have read what it actually does for them */
       panel.innerHTML =
         '<div class="rf-lead"><h3>' + d.lead + '</h3>' +
-        '<a class="btn btn-ghost" href="/contact?type=demo">' + d.cta + '</a>' +
-        (page ? '<a class="rf-more" href="' + page + '">Read the whole story <span aria-hidden="true">→</span></a>' : '') +
+        (page
+          ? '<a class="btn btn-ghost rf-go" href="' + page + '">' + d.cta +
+            ' <span aria-hidden="true">→</span></a>'
+          : '') +
         '</div>' +
         '<div class="rf-items">' + d.items.map(function (it) {
           return '<div class="rf-item"><b>' + it[0] + '</b><p>' + it[1] + '</p></div>';

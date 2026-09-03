@@ -1232,13 +1232,12 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .role-cta .btn{flex:1 1 auto;text-align:center;justify-content:center}
 }
 
-/* the home role folder's link through to the full role page */
-.rf-more{display:inline-flex;align-items:center;gap:7px;margin-top:14px;
-  font-size:14.5px;color:var(--emerald);text-decoration:none;
-  text-underline-offset:4px}
-.rf-more:hover{text-decoration:underline}
-.rf-more span{transition:transform .2s ease;display:inline-block}
-.rf-more:hover span{transform:translateX(3px)}
+/* the home role folder's way through to the full role page — the only
+   action in that panel now, so it keeps the button weight the contact
+   link used to have */
+.rf-go{display:inline-flex;align-items:center;gap:9px}
+.rf-go span{transition:transform .2s ease;display:inline-block}
+.rf-go:hover span{transform:translateX(3px)}
 
 /* a page still waiting on its narrative says so, quietly */
 .role-soon{display:inline-block;margin:16px 0 0;font-size:12.5px;letter-spacing:.06em;

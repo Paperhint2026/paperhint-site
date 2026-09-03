@@ -81,25 +81,35 @@ export default async function handler(req, res) {
   const notify = founderEmail(data, { from, to });
   const ack = acknowledgement(data, { from, whatsapp });
 
+  /* An enquiry must survive a mail outage. Both emails are attempted, then
+     the enquiry is stored whatever happened, carrying whether the mail went
+     out — so a Resend failure costs us a notification, not a lead. Recording
+     last rather than first also means the row says what actually happened. */
+  let mailed = false, acked = false, mailError = null;
   try {
-    /* the founder notification is the one that must not be lost — send it
-       first and fail loudly; the acknowledgement is best-effort */
     await send(key, notify);
-    let acked = false;
-    try { await send(key, ack); acked = true; } catch (e) { console.error('ack failed', e.message); }
-    /* the log is a convenience, never a reason to fail a delivered enquiry */
-    await recordNow({
-      kind: 'callback', sid: data.sid || null,
-      name: data.name, email: data.email, school: data.school,
-      role: data.role, enquiry: data.typeLabel, page: data.page, via: data.source,
-      text: data.message || '', reasons: data.reasons, transcript: data.transcript || '',
-      ...whereFrom(req),
-    });
-    return json(res, 200, { ok: true, acked });
+    mailed = true;
   } catch (e) {
-    console.error('notify failed', e.message);
-    return json(res, 502, { ok: false, error: 'We couldn’t send that just now.' });
+    mailError = String(e && e.message).slice(0, 300);
+    console.error('notify failed', mailError);
   }
+  try { await send(key, ack); acked = true; } catch (e) { console.error('ack failed', e.message); }
+
+  const stored = await recordNow({
+    kind: 'callback', sid: data.sid || null,
+    name: data.name, email: data.email, school: data.school,
+    role: data.role, enquiry: data.typeLabel, page: data.page, via: data.source,
+    text: data.message || '', reasons: data.reasons, transcript: data.transcript || '',
+    mailed, acked, mailError,
+    ...whereFrom(req),
+  });
+
+  /* Only a total loss is an error: if either the mail or the row landed, the
+     enquiry has reached us and the person should be told so. */
+  if (!mailed && !stored) {
+    return json(res, 502, { ok: false, error: 'That didn’t send. Write to support@paperhint.com and we’ll pick it up.' });
+  }
+  return json(res, 200, { ok: true, acked });
 };
 
 async function send(key, msg) {

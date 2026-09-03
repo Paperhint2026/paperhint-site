@@ -83,26 +83,51 @@ async function ask(system, messages) {
  * prompt forbids it. The prompt is the real fix; this is the safety net —
  * a narrow set of exact phrases swapped for the house equivalent. */
 /* What the model still gets wrong despite the prompt, fixed where a model
-   cannot forget it.
+   cannot forget it. Three different treatments, because the mistakes differ.
 
-   Filler: a sentence carrying a support-desk phrase is dropped whole —
-   substituting mid-sentence used to leave "say the word what you need". They
-   are always the closing offer, never the answer. The same treatment for the
-   marketing words the founder banned outright (streamline, leverage,
-   seamless, empower): a sentence built on one of those is a sentence that
-   said nothing. A reply is never left empty.
+   Support-desk filler ("just let me know", "I'm here to help") is a whole
+   clause that says nothing, always the closing offer, never the answer — so
+   the sentence carrying it is dropped. A reply is never left empty.
 
-   Exclamation marks: replaced with a full stop, in any language. The prompt
-   forbids them and gpt-4o-mini reaches for them anyway when told to be warm. */
-const TICS = /\b(feel free to ask|please feel free to|just let me know|let me know if|i'?m here for that|i'?m here to help|i'?m here as your assistant|i'?d be happy to|i can definitely assist|i'?m focused on|i focus on|happy to help|how can i assist|streamlin\w*|leverag\w*|seamless\w*|empower\w*)\b/i;
+   The banned marketing words (streamline, leverage, seamless, empower) sit
+   inside sentences that DO carry the answer. Dropping those sentences
+   decapitated a reply in testing — "For your class 6 science, Paperhint
+   streamlines…" vanished and the reply began "Plus, the register…". So the
+   word is swapped for a plain one and the sentence keeps its meaning.
+
+   Exclamation marks become full stops, in any language.
+
+   And a reply of six words or fewer — "I can't share that." — gets one
+   offer added, because a decline with nothing after it is the abruptness
+   the founder heard. */
+const FILLER = /\b(feel free to ask|please feel free to|just let me know|let me know if|i'?m here for that|i'?m here to help|i'?m here as your assistant|i'?d be happy to|i can definitely assist|i'?m focused on|i focus on|happy to help|how can i assist)\b/i;
 const OPENERS = /^(great question|certainly|absolutely|sure|that'?s great)[.,!]?\s*/i;
+const WORDS = [
+  [/\bstreamlining\b/gi, 'handling'], [/\bstreamlines\b/gi, 'handles'], [/\bstreamlined\b/gi, 'handled'], [/\bstreamline\b/gi, 'handle'],
+  [/\bleveraging\b/gi, 'using'], [/\bleverages\b/gi, 'uses'], [/\bleverage\b/gi, 'use'],
+  [/\bseamlessly\b/gi, 'without fuss'], [/\bseamless\b/gi, 'straightforward'],
+  [/\bempowering\b/gi, 'helping'], [/\bempowers\b/gi, 'helps'], [/\bempower\b/gi, 'help'],
+  [/\beffortlessly\b/gi, 'without fuss'], [/\beffortless\b/gi, 'easy'],
+];
+const OFFERS = [
+  'Give me a class instead and I’ll show you the part that matters.',
+  'Ask me about a chapter or the marking and I’ll show you what I’m for.',
+  'Throw me something from your classroom and I’ll do that one properly.',
+];
 
 function scrub(text) {
-  const calm = String(text || '').replace(/\?!+/g, '?').replace(/!+/g, '.');
-  const parts = calm.split(/(?<=[.?])\s+/);
-  const kept = parts.filter(s => !TICS.test(s));
-  const out = (kept.length ? kept : parts).join(' ').replace(OPENERS, '').replace(/\.\s*\./g, '.').trim();
-  return out.charAt(0).toUpperCase() + out.slice(1);
+  let t = String(text || '').replace(/\?!+/g, '?').replace(/!+/g, '.');
+  for (const [re, to] of WORDS) t = t.replace(re, to);
+  const parts = t.split(/(?<=[.?])\s+/);
+  const kept = parts.filter(p => !FILLER.test(p));
+  let out = (kept.length ? kept : parts).join(' ')
+    .replace(OPENERS, '')
+    .replace(/^(plus|also|and|but|so),?\s+/i, '')      /* an orphan left by a drop */
+    .replace(/\.\s*\./g, '.').trim();
+  out = out.charAt(0).toUpperCase() + out.slice(1);
+  const words = out.split(/\s+/).filter(Boolean).length;
+  if (words > 0 && words <= 6) out += ' ' + OFFERS[out.length % OFFERS.length];
+  return out;
 }
 
 function providerError(status, body) {

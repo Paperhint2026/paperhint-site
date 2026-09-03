@@ -753,6 +753,65 @@
     [/demo|start|onboard|migrat|pilot/i, 'We\u2019re onboarding founding schools hands-on right now. Book a demo \u2014 we\u2019ll set up one of your classes beforehand so you see your school, not a sample one.']
   ];
 
+
+  /* Written stories, not improvised — every visitor gets the pitch right.
+     Voice: the situation first, then what changes. Nothing promised that
+     doesn't ship. Rendered as trusted HTML (authored here, never user or
+     model text, which always goes in as textContent). */
+  var STORIES = {
+    teacher: {
+      ask: 'I\u2019m a teacher \u2014 how does Paperhint help me?',
+      intro: 'It\u2019s Sunday evening. Forty-odd answer sheets from Friday\u2019s test are still in the bag, tomorrow\u2019s notes aren\u2019t written, and the question paper for next week is a blank page. None of that is teaching \u2014 it\u2019s the work around teaching.',
+      lead: 'Here\u2019s the same week with Paperhint:',
+      bullets: [
+        '<b>Monday.</b> You photograph the answer sheets with your phone. Every answer is checked against its question and scored on your rubric \u2014 the same way for every student. You read through, adjust what you disagree with, approve.',
+        '<b>Tuesday.</b> You ask for notes on the next chapter. They come back drafted for your syllabus \u2014 simpler for the weaker section if you ask, with a board-style diagram if you want one.',
+        '<b>Wednesday.</b> Homework goes out in a minute, and parents know the moment it\u2019s assigned. No group message to write.',
+        '<b>Thursday.</b> Next week\u2019s paper: you pick chapters, weightage and difficulty. Paper, blueprint and answer key come back for your syllabus.',
+        '<b>Friday.</b> Attendance is the same paper register you already keep \u2014 scanned, not retyped.'
+      ],
+      close: 'The marks land on each student\u2019s record as you approve them. Nothing goes out without you signing off.'
+    },
+    admin: {
+      ask: 'I run the school office \u2014 what changes for me?',
+      intro: 'It\u2019s the week before the new academic year. Last year\u2019s lists have to become this year\u2019s, every section needs a teacher, and the registers from last term are still stacked on the desk.',
+      lead: 'What the office stops doing by hand:',
+      bullets: [
+        '<b>Rolling the year over.</b> A whole class is promoted to the next grade in one move; the year that ended is archived, not lost.',
+        '<b>Staffing every section.</b> Allotments \u2014 who teaches which class and section \u2014 are worked out for you and kept in one place. Cover a period by asking, in plain language.',
+        '<b>Subjects and books.</b> Attach a book to a subject once; it reaches every teacher in that department.',
+        '<b>Attendance.</b> The paper register the school already uses, scanned in \u2014 absences reach parents the same day.',
+        '<b>People and structure.</b> Classes, sections, students, teachers and subjects live in one portal instead of four spreadsheets.'
+      ],
+      close: 'Nothing gets migrated by you \u2014 we set the school up alongside your office, in one sitting.'
+    },
+    principal: {
+      ask: 'I\u2019m a principal \u2014 why would my school do this?',
+      intro: 'You have bought software before. It was configured in June, fed until August, and quietly abandoned by October \u2014 because it asked teachers to do a second job in a second place.',
+      lead: 'Paperhint works the other way round:',
+      bullets: [
+        '<b>It reads the paper you already produce.</b> Answer sheets, attendance registers, written exams. Day one changes nothing about how your school runs.',
+        '<b>It gives time back to teachers first.</b> Correction, paper setting and notes \u2014 the work that eats their evenings. That\u2019s why it actually gets used.',
+        '<b>Exams stay on paper.</b> This isn\u2019t a digital examination portal. You print as you always have.',
+        '<b>One licence per student</b> covers admins, teachers, students and parent access \u2014 priced with founding schools rather than off a rate card.',
+        '<b>Your school shapes it.</b> Founding schools\u2019 ways of working land on the roadmap, and we build custom modules for how you actually run.'
+      ],
+      close: 'A phone and a browser. No scanners, no new hardware.'
+    },
+    parent: {
+      ask: 'I\u2019m a parent \u2014 what would I see?',
+      intro: 'Most of what you learn about school arrives late \u2014 the test that happened last week, the homework you hear about at bedtime, the absence nobody mentioned.',
+      lead: 'With Paperhint in the school:',
+      bullets: [
+        '<b>Homework, when it\u2019s set.</b> You hear the moment a teacher assigns it \u2014 not the night before it\u2019s due.',
+        '<b>Absences, the same day.</b> Read straight from the attendance sheet, no phone call needed.',
+        '<b>Marks, when the teacher shares them.</b> Each evaluation is recorded to your child, exam over exam.',
+        '<b>Nothing to install.</b> Updates come to where you already are.'
+      ],
+      close: 'Paperhint is bought by your school, not by you \u2014 if you\u2019d like them to see it, we\u2019re happy to talk to them.'
+    }
+  };
+
   /* Flip this to '/api/chat' the day the endpoint ships — nothing else changes. */
   var CHAT_ENDPOINT = null;
   var history = [];
@@ -954,6 +1013,9 @@
     var chips = root.querySelector('.chat-chips');
     var form  = root.querySelector('.chat-form');
     var input = form.querySelector('input');
+    var opened = Date.now();
+    var lead = { role: null, name: '', email: '', school: '' };
+    var step = null;              /* null | 'name' | 'email' | 'school' */
 
     function setOpen(open) {
       root.classList.toggle('open', open);
@@ -965,7 +1027,6 @@
     pill.addEventListener('click', function () { setOpen(true); });
     close.addEventListener('click', function () { setOpen(false); });
 
-    /* Escape closes; "/" opens from anywhere the user isn't already typing */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && root.classList.contains('open')) { setOpen(false); return; }
       if (e.key === '/' && !root.classList.contains('open')) {
@@ -978,36 +1039,134 @@
       if (root.classList.contains('open') && !root.contains(e.target)) setOpen(false);
     });
 
-    function add(kind, html) {
+    function scroll() { log.scrollTop = log.scrollHeight; }
+
+    /* text() for anything from a person or a model; html() only for the
+       stories authored in this file. */
+    function text(kind, str) {
       var el = document.createElement('div');
       el.className = 'chat-msg ' + kind;
-      if (kind.indexOf('typing') > -1) {
-        var spin = root.querySelector('.chat-head .ph-mark').cloneNode(true);
-        spin.setAttribute('class', 'ph-mark spin');
-        el.appendChild(spin);
-        el.appendChild(document.createTextNode('Thinking\u2026'));
-      }
-      else el.textContent = html;
-      log.appendChild(el);
-      log.scrollTop = log.scrollHeight;
-      return el;
+      el.textContent = str;
+      log.appendChild(el); scroll(); return el;
+    }
+    function html(kind, markup) {
+      var el = document.createElement('div');
+      el.className = 'chat-msg ' + kind;
+      el.innerHTML = markup;
+      log.appendChild(el); scroll(); return el;
+    }
+    function thinking() {
+      var el = document.createElement('div');
+      el.className = 'chat-msg bot typing';
+      var spin = root.querySelector('.chat-head .ph-mark').cloneNode(true);
+      spin.setAttribute('class', 'ph-mark spin');
+      el.appendChild(spin);
+      el.appendChild(document.createTextNode('Thinking…'));
+      log.appendChild(el); scroll(); return el;
+    }
+    /* a row of tappable follow-ups under the last message */
+    function actions(items) {
+      var row = document.createElement('div');
+      row.className = 'chat-actions';
+      items.forEach(function (it) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'chat-chip'; b.textContent = it.label;
+        b.addEventListener('click', function () { row.remove(); it.run(); });
+        row.appendChild(b);
+      });
+      log.appendChild(row); scroll(); return row;
     }
 
-    function ask(q) {
-      if (!q) return;
-      chips.classList.add('gone');       /* suggestions step aside once asked */
-      add('me', q);
-      var typing = add('bot typing', '');
+    /* ---- stories ---- */
+    function tellStory(role) {
+      var st = STORIES[role];
+      if (!st) return;
+      lead.role = role;
+      chips.classList.add('gone');
+      text('me', st.ask);
+      var wait = thinking();
+      setTimeout(function () {
+        wait.remove();
+        html('bot story',
+          '<p>' + st.intro + '</p>' +
+          '<p class="story-lead">' + st.lead + '</p>' +
+          '<ul>' + st.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('') + '</ul>' +
+          '<p class="story-close">' + st.close + '</p>');
+        actions([
+          { label: 'Arrange a callback', run: startLead },
+          { label: 'Ask something else', run: function () { input.focus(); } }
+        ]);
+      }, 620);
+    }
+
+    /* ---- callback capture -> the same pipeline as the contact form ---- */
+    var PROMPT = {
+      name:   'Happy to. What’s your name?',
+      email:  'Thanks. Which email should we write to?',
+      school: 'And which school?'
+    };
+    function startLead() {
+      step = 'name';
+      text('bot', PROMPT.name);
+      input.placeholder = 'Your name';
+      input.focus();
+    }
+    function cancelLead() {
+      step = null; input.placeholder = 'Ask anything…';
+      text('bot', 'No problem — ask me anything else, or write to support@paperhint.com whenever you like.');
+    }
+    function handleLead(value) {
+      if (/^(cancel|stop|no thanks|nevermind|never mind)$/i.test(value)) return cancelLead();
+
+      if (step === 'name') {
+        lead.name = value; step = 'email';
+        text('bot', PROMPT.email); input.placeholder = 'you@school.edu'; return;
+      }
+      if (step === 'email') {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          text('bot', 'That doesn’t look like an email address — could you check it?'); return;
+        }
+        lead.email = value; step = 'school';
+        text('bot', PROMPT.school); input.placeholder = 'School name'; return;
+      }
+      if (step === 'school') {
+        lead.school = value; step = null; input.placeholder = 'Ask anything…';
+        var wait = thinking();
+        var role = lead.role ? STORIES[lead.role].ask : 'a question in the chat';
+        fetch('/api/contact', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            etype: 'demo', name: lead.name, email: lead.email, school: lead.school,
+            role: lead.role === 'teacher' ? 'Teacher' : lead.role === 'principal' ? 'Principal / Head'
+                : lead.role === 'admin' ? 'Administrator' : 'Other',
+            message: 'Asked for a callback from the chat on the website. Read the story for: ' + role,
+            source: 'ask-paperhint', page: location.pathname + location.search, _t: opened
+          })
+        }).then(function (r) { return r.json(); }).then(function (j) {
+          wait.remove();
+          if (!j || !j.ok) throw new Error(j && j.error || 'failed');
+          text('bot', 'Done, ' + lead.name.split(' ')[0] + ' — a Paperhint representative will reach out to ' +
+                      lead.email + ' within one working day. We’ve sent you an acknowledgement too.');
+        }).catch(function () {
+          wait.remove();
+          html('bot err', 'That didn’t go through. You can reach us directly at ' +
+               '<a href="mailto:support@paperhint.com">support@paperhint.com</a>.');
+        });
+      }
+    }
+
+    /* ---- free questions ---- */
+    function askAdapter(q) {
+      var wait = thinking();
       input.disabled = true;
       window.PaperhintChat.adapter(q).then(function (reply) {
-        typing.className = 'chat-msg bot';
-        typing.textContent = reply;
+        wait.remove(); text('bot', reply);
       }).catch(function () {
-        typing.className = 'chat-msg bot err';
-        typing.textContent = 'That didn\u2019t go through. Try again, or write to support@paperhint.com.';
+        wait.remove();
+        html('bot err', 'That didn’t go through. Try again, or write to ' +
+             '<a href="mailto:support@paperhint.com">support@paperhint.com</a>.');
       }).then(function () {
-        input.disabled = false; input.focus();
-        log.scrollTop = log.scrollHeight;
+        input.disabled = false; input.focus(); scroll();
       });
     }
 
@@ -1015,10 +1174,16 @@
       e.preventDefault();
       var q = input.value.trim();
       input.value = '';
-      ask(q);
+      if (!q) return;
+      text('me', q);
+      chips.classList.add('gone');
+      if (step) return handleLead(q);
+      if (/call ?back|call me|talk to (someone|a person)|demo/i.test(q)) return startLead();
+      askAdapter(q);
     });
+
     chips.querySelectorAll('.chat-chip').forEach(function (c) {
-      c.addEventListener('click', function () { ask(c.textContent.trim()); });
+      c.addEventListener('click', function () { tellStory(c.getAttribute('data-story')); });
     });
   }
 

@@ -60,3 +60,28 @@ and goes through the same form.
 `node scratch/mail/test.mjs` (see the session scratchpad) exercises every
 branch with a fake Resend and renders each template to HTML. Or run
 `vercel dev` with a `.env` holding the variables above.
+
+---
+
+# Ask Paperhint (the chat)
+
+Three files, deliberately separate so each can be worked on alone:
+
+| File | What it owns |
+|---|---|
+| `public/assets/js/ask-paperhint.js` | the whole widget — `<ask-paperhint>` custom element: markup, shadow-DOM styles, the four role stories, the callback capture, the canned fallback brain |
+| `api/chat-prompt.js` | the assistant's instructions. Nothing else. Iterate the prompt here without touching transport. |
+| `api/chat.js` | transport only — provider routing, rate limit, history trimming, errors |
+
+**Using it:** `<ask-paperhint></ask-paperhint>`. Optional attributes:
+`endpoint="/api/chat"` (omit and it answers from its own canned map),
+`contact-endpoint="/api/contact"`. Or set `window.PaperhintChat.endpoint`
+/ `window.PaperhintChat.adapter` at runtime.
+
+It reads the page's design tokens through the shadow boundary and falls
+back to its own, so it also works on a page that doesn't load
+`style.css` — which is what makes it droppable into the product app.
+
+**Env (Vercel, Production ticked):** one of `OPENAI_API_KEY` or
+`GEMINI_API_KEY`, plus `CHAT_MODEL` (set it to a model your account has)
+and optionally `CHAT_PROVIDER` to force one when both keys exist.

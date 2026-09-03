@@ -86,9 +86,11 @@ function providerError(status, body) {
 }
 
 /* ---------------- rate limiting (per warm instance) ---------------- */
+/* Schools sit behind one public IP — a whole staff room shares it — so this
+   is set to stop a bill being run up, not to ration a curious teacher. */
 const hits = new Map();
 const WINDOW_MS = 60 * 60 * 1000;
-const MAX_PER_WINDOW = 25;
+const MAX_PER_WINDOW = Number(process.env.CHAT_RATE_LIMIT || 80);
 
 function overLimit(ip) {
   const now = Date.now();

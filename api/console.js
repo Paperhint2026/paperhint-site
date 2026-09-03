@@ -5,7 +5,7 @@
  * order, and whether they left a way to reach them.
  */
 
-import { read, logging } from './_log.js';
+import { read, logging, storageKeys } from './_log.js';
 import { bearer, whoIs, configured, diagnose } from './_auth.js';
 
 export default async function handler(req, res) {
@@ -18,9 +18,16 @@ export default async function handler(req, res) {
   if (!who) return json(res, 401, { error: 'Sign in again.' });
 
   if (!logging()) {
+    const { seen, other } = storageKeys();
+    const notice = other.length
+      ? 'Storage is half-connected: this deployment sees ' + other.join(', ') +
+        ', but not a REST url and token pair. A redis:// connection string is no use here — ' +
+        'take the REST URL and token from the Upstash dashboard and add them as ' +
+        'KV_REST_API_URL and KV_REST_API_TOKEN, then redeploy.'
+      : 'Nothing is being stored yet. No storage keys are visible to this deployment — ' +
+        'connect an Upstash Redis to the project in Vercel, then redeploy.';
     return json(res, 200, {
-      who, sessions: [], faults: [], summary: empty(),
-      notice: 'Nothing is being stored yet — set KV_REST_API_URL and KV_REST_API_TOKEN in Vercel and the log starts filling.',
+      who, sessions: [], faults: [], summary: empty(), notice, storageKeys: seen,
     });
   }
 

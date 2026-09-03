@@ -20,6 +20,21 @@ const KEEP = 500;
 
 export function logging() { return Boolean(URL_() && TOK_()); }
 
+/* Which storage keys this deployment can actually see. Vercel injects
+   different names depending on which database you pick, and one of the
+   choices injects only a redis:// connection string, which this REST client
+   cannot use — worth saying out loud rather than showing an empty table. */
+export function storageKeys() {
+  const rest = ['KV_REST_API_URL', 'KV_REST_API_TOKEN',
+                'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN'];
+  const seen = {};
+  for (const k of rest) seen[k] = Boolean(process.env[k]);
+  const other = Object.keys(process.env)
+    .filter(k => !rest.includes(k) && /redis|^kv_|upstash/i.test(k))
+    .slice(0, 12);
+  return { seen, other };
+}
+
 /* Where the request came from. Vercel resolves this at the edge, so there's
    nothing to look up. The IP is truncated to its network before it's stored —
    enough to tell two schools apart, not enough to be a home address. */

@@ -167,11 +167,18 @@ function splitLink(text) {
    after the noun. Past participles are safe — \bdraft\b does not match
    "drafted", so "How are notes drafted?" survives, which is a question about
    the product rather than a request for labour. */
-const CHIP_SOLICITS_WORK =
-  /\b(draft|write|set|create|make|prepare|generate|plan|compose|mark|grade|correct)\b[^?]{0,40}\b(note|notes|question|questions|paper|papers|lesson|essay|assignment|homework|test|quiz|comment|comments|report|answer|answers|scheme)\b/i;
+const WORK_VERB = 'draft|write|set|create|make|prepare|generate|plan|compose|mark|grade|correct';
+const WORK_NOUN = 'note|notes|question|questions|paper|papers|lesson|essay|assignment|homework|test|quiz|comment|comments|report|answer|answers|scheme';
+const CHIP_SOLICITS_WORK = new RegExp(
+  /* verb then noun: "set questions for a class" */
+  '\\b(?:' + WORK_VERB + ')\\b[^?]{0,40}\\b(?:' + WORK_NOUN + ')\\b' + '|' +
+  /* noun then verb: "what questions could I set on this?" */
+  '\\b(?:' + WORK_NOUN + ')\\b[^?]{0,40}\\b(?:' + WORK_VERB + ')\\b', 'i');
 
 function usefulChips(chips) {
-  return (chips || []).filter(c => !CHIP_SOLICITS_WORK.test(c));
+  return (chips || [])
+    .map(c => String(c).replace(/\s*[.]+\s*$/, '').trim())   /* a chip is a label, not a sentence */
+    .filter(c => c && !CHIP_SOLICITS_WORK.test(c));
 }
 
 /* How much classroom work this conversation has already been given. The

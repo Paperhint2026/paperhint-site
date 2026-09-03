@@ -1,4 +1,5 @@
 ---
+import Consent from '../components/Consent.astro';
 export interface Props {
   title: string;
   description: string;
@@ -53,10 +54,12 @@ const v = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || String
   .nav-inner.nav-shrink>*{opacity:1;pointer-events:auto}
   .nav-inner.nav-boot{animation:none}
 </style></noscript>
+<script src={`/assets/js/watchdog.js?v=${v}`} is:inline></script>
 <slot name="head" />
 </head>
 <body>
 <slot />
+<Consent />
 <slot name="scripts">
   <script src={`/assets/js/main.js?v=${v}`} is:inline></script>
 </slot>

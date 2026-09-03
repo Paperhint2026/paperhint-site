@@ -163,6 +163,18 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .log{position:relative;max-height:min(46vh,320px);overflow-y:auto;overscroll-behavior:contain;padding:10px 16px 4px;display:flex;flex-direction:column;gap:9px;scrollbar-width:thin}
 .msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:14.5px;line-height:1.55;color:var(--c-ink);animation:in .3s cubic-bezier(.25,.8,.25,1) both}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg p{margin:0 0 8px}
+.msg p:last-child{margin:0}
+.msg p.h{margin-top:10px}
+.msg p.h:first-child{margin-top:0}
+.msg ul,.msg ol{margin:0 0 8px;padding-left:20px}
+.msg ul:last-child,.msg ol:last-child{margin:0}
+.msg li{margin:0 0 4px}
+.msg li:last-child{margin:0}
+.msg strong{font-weight:600}
+.msg code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;
+  background:color-mix(in srgb,var(--c-ink) 8%,transparent);padding:1px 5px;border-radius:5px}
+.msg a{color:var(--c-emerald)}
 .msg.bot{background:color-mix(in srgb,var(--c-ink) 5%,transparent);border-bottom-left-radius:6px;align-self:flex-start}
 .msg.me{background:color-mix(in srgb,var(--c-emerald) 13%,transparent);border-bottom-right-radius:6px;align-self:flex-end}
 .msg.typing{display:inline-flex;align-items:center;gap:8px;color:var(--c-muted);font-size:13.5px;background:none;padding:6px 4px}
@@ -363,6 +375,80 @@ input::placeholder{color:var(--c-muted)}
       });
   }
 
+
+  /* The model writes markdown. Rendering it as plain text put literal
+     asterisks on screen and collapsed every list into one paragraph, so
+     replies read like a wall. This turns the subset a reply actually uses
+     into real blocks — escaped first, so nothing in a reply can inject
+     markup, and only https/mailto links survive. */
+  function md(src) {
+    var esc = function (t) {
+      return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    };
+    var inline = function (t) {
+      return esc(t)
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s.,;:!?)]|$)/g, '$1<em>$2</em>')
+        .replace(/(^|[\s(])_([^_\n]+)_(?=[\s.,;:!?)]|$)/g, '$1<em>$2</em>')
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)/g, '<a href="$2" rel="noopener">$1</a>')
+        .replace(/(^|\s)([\w.+-]+@[\w-]+\.[\w.]+)/g, '$1<a href="mailto:$2">$2</a>');
+    };
+
+    var lines = String(src).replace(/\r/g, '').split('\n');
+    var out = '', para = [], list = null;
+
+    var shutPara = function () {
+      if (para.length) { out += '<p>' + inline(para.join(' ')) + '</p>'; para = []; }
+    };
+    var shutList = function () { if (list) { out += '</' + list + '>'; list = null; } };
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) { shutPara(); shutList(); continue; }
+
+      var bullet = line.match(/^[-*•]\s+(.*)$/);
+      var number = line.match(/^\d+[.)]\s+(.*)$/);
+      var head = line.match(/^#{1,4}\s+(.*)$/);
+
+      if (bullet || number) {
+        shutPara();
+        var want = bullet ? 'ul' : 'ol';
+        if (list !== want) { shutList(); out += '<' + want + '>'; list = want; }
+        out += '<li>' + inline((bullet || number)[1]) + '</li>';
+      } else if (head) {
+        shutPara(); shutList();
+        out += '<p class="h"><strong>' + inline(head[1]) + '</strong></p>';
+      } else {
+        shutList();
+        para.push(line);
+      }
+    }
+    shutPara(); shutList();
+    return out || '<p>' + inline(src) + '</p>';
+  }
+
+  /* The staggered blur reveal, applied inside real blocks rather than
+     instead of them: every word in every text node gets its own span. */
+  function reveal(root) {
+    var n = 0, walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = [];
+    while (walk.nextNode()) nodes.push(walk.currentNode);
+    nodes.forEach(function (node) {
+      if (!node.nodeValue.trim()) return;
+      var frag = document.createDocumentFragment();
+      node.nodeValue.split(/(\s+)/).forEach(function (w) {
+        if (!w) return;
+        if (!w.trim()) return frag.appendChild(document.createTextNode(w));
+        var sp = document.createElement('span');
+        sp.className = 'w'; sp.textContent = w;
+        sp.style.animationDelay = Math.min(n++ * 22, 1600) + 'ms';
+        frag.appendChild(sp);
+      });
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
   var config = window.PaperhintChat || (window.PaperhintChat = {});
   config.visit = visit;
   config.forgetVisit = function () { try { sessionStorage.removeItem(SKEY); } catch (e) {} };
@@ -530,15 +616,9 @@ input::placeholder{color:var(--c-muted)}
     text(kind, str) {
       var el = document.createElement('div');
       el.className = 'msg ' + kind;
-      if (kind.indexOf('bot') > -1 && !this.slowMo) {
-        var n = 0;
-        String(str).split(/(\s+)/).forEach(function (w) {
-          if (!w.trim()) return el.appendChild(document.createTextNode(w));
-          var sp = document.createElement('span');
-          sp.className = 'w'; sp.textContent = w;
-          sp.style.animationDelay = Math.min(n++ * 26, 1500) + 'ms';
-          el.appendChild(sp);
-        });
+      if (kind.indexOf('bot') > -1) {
+        el.innerHTML = md(str);            /* lists and emphasis, not asterisks */
+        if (!this.slowMo) reveal(el);
       } else el.textContent = str;
       this.$('.log').appendChild(el);
       this.place(el, kind.indexOf('me') > -1);

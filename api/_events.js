@@ -13,6 +13,7 @@ const NAMES = {
   question: 'chat_question_asked',
   callback: 'callback_requested',
   contact: 'contact_submitted',
+  bug: '$exception',            /* PostHog's own name for a fault */
 };
 
 export function eventName(kind) { return NAMES[kind] || 'enquiry_' + (kind || 'unknown'); }
@@ -39,7 +40,16 @@ export function toEvent(row) {
     session_id: row.sid || undefined,
   };
 
-  if (kind === 'question') {
+  if (kind === 'bug') {
+    /* the property names PostHog's error tracking already understands */
+    props.$exception_message = row.message || 'unknown fault';
+    props.$exception_type = row.fault || 'error';
+    props.$exception_source = row.file || undefined;
+    props.$exception_lineno = row.line || undefined;
+    props.$exception_colno = row.column || undefined;
+    props.$exception_stack_trace_raw = row.stack || undefined;
+    props.viewport = row.viewport || undefined;
+  } else if (kind === 'question') {
     props.question = row.text || '';
     props.question_chars = (row.text || '').length;
     props.reply_chars = (row.reply || '').length;

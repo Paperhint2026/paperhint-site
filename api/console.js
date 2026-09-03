@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   if (!logging()) {
     return json(res, 200, {
-      who, sessions: [], summary: empty(),
+      who, sessions: [], faults: [], summary: empty(),
       notice: 'Nothing is being stored yet — set KV_REST_API_URL and KV_REST_API_TOKEN in Vercel and the log starts filling.',
     });
   }
@@ -26,8 +26,15 @@ export default async function handler(req, res) {
   try { rows = (await read(500)) || []; }
   catch (e) { return json(res, 502, { error: 'Could not read the log: ' + (e && e.message) }); }
 
-  const sessions = group(rows);
-  return json(res, 200, { who, sessions, summary: summarise(sessions, rows) });
+  /* faults live in the same log but are not people — split them out before
+     grouping, or every broken page would be counted as an enquiry */
+  const bugs = rows.filter(r => r && r.kind === 'bug');
+  const rest = rows.filter(r => !r || r.kind !== 'bug');
+  const sessions = group(rest);
+  return json(res, 200, {
+    who, sessions, faults: faults(bugs),
+    summary: { ...summarise(sessions, rest), faults: bugs.length },
+  });
 }
 
 /* The log is newest-first; a visit reads forwards. */
@@ -83,6 +90,36 @@ export function group(rows) {
   return [...byId.values()].sort((a, b) => String(b.last).localeCompare(String(a.last)));
 }
 
+/* One row per distinct fault, not per occurrence: the same broken selector
+   firing 40 times is one thing to fix, and the count is what says how badly. */
+export function faults(bugs) {
+  const by = new Map();
+  for (const b of bugs) {
+    const key = (b.fault || 'error') + '|' + (b.message || '') + '|' + (b.file || '');
+    let f = by.get(key);
+    if (!f) {
+      f = {
+        fault: b.fault || 'error', message: b.message || 'unknown fault',
+        file: b.file || null, line: b.line || null,
+        stack: b.stack || null, count: 0,
+        first: b.at, last: b.at, pages: [], viewports: [], places: [],
+      };
+      by.set(key, f);
+    }
+    f.count++;
+    if (String(b.at) > String(f.last)) f.last = b.at;
+    if (String(b.at) < String(f.first)) f.first = b.at;
+    if (b.page && f.pages.indexOf(b.page) < 0) f.pages.push(b.page);
+    if (b.viewport && f.viewports.indexOf(b.viewport) < 0) f.viewports.push(b.viewport);
+    const place = [b.city, b.country].filter(Boolean).join(', ');
+    if (place && f.places.indexOf(place) < 0) f.places.push(place);
+    if (!f.stack && b.stack) f.stack = b.stack;
+  }
+  /* worst first: how often, then how recent */
+  return [...by.values()].sort((a, b) =>
+    b.count - a.count || String(b.last).localeCompare(String(a.last)));
+}
+
 export function summarise(sessions, rows) {
   const now = Date.now();
   const since = h => sessions.filter(s => now - Date.parse(s.last) < h * 36e5).length;
@@ -104,7 +141,7 @@ export function summarise(sessions, rows) {
 }
 
 function empty() {
-  return { sessions: 0, day: 0, week: 0, questions: 0, callbacks: 0, withEmail: 0, rows: 0, places: [] };
+  return { sessions: 0, day: 0, week: 0, questions: 0, callbacks: 0, withEmail: 0, faults: 0, rows: 0, places: [] };
 }
 
 function json(res, code, obj) { res.status(code).setHeader('Content-Type', 'application/json'); return res.end(JSON.stringify(obj)); }

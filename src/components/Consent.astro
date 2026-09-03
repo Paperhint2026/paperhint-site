@@ -1,0 +1,17 @@
+---
+/* Asked once, remembered, and never in the way of reading the page. */
+const v = import.meta.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || 'dev';
+---
+<div class="consent" id="consent" role="region" aria-label="Cookie choices" hidden>
+  <div class="consent-in">
+    <p class="consent-say">
+      We'd like to measure how this site gets used, so we can make it clearer.
+      Nothing measures you until you say yes. <a href="/privacy">What we collect</a>
+    </p>
+    <div class="consent-do">
+      <button type="button" class="btn-ghost" data-no>Only essentials</button>
+      <button type="button" class="btn-primary" data-yes>Accept all</button>
+    </div>
+  </div>
+</div>
+<script src={`/assets/js/consent.js?v=${v}`} is:inline></script>

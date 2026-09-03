@@ -158,6 +158,10 @@ tbody tr:hover{background:var(--raise)}
   <div class="stats" id="stats"></div>
   <p class="places" id="places"></p>
   <div id="notice"></div>
+  <div id="faultsWrap" hidden>
+    <h2 class="sec">Broken things</h2>
+    <div id="faults"></div>
+  </div>
   <h2 class="sec">Visits</h2>
   <div id="list"></div>
   <p class="foot">Newest first, last 500 events. Addresses are stored as a network, never in full. Build {v}</p>
@@ -246,7 +250,7 @@ tbody tr:hover{background:var(--raise)}
   $('refresh').addEventListener('click', function () { load(); });
 
   /* ---- the log ---- */
-  var sessions = [];
+  var sessions = [], faults = [];
 
   function load() {
     var k = grant();
@@ -274,9 +278,11 @@ tbody tr:hover{background:var(--raise)}
 
     $('stats').innerHTML = [
       ['Visits', s.sessions], ['Today', s.day], ['This week', s.week],
-      ['Questions', s.questions], ['Callbacks', s.callbacks], ['With email', s.withEmail]
+      ['Questions', s.questions], ['Callbacks', s.callbacks], ['Faults', s.faults]
     ].map(function (p) {
-      return '<div class="stat"><b>' + (p[1] || 0) + '</b><span>' + p[0] + '</span></div>';
+      var bad = p[0] === 'Faults' && p[1];
+      return '<div class="stat"><b' + (bad ? ' style="color:#B4321A"' : '') + '>' +
+        (p[1] || 0) + '</b><span>' + p[0] + '</span></div>';
     }).join('');
 
     $('places').innerHTML = (s.places && s.places.length)
@@ -284,6 +290,26 @@ tbody tr:hover{background:var(--raise)}
       : '';
 
     $('notice').innerHTML = j.notice ? '<p class="notice">' + esc(j.notice) + '</p>' : '';
+
+    faults = j.faults || [];
+    $('faultsWrap').hidden = !faults.length;
+    if (faults.length) {
+      $('faults').innerHTML = '<table><thead><tr>' +
+        '<th>Fault</th><th class="hide-sm">Where</th><th>Seen</th><th>Last</th>' +
+        '</tr></thead><tbody>' + faults.map(function (f, i) {
+          return '<tr data-f="' + i + '">' +
+            '<td class="who-cell"><b>' + esc(f.message) + '</b>' +
+              '<small>' + esc(f.fault) + (f.file ? ' · ' + esc(shortFile(f.file)) +
+                (f.line ? ':' + f.line : '') : '') + '</small></td>' +
+            '<td class="hide-sm">' + esc((f.pages || []).join(', ') || '—') + '</td>' +
+            '<td class="num">' + f.count + '</td>' +
+            '<td class="num">' + esc(ago(f.last)) + '</td>' +
+          '</tr>';
+        }).join('') + '</tbody></table>';
+      [].forEach.call($('faults').querySelectorAll('tr[data-f]'), function (tr) {
+        tr.addEventListener('click', function () { openFault(faults[+tr.dataset.f]); });
+      });
+    }
 
     if (!sessions.length) {
       $('list').innerHTML = '<div class="none">Nothing yet. Every question asked in the panel and every callback lands here.</div>';
@@ -350,6 +376,33 @@ tbody tr:hover{background:var(--raise)}
     });
     if (!(v.events || []).length) out += '<div class="none">No events recorded.</div>';
 
+    $('sheetBody').innerHTML = out;
+    $('sheetBody').scrollTop = 0;
+    $('sheet').classList.add('on');
+  }
+
+  function shortFile(f) { return String(f).replace(/^https?:\/\/[^/]+/, ''); }
+
+  function openFault(f) {
+    if (!f) return;
+    $('sheetName').textContent = f.message;
+    $('sheetWhere').textContent = f.fault + ' · seen ' + f.count +
+      (f.count === 1 ? ' time' : ' times');
+    var out = '<dl class="facts">' +
+      row('Type', f.fault) +
+      row('File', f.file ? shortFile(f.file) + (f.line ? ':' + f.line +
+        (f.column ? ':' + f.column : '') : '') : '') +
+      row('Pages', (f.pages || []).join(', ')) +
+      row('Screens', (f.viewports || []).join(', ')) +
+      row('Places', (f.places || []).join(' · ')) +
+      row('First', when(f.first)) + row('Last', when(f.last)) +
+      '</dl>';
+    if (f.stack) {
+      out += '<h2 class="sec">Stack</h2><pre style="white-space:pre-wrap;font-size:12px;' +
+        'line-height:1.5;background:var(--surface);border:1px solid var(--line);' +
+        'border-radius:12px;padding:14px;overflow-x:auto;color:var(--ink-soft)">' +
+        esc(f.stack) + '</pre>';
+    }
     $('sheetBody').innerHTML = out;
     $('sheetBody').scrollTop = 0;
     $('sheet').classList.add('on');

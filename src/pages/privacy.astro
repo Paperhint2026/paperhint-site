@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base
+  title="Privacy — Paperhint"
+  description="What Paperhint collects when you visit this site, why, and how to have it removed."
+  canonical="https://paperhint.com/privacy"
+>
+<Nav />
+
+<article class="prose">
+  <h1>Privacy</h1>
+  <p class="stamp">Last updated 3 September 2026</p>
+
+  <p>
+    This page is about the Paperhint website. It is written to be read, not to
+    protect us. If anything here is unclear, write to
+    <a href="mailto:support@paperhint.com">support@paperhint.com</a> and we will
+    fix the wording.
+  </p>
+
+  <div class="box">
+    <p>
+      <strong>Student data is not on this page.</strong> Nothing a school
+      teaches, marks or records goes through this website. A school's own data
+      lives in the school's Paperhint account, under an agreement with that
+      school, and is never used to train anything.
+    </p>
+  </div>
+
+  <h2>What we collect here</h2>
+  <table>
+    <tr><th>When</th><th>What</th><th>Why</th></tr>
+    <tr>
+      <td>You fill in the contact form</td>
+      <td>Your name, email, school, role, and whatever you wrote</td>
+      <td>To reply to you. Nothing else.</td>
+    </tr>
+    <tr>
+      <td>You ask the chat panel something</td>
+      <td>Your question, our answer, the page you were on</td>
+      <td>To answer, and to learn which questions schools actually have</td>
+    </tr>
+    <tr>
+      <td>Any visit</td>
+      <td>Your city and country, and your address shortened to its network</td>
+      <td>To know which parts of the country are looking</td>
+    </tr>
+    <tr>
+      <td>Something breaks</td>
+      <td>The error, the page, and the browser version</td>
+      <td>To fix it. No personal details are attached.</td>
+    </tr>
+    <tr>
+      <td>You accept measurement</td>
+      <td>Which pages you opened and what you clicked</td>
+      <td>To see which parts of the site are working</td>
+    </tr>
+  </table>
+
+  <h2>Your address is shortened before it is stored</h2>
+  <p>
+    We keep the network, not the address: the last part of an IPv4 address is
+    dropped, and all but the first half of an IPv6 one. It is enough to tell two
+    schools apart. It is not enough to be a street.
+  </p>
+
+  <h2>Cookies, and the choice you were given</h2>
+  <p>
+    This site sets no advertising cookies and runs no ad networks. Measurement
+    is off until you accept it, and your answer is kept in your own browser's
+    storage rather than in a cookie. You can change it at any time:
+  </p>
+  <p>
+    <button type="button" class="btn-ghost" id="resetConsent"
+      style="font-family:inherit;font-size:14px;padding:9px 18px;border-radius:999px;
+             border:1px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer">
+      Ask me about cookies again
+    </button>
+  </p>
+
+  <h2>Who else sees it</h2>
+  <ul>
+    <li><strong>Vercel</strong> serves this site and runs its functions.</li>
+    <li><strong>Resend</strong> delivers the emails we send you.</li>
+    <li><strong>OpenAI and Google</strong> answer chat questions. Your question is sent to answer it; a school's own data is never sent.</li>
+    <li><strong>PostHog</strong> measures site usage, only once you have accepted.</li>
+  </ul>
+  <p>Nobody buys this data from us, because we do not sell it.</p>
+
+  <h2>How long we keep it</h2>
+  <p>
+    Enquiries stay while we are still talking to you and for a year after.
+    Chat questions are kept as a rolling window of the most recent few hundred
+    and then fall off on their own. Ask us to delete yours sooner and we will.
+  </p>
+
+  <h2>Asking us to remove it</h2>
+  <p>
+    Write to <a href="mailto:support@paperhint.com">support@paperhint.com</a>
+    from the address you used, and say what you want removed. You can ask for a
+    copy of what we hold, a correction, or deletion. We will do it within 30
+    days and tell you when it is done. No form, no ticket number.
+  </p>
+
+  <h2>Where we are</h2>
+  <p>
+    Paperhint is built in Chennai, India. If you are in the EU or UK and think
+    we have handled your data badly, you can complain to your local data
+    protection authority — but write to us first, because we would rather just
+    fix it.
+  </p>
+</article>
+
+<Footer />
+<script is:inline>
+  document.getElementById('resetConsent')?.addEventListener('click', function () {
+    if (window.PaperhintConsent) window.PaperhintConsent.reset();
+  });
+</script>
+</Base>

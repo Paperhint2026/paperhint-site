@@ -1065,3 +1065,48 @@ footer .wrap{position:relative;z-index:2}
   .rf-tabs{grid-template-columns:repeat(2,1fr);gap:6px;padding:10px}
   .cta-card{border-radius:24px}
 }
+
+/* ---------------------------------------------------------------
+   Cookie choices — asked once, low, and never over the content
+   --------------------------------------------------------------- */
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:0 16px 16px;
+  transform:translateY(120%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.consent.on{transform:none}
+.consent-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:18px;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(16px) saturate(1.2);
+  border:1px solid var(--line);border-radius:18px;padding:14px 18px;
+  box-shadow:0 12px 40px -18px rgba(10,15,12,.34)}
+.consent-say{margin:0;flex:1;font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
+.consent-say a{color:var(--emerald);text-underline-offset:3px}
+.consent-do{display:flex;gap:8px;flex-shrink:0}
+.consent .btn-ghost,.consent .btn-primary{font-size:13.5px;padding:9px 16px;border-radius:999px;
+  white-space:nowrap;cursor:pointer;font-family:inherit;font-weight:500}
+.consent .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft)}
+.consent .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink)}
+.consent .btn-primary{background:var(--emerald);border:1px solid var(--emerald);color:#fff}
+@media (max-width:640px){
+  .consent{padding:0 10px 10px}
+  .consent-in{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px}
+  .consent-do{justify-content:stretch}
+  .consent-do button{flex:1}
+}
+
+/* ---------------------------------------------------------------
+   Plain prose pages (privacy)
+   --------------------------------------------------------------- */
+.prose{max-width:680px;margin:0 auto;padding:120px 20px 80px}
+.prose h1{font-size:clamp(30px,5vw,42px);font-weight:500;letter-spacing:-.03em;margin:0 0 6px}
+.prose .stamp{color:var(--muted);font-size:13.5px;margin:0 0 36px}
+.prose h2{font-size:19px;font-weight:500;letter-spacing:-.01em;margin:36px 0 10px}
+.prose p,.prose li{font-size:15.5px;line-height:1.65;color:var(--ink-soft)}
+.prose p{margin:0 0 14px}
+.prose ul{margin:0 0 16px;padding-left:22px}
+.prose li{margin:0 0 7px}
+.prose a{color:var(--emerald)}
+.prose table{width:100%;border-collapse:collapse;margin:0 0 20px;font-size:14.5px}
+.prose th,.prose td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);
+  vertical-align:top;color:var(--ink-soft)}
+.prose th{font-weight:500;color:var(--ink);white-space:nowrap}
+.prose .box{background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:0 0 20px}
+.prose .box p:last-child{margin:0}

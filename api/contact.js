@@ -15,7 +15,7 @@
  * account owner's address, which is fine for testing.
  */
 
-import { record } from './_log.js';
+import { record, whereFrom } from './_log.js';
 
 const RESEND_URL = 'https://api.resend.com/emails';
 /* hosted brand assets for the emails — star die-cut + pre-rendered ribbon */
@@ -89,9 +89,11 @@ export default async function handler(req, res) {
     try { await send(key, ack); acked = true; } catch (e) { console.error('ack failed', e.message); }
     /* the log is a convenience, never a reason to fail a delivered enquiry */
     record({
-      kind: 'callback', name: data.name, email: data.email, school: data.school,
+      kind: 'callback', sid: data.sid || null,
+      name: data.name, email: data.email, school: data.school,
       role: data.role, enquiry: data.typeLabel, page: data.page, via: data.source,
-      text: data.message || '', reasons: data.reasons,
+      text: data.message || '', reasons: data.reasons, transcript: data.transcript || '',
+      ...whereFrom(req),
     }).catch(() => {});
     return json(res, 200, { ok: true, acked });
   } catch (e) {
@@ -135,6 +137,7 @@ function clean(b) {
     message: s(b.message, MAX.message),
     reasons: Array.isArray(b.reasons) ? b.reasons.map(r => s(r, 80)).filter(Boolean).slice(0, 6) : [],
     page: s(b.page, 200),
+    sid: s(b.sid, 40),
     transcript: s(b.transcript, 3000),
     source: s(b.source, 40) || 'contact-form'
   };

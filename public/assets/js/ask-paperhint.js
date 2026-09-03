@@ -223,7 +223,10 @@ input::placeholder{color:var(--muted)}
   var visit = load();
 
   function load() {
-    var blank = { name: '', email: '', school: '', role: null, pages: [], turns: [], started: Date.now() };
+    var blank = {
+      sid: 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+      name: '', email: '', school: '', role: null, pages: [], turns: [], started: Date.now()
+    };
     try {
       var raw = sessionStorage.getItem(SKEY);
       if (!raw) return blank;
@@ -525,6 +528,7 @@ input::placeholder{color:var(--muted)}
             message: 'Asked for a callback from the chat on the website.' +
                      (this.lead.role ? ' Read the story for: ' + STORIES[this.lead.role].ask : ''),
             source: 'ask-paperhint', page: location.pathname + location.search, _t: this.opened,
+            sid: visit.sid,
             transcript: visit.turns.slice(-10).map(function (t) { return (t.role === 'user' ? 'Q: ' : 'A: ') + t.content; }).join('\n')
           })
         }).then(function (r) { return r.json(); }).then(function (j) {
@@ -551,7 +555,9 @@ input::placeholder{color:var(--muted)}
             body: JSON.stringify({
               question: q,
               history: this.history.slice(-8),
-              context: visitContext()
+              context: visitContext(),
+              sid: visit.sid,
+              page: location.pathname
             })
           }).then(function (r) { return r.json(); }).then(function (j) {
             if (!j || !j.reply) throw new Error(j && j.error || 'no reply');

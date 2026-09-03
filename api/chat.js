@@ -117,6 +117,18 @@ const WORDS = [
   [/\bempowering\b/gi, 'helping'], [/\bempowers\b/gi, 'helps'], [/\bempower\b/gi, 'help'],
   [/\beffortlessly\b/gi, 'without fuss'], [/\beffortless\b/gi, 'easy'],
 ];
+/* The subtraction pitch. The prompt forbids it and the model reaches for it
+   anyway, because it is the most obvious thing to say about school software.
+   Rewritten rather than dropped: the sentence usually carries the answer. */
+const SUBTRACTION = [
+  [/\breduc\w*\s+(?:the\s+)?(?:time\s+\w+\s+spend\s+on\s+)?paperwork\b/gi, 'gets the week done'],
+  [/\breduces?\s+(?:the\s+)?(?:admin|administrative)\s+\w*\s*burden\b/gi, 'gets the week done'],
+  [/\bless\s+paperwork\b/gi, 'more teaching'],
+  [/\bcuts?\s+(?:down\s+on\s+)?(?:the\s+)?(?:paperwork|admin)\b/gi, 'moves faster'],
+  [/\bpaperwork\s+(?:is\s+)?(?:handled|reduced|taken care of)\b/gi, 'the week is carried'],
+  [/\bsav\w+\s+(?:you\s+)?time\s+on\b/gi, 'gets you further with'],
+];
+
 const OFFERS = [
   'Give me a class instead and I’ll show you the part that matters.',
   'Ask me about a chapter or the marking and I’ll show you what I’m for.',
@@ -194,6 +206,7 @@ function workAlreadyDone(history) {
 function scrub(text) {
   let t = String(text || '').replace(/\?!+/g, '?').replace(/!+/g, '.');
   for (const [re, to] of WORDS) t = t.replace(re, to);
+  for (const [re, to] of SUBTRACTION) t = t.replace(re, to);
   const parts = t.split(/(?<=[.?])\s+/);
   const kept = parts.filter(p => !FILLER.test(p));
   let out = (kept.length ? kept : parts).join(' ')

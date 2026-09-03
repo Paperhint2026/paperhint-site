@@ -1,8 +1,9 @@
 # What Paperhint is
 
-*The source of truth for how every page, the chat assistant and every email
-talks about the product. Written from the founder's brief, 3 September 2026.
-When this and a page disagree, the page is wrong.*
+*My understanding of the founder's brief of 3 September 2026, written down so
+the writing has a spine. **This is not page copy** — it is the argument the
+copy has to make. Where it and a page disagree, one of them is wrong; check
+with the founder which.*
 
 ---
 
@@ -14,21 +15,29 @@ Not by moving it online. Not by taking paper away. By putting an assistant on
 every desk that prepares, remembers and follows through — so the hours go to
 teaching instead of to the work stacked around it.
 
-## What we are NOT selling
+## What we sell
 
-We are not selling paperwork reduction.
+**Capability, and speed.**
 
-Paperwork does drop, and sharply. It is a consequence, not the pitch. A school
-that hears "less paperwork" hears a filing cabinet; a school that hears "your
-teachers get their week back and teach better" hears the thing they actually
-want. Lead with what a teacher and a school can now *do*, and let the paper
-take care of itself.
+A teacher who walks in prepared, every class, every section. A class that is
+ready before it starts. A school that can see itself and plan from what it
+sees. Work at a scale and a pace that hand-work never reached, and work a
+school simply could not do at all before.
 
-Retire as a headline: *"it works from the paper you already produce"*,
-*"day one changes nothing"*, *"we don't digitise your school"*. All still true,
-all still useful lower down as reassurance. None of them is the promise.
+Describe what the person can now **do**. Not what they do less of, and not the
+chores that disappear — a run of artefacts is a description of the old world
+with a tick beside each line. Say what the new day looks like.
 
-## The teacher's day — what Paperhint carries
+Three tests for a sentence before it ships:
+
+1. Does it name something the reader can now do, or somewhere they get to
+   faster? If it names a task that has gone away, rewrite it.
+2. Would it still be worth saying to a school that had no problem with its
+   current way of working? If not, it is leaning on their pain rather than
+   your value.
+3. Is the subject the teacher or the school — not the software?
+
+## The teacher's day — what is already done when they get there
 
 A teacher walks into a class. Across that day and that week they must:
 
@@ -47,10 +56,10 @@ carries the follow-through. It is also the knowledge source at the desk — so a
 teacher stops hunting across the internet, gathering, printing and stacking it
 by the register.
 
-**The promise: focus on teaching, and teach better, because the technology is
-doing the rest.**
+**The promise: teach better, because everything around the teaching is already
+done when you get there.**
 
-## The school's day — what the office stops assembling by hand
+## The school's day — what the office can now run
 
 - setting up a class, and migrating the whole school year on year
 - curating sources and building the knowledge every teacher draws on
@@ -104,9 +113,9 @@ as the product itself.
 2. **Exams stay on pen and paper.** This is not a digital examination portal.
    Still true, still worth saying — as reassurance, not as the pitch.
 3. **Never invent** a price, a number, a percentage, a customer.
-4. **Banned vocabulary**: digitise, streamline, leverage, solutions, empower,
-   seamless, optimise, robust. The language of the software that already
-   failed these schools.
+4. **Words that do not appear**, in any tense or paraphrase: digitise,
+   streamline, leverage, solutions, empower, seamless, optimise, robust — and
+   any phrasing that measures the product by what a school does less of.
 
 ## The shape of a page, under this positioning
 

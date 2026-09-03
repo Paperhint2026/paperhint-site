@@ -73,12 +73,12 @@ export const PRODUCT = {
     },
   ],
 
-  factsTitle: 'What it asks of the school',
+  factsTitle: 'What it runs on',
   facts: [
-    ['Nothing new to buy', 'Runs on a phone and a browser. No scanners, no new hardware.'],
-    ['Nothing to change on day one', 'It starts from the paper the school already produces, so nobody has to work differently to begin.'],
-    ['Nothing leaves the school', 'School data is scoped to the school’s account; teacher libraries are private until shared; nothing is visible outside the school’s email.'],
-    ['One licence', 'One licence per enrolled student covers admins, teachers, students and parents.'],
+    ['A phone and a browser', 'The hardware every school already has. No scanners, nothing to install in a room.'],
+    ['The work you already do', 'It starts from the paper your school already produces, so a teacher can begin on Monday without learning a new way to work.'],
+    ['Your school’s own account', 'Data is scoped to your school; teacher libraries stay private until shared, and nothing is visible outside your school’s email.'],
+    ['One licence per student', 'It covers admins, teachers, students and parents — everyone in the building.'],
   ],
 
   close: 'Two roles today, teachers and the office. The direction is a school that runs end to end in one place.',  /* DRAFT */

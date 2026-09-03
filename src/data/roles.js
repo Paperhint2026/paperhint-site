@@ -36,13 +36,13 @@ const PAGES = {
     sub: 'Attendance, notes for the next class, papers set, sheets marked, parents told — an assistant at your desk doing the week alongside you.',  /* DRAFT */
     title: 'Paperhint for Teachers — An Assistant at Your Desk',
     description: 'What a teacher gets from Paperhint: attendance recorded, notes and papers prepared for your syllabus, answer sheets marked to your rubric, homework followed through to parents — so the hours go to teaching.',
-    stopsTitle: 'What you stop doing by hand',
+    stopsTitle: 'What is ready when you get there',
     stops: [
-      ['Marking a class by hand', 'Every answer is checked against its question and scored on your rubric, the same way for every student. You review and approve.'],
-      ['Writing the paper from scratch', 'Pick chapters, weightage and difficulty. Paper, blueprint and answer key come back drafted for your syllabus.'],
-      ['Starting notes on a blank page', 'Notes drafted for the syllabus, ready to teach with. Simpler for a weaker section, or extended with a diagram.'],
-      ['Chasing parents about homework', 'They are told the moment it is assigned. No group message to write.'],
-      ['Retyping the attendance register', 'The paper register you already keep, scanned rather than keyed in.'],
+      ['A class you can walk into', 'Notes for the next chapter, drafted for your syllabus and ready to teach with — simpler for a weaker section, or extended with a diagram, if you ask.'],
+      ['Next week\u2019s paper, set', 'Pick chapters, weightage and difficulty. Paper, blueprint and answer key come back drafted for your syllabus.'],
+      ['Every sheet marked the same way', 'Each answer checked against its question and scored on your rubric, identically for every student. You review and approve.'],
+      ['A section you can actually read', 'Marks recorded to each student, exam over exam, so you know where a class stands before the lesson rather than after it.'],
+      ['Home already told', 'Homework reaches parents the moment it is set, and an absence the same day it is read from the register.'],
     ],
     keepsTitle: 'What stays yours',
     keeps: [
@@ -73,15 +73,14 @@ const PAGES = {
     sub: 'Classes, allotments, the year’s rollover and every mark sheet in one place — configured once, and a picture of the school you can plan from.',  /* DRAFT */
     title: 'Paperhint for Schools — Run the Year From One Place',
     description: 'What the school office gets from Paperhint: classes and sections set up once, allotments worked out for you, the year migrated in one move, notifications home configured rather than typed, and every class and mark sheet in one picture.',
-    stopsTitle: 'What stops being assembled by hand',
+    stopsTitle: 'What the office can run from here',
     stops: [
-      ['Rebuilding the year in spreadsheets', 'A whole class is promoted in one move at year end. The year that ended is archived, not lost.'],
-      ['Working out who teaches what', 'Allotments are proposed for you and kept on one board. Cover a period by asking, in plain language.'],
-      ['Sending books round the department', 'Attach a book to a subject once and it reaches every teacher who teaches it.'],
-      ['Keying in the attendance register', 'The register the school already uses, scanned. Absences reach parents the same day.'],
-      ['Keeping four lists of the same people', 'Classes, sections, students, teachers and subjects in one portal.'],
-      ['Typing the term into a spreadsheet', 'Every class logged and every mark sheet monitored in one place, so the picture of the school is something you can plan from rather than assemble.'],
-      ['Messaging parents by hand', 'Notifications home are configured once and run — homework, marks, an absence — instead of a teacher typing into a group.'],
+      ['A new year, in one move', 'Promote a whole class to the next grade at year end and absorb the fresh batch cleanly. The year that ended is archived, not lost.'],
+      ['Every section staffed', 'Allotments proposed for you and kept on one board. Cover a period, or borrow one from another teacher, by asking in plain language.'],
+      ['One place for everyone', 'Classes, sections, students, teachers and subjects together, with books attached to a subject once and reaching every teacher who teaches it.'],
+      ['The whole school at a glance', 'Every class logged and every mark sheet monitored in one place, so performance across sections is something you plan and budget from.'],
+      ['Home kept informed on its own', 'Notifications configured once and running — homework, marks, a same-day absence — rather than typed into a group by a teacher.'],
+      ['The day\u2019s roll, already in', 'The register the school already keeps, scanned rather than keyed in, with absences out to parents the same day.'],
     ],
     keepsTitle: 'What we do, not you',
     keeps: [
@@ -106,7 +105,7 @@ const PAGES = {
     sub: 'Homework, marks and absences reach you from the school, on the day, without you asking.',  /* DRAFT */
     title: 'Paperhint for Parents — Homework, Marks and Attendance Updates',
     description: 'What parents get from Paperhint: homework the moment it is assigned, marks when the teacher shares them, and an absence the same day — sent by the school automatically, not typed into a group.',
-    stopsTitle: 'What reaches you',
+    stopsTitle: 'What reaches you, and when',
     stops: [
       ['Homework', 'The moment it is assigned, not the evening it is due.'],
       ['Marks', 'When the teacher has checked and shared them.'],

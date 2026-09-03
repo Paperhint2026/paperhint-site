@@ -192,3 +192,4 @@ function json(res, code, obj) {
   res.status(code).setHeader('Content-Type', 'application/json');
   return res.end(JSON.stringify(obj));
 }
+export const config = { maxDuration: 30 };

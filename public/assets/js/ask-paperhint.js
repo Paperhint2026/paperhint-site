@@ -330,6 +330,39 @@ input::placeholder{color:var(--c-muted)}
     return FOLLOW_DEFAULT;
   }
 
+
+  function esc(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/(support@paperhint\.com)/, '<a href="mailto:support@paperhint.com">$1</a>');
+  }
+
+  /* One ask over the wire: a hard 30s ceiling so a cold start can't hang the
+     panel, and one quiet retry when the failure looks transient. A refusal the
+     server can explain (429, 503) is passed through as-is, never retried. */
+  function post(endpoint, payload, again) {
+    var ctl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 30000);
+    return fetch(endpoint, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined
+    }).then(function (r) {
+      clearTimeout(timer);
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (j && j.reply) return j.reply;
+        var err = new Error(j && j.error || 'no reply');
+        err.status = r.status;
+        if (j && j.error) err.said = j.error;
+        throw err;
+      });
+    }, function (netErr) { clearTimeout(timer); throw netErr; })
+      .catch(function (err) {
+        var transient = !err.status || err.status >= 500;
+        if (again || !transient) throw err;
+        return new Promise(function (go) { setTimeout(go, 900); })
+          .then(function () { return post(endpoint, payload, true); });
+      });
+  }
+
   var config = window.PaperhintChat || (window.PaperhintChat = {});
   config.visit = visit;
   config.forgetVisit = function () { try { sessionStorage.removeItem(SKEY); } catch (e) {} };
@@ -666,18 +699,12 @@ input::placeholder{color:var(--c-muted)}
       var endpoint = this.getAttribute('endpoint') || config.endpoint;
 
       var pending = config.adapter ? config.adapter(q, this.history.slice(-8))
-        : endpoint ? fetch(endpoint, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              question: q,
-              history: this.history.slice(-8),
-              context: visitContext(),
-              sid: visit.sid,
-              page: location.pathname
-            })
-          }).then(function (r) { return r.json(); }).then(function (j) {
-            if (!j || !j.reply) throw new Error(j && j.error || 'no reply');
-            return j.reply;
+        : endpoint ? post(endpoint, {
+            question: q,
+            history: this.history.slice(-8),
+            context: visitContext(),
+            sid: visit.sid,
+            page: location.pathname
           })
         : cannedReply(q);
 
@@ -687,9 +714,13 @@ input::placeholder{color:var(--c-muted)}
         visit.turns.push({ role: 'user', content: q }, { role: 'assistant', content: reply }); save();
         self.text('bot', reply);
         self.suggest(followUps(q, reply));
-      }).catch(function () {
+      }).catch(function (err) {
         wait.remove();
-        self.html('bot err', 'That didn’t go through. Try again, or write to <a href="mailto:support@paperhint.com">support@paperhint.com</a>.');
+        /* the server says why (busy, not switched on, too many questions) —
+           show that instead of one blank failure for every cause */
+        var said = err && err.said;
+        self.html('bot err', said ? esc(said)
+          : 'That didn’t go through. Try again, or write to <a href="mailto:support@paperhint.com">support@paperhint.com</a>.');
       }).then(function () {
         input.disabled = false; input.focus(); self.scroll();
       });

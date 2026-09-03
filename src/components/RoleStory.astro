@@ -13,12 +13,30 @@ import { ROLES, ORDER } from '../data/roles.js';
 const { role } = Astro.props;
 const r = ROLES[role];
 const others = ORDER.filter(k => k !== role).map(k => ({ key: k, ...ROLES[k] }));
+
+/* Two different notes, on purpose.
+ *
+ * Public: a page still waiting on its narrative says "More on this soon",
+ * which is true and reads like any other marketing line. A visiting school
+ * should never be told it is looking at a draft.
+ *
+ * Internal: on preview deploys and locally, each page also lists exactly what
+ * content it is waiting for, so the gaps are visible while working rather
+ * than tracked in someone's head. docs/content-todo.md is the full list. */
+const internal = process.env.VERCEL_ENV !== 'production';
 ---
 <header class="role-hero">
   <div class="wrap">
     <span class="tagline"><span class="tag">{r.kicker}</span> Paperhint <i>·</i></span>
     <h1 class="display role-h1">{r.h1[0]}<em>{r.h1[1]}</em>{r.h1[2]}</h1>
     <p class="role-sub">{r.sub}</p>
+    {r.thin && <p class="role-soon">More on this soon</p>}
+    {internal && r.needs && (
+      <div class="role-needs">
+        <b>Waiting on content</b>
+        <ul>{r.needs.map(n => <li>{n}</li>)}</ul>
+      </div>
+    )}
     <div class="role-cta">
       <a class="btn btn-primary btn-lg" href={`/contact?type=demo&role=${role}`}>Book a demo</a>
       <a class="btn btn-ghost btn-lg" href="/#capabilities">See the whole product</a>
@@ -106,7 +124,7 @@ const others = ORDER.filter(k => k !== role).map(k => ({ key: k, ...ROLES[k] }))
     <div class="other-grid">
       {others.map(o => (
         <a class="other reveal" href={`/${o.key}`}>
-          <span class="other-kicker">{o.nav}</span>
+          <span class="other-kicker">{o.nav}{o.thin && <em class="other-soon">more soon</em>}</span>
           <p set:html={o.sub} />
           <span class="other-go" aria-hidden="true">→</span>
         </a>

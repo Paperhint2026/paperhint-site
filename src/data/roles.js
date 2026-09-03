@@ -26,6 +26,7 @@ function beats(bullets) {
 const PAGES = {
   teachers: {
     story: 'teacher',
+    needs: ['Headline and standfirst', 'Closing line', 'A product screenshot per beat'],
     nav: 'Teachers',
     kicker: 'FOR TEACHERS',
     h1: ['The week, without the ', 'p', 'aperwork'],           /* DRAFT */
@@ -52,6 +53,7 @@ const PAGES = {
 
   schools: {
     story: 'admin',
+    needs: ['Headline and standfirst', 'Closing line', 'A screenshot of the allotment board and the admin portal'],
     second: 'principal',                       /* the case for the school, below */
     /* A principal is not a separate product and has no interface of their
        own: the same portal, with permissions between a teacher's and the
@@ -84,6 +86,7 @@ const PAGES = {
 
   parents: {
     story: 'parent',
+    needs: ['Headline and standfirst', 'Closing line', 'An example of what a parent actually receives'],
     nav: 'Parents',
     kicker: 'FOR PARENTS',
     h1: ['You hear it the ', 'd', 'ay it happens'],             /* DRAFT */
@@ -107,6 +110,9 @@ const PAGES = {
 
   students: {
     story: null,                               /* no approved narrative yet */
+    thin: true,                                /* says so on the page, quietly */
+    needs: ['The whole narrative — scene, turn and beats', 'Headline and standfirst',
+            'What a student actually sees on their record', 'Whether students get their own login'],
     nav: 'Students',
     kicker: 'FOR STUDENTS',
     h1: ['Your work, ', 'r', 'ecorded properly'],               /* DRAFT */

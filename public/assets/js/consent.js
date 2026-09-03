@@ -50,22 +50,18 @@
   };
   window.PaperhintConsent = api;
 
-  /* the gravity layer may not have loaded yet, or at all */
-  function floor(px) {
-    try {
-      if (window.PaperhintGravity) return window.PaperhintGravity.setFloor(px);
-      /* it boots after us on a slow connection — try once more */
-      setTimeout(function () {
-        if (window.PaperhintGravity) window.PaperhintGravity.setFloor(px);
-      }, 1200);
-    } catch (e) {}
+  /* The falling characters measure the bar themselves — we only say when it
+     has moved. They boot behind a CDN import, so anything we called directly
+     would often be calling nothing. */
+  function floor() {
+    try { document.dispatchEvent(new Event('paperhint:floor')); } catch (e) {}
   }
 
   function decide(yes) {
     state = { v: VERSION, analytics: yes, at: new Date().toISOString() };
     keep(yes);
     document.documentElement.classList.remove('consent-open');
-    floor(0);                        /* the characters get their floor back */
+    setTimeout(floor, 320);          /* once the bar has slid away */
     var bar = document.getElementById('consent');
     if (bar) { bar.classList.remove('on'); setTimeout(function () { bar.remove(); }, 300); }
     if (yes) {
@@ -86,10 +82,7 @@
     requestAnimationFrame(function () { bar.classList.add('on'); });
     /* and the falling characters get a new floor: the bar's own top edge, so
        they land on it rather than behind it */
-    var box = bar.querySelector('.consent-in');
-    if (box) setTimeout(function () {
-      floor(Math.round(window.innerHeight - box.getBoundingClientRect().top));
-    }, 380);
+    setTimeout(floor, 380);          /* once it has slid into place */
     bar.querySelector('[data-yes]').addEventListener('click', api.accept);
     bar.querySelector('[data-no]').addEventListener('click', api.decline);
   }

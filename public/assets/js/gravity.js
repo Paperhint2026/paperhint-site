@@ -56,6 +56,7 @@
 
   function walls() {
     var W = innerWidth, H = innerHeight, T = 200; /* thickness */
+    lift = measureFloor();          /* the bar may already be up */
     floorBody = M.Bodies.rectangle(W / 2, H - lift + T / 2 - 4, W + 800, T,
       { isStatic: true, label: 'floor' });
     return [
@@ -227,9 +228,20 @@
 
   /* Anything that occupies the bottom of the screen — the cookie bar today —
      raises the floor so the characters come to rest on top of it instead of
-     disappearing behind it. */
+     disappearing behind it.
+     Measured from the DOM rather than pushed in by whoever owns the bar: this
+     layer boots behind a CDN import, so a caller that announces itself first
+     would be talking to nothing. Mark the element with data-gravity-floor. */
+  function measureFloor() {
+    var el = document.querySelector('[data-gravity-floor]');
+    if (!el) return 0;
+    var r = el.getBoundingClientRect();
+    if (!r.height || r.top >= innerHeight) return 0;
+    return Math.max(0, Math.round(innerHeight - r.top));
+  }
+
   function setFloor(px) {
-    var want = Math.max(0, px | 0);
+    var want = Math.max(0, (px == null ? measureFloor() : px) | 0);
     if (want === lift) return;
     lift = want;
     if (!M || !floorBody) return;
@@ -247,7 +259,11 @@
     }
   }
 
-  window.PaperhintGravity = { setFloor: setFloor };
+  window.PaperhintGravity = { setFloor: setFloor, measureFloor: measureFloor };
+
+  /* whoever changes the bottom of the screen just says so; we do the measuring */
+  document.addEventListener('paperhint:floor', function () { setFloor(null); });
+  addEventListener('resize', function () { setFloor(null); });
 
   function boot() {
     import('https://esm.sh/matter-js@0.20.0')

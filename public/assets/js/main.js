@@ -1174,8 +1174,8 @@
       lead: 'Walk into every class already prepared',
       cta: 'See it on your own answer sheets',
       items: [
-        /* the copilot leads: it is how the rest of this list gets asked for */
-        ['The copilot at your desk', 'A chat interface where the work happens: prepare notes, work through teaching tasks, ask for what you need in plain language.', 'lead'],
+        /* the copilot leads by being first; it needs no marking out */
+        ['The copilot at your desk', 'A chat interface where the work happens: prepare notes, work through teaching tasks, ask for what you need in plain language.'],
         ['Teaching notes, prepared with you', 'Ask the copilot for notes you can actually teach with, or paste your own; keep them private or share to everyone on your school\u2019s email.'],
         ['Homework that reaches home', 'Drafted for what you taught today \u2014 and parents are notified the moment it\u2019s assigned.'],
         ['The exam, set and marked', 'Question papers with blueprint and answer key, drafted for your syllabus \u2014 then every answer sheet photographed and scored on your rubric. You review and approve.']
@@ -1235,9 +1235,7 @@
           : '') +
         '</div>' +
         '<div class="rf-items">' + d.items.map(function (it) {
-          /* a third entry marks the item that carries the others */
-          return '<div class="rf-item' + (it[2] === 'lead' ? ' rf-item-lead' : '') + '">' +
-                 '<b>' + it[0] + '</b><p>' + it[1] + '</p></div>';
+          return '<div class="rf-item"><b>' + it[0] + '</b><p>' + it[1] + '</p></div>';
         }).join('') + '</div>';
     }
 

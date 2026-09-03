@@ -7,6 +7,7 @@
 
 import { read, logging, storageState } from './_log.js';
 import { probe } from './_store.js';
+import { promptState } from './_ai.js';
 import { bearer, whoIs, configured, diagnose } from './_auth.js';
 
 export default async function handler(req, res) {
@@ -20,7 +21,9 @@ export default async function handler(req, res) {
 
   /* one real round trip through the store, reporting what it actually said */
   if (req.query && req.query.selftest) {
-    return json(res, 200, { who, storage: await probe(), ...storageState() });
+    return json(res, 200, {
+      who, storage: await probe(), prompt: promptState(), ...storageState(),
+    });
   }
 
   if (!logging()) {

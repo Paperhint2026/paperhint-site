@@ -9,7 +9,7 @@
  * chat-models.js — not here and not in the environment.
  */
 
-import { SYSTEM } from './chat-prompt.js';
+import { systemFor } from './_ai.js';
 import { candidates, KEYS, shouldFallOver } from './chat-models.js';
 import { recordNow, whereFrom } from './_log.js';
 
@@ -159,9 +159,12 @@ export default async function handler(req, res) {
     : [];
 
   try {
-    /* what the visit already knows about them, appended to the instructions
-       rather than the conversation, so it reads as context and not as a turn */
-    const system = context ? SYSTEM + '\n\n# About this visitor\n' + context : SYSTEM;
+    /* Instructions come from the database so the voice can be changed without
+       a deploy, with the repo's file as the fallback. What the visit knows
+       about them is appended to the instructions rather than the conversation,
+       so it reads as context and not as a turn. */
+    const { system: base, version: promptVersion, facts } = await systemFor(question);
+    const system = context ? base + '\n\n# About this visitor\n' + context : base;
     const { reply, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
 
     /* what schools ask is the cheapest product research there is; the model
@@ -169,6 +172,7 @@ export default async function handler(req, res) {
     console.log(JSON.stringify({
       at: new Date().toISOString(), model: used.provider + '/' + used.model,
       fellBackPast: tried.length ? tried : undefined,
+      prompt: 'v' + promptVersion, facts,
       q: question, chars: reply.length,
     }));
 
@@ -177,7 +181,8 @@ export default async function handler(req, res) {
     await recordNow({
       kind: 'question', sid: String(body.sid || '').slice(0, 40) || null,
       text: question, reply, page: String(body.page || '').slice(0, 200),
-      model: used.provider + '/' + used.model, ...whereFrom(req),
+      model: used.provider + '/' + used.model,
+      promptVersion, facts, ...whereFrom(req),
     });
 
     return json(res, 200, { reply });

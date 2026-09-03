@@ -114,6 +114,41 @@ export async function list(limit = 200) {
   return null;
 }
 
+/* Writes fail silently by design: an enquiry must never break a reply. That
+   makes a broken store invisible, so this does one real round trip and hands
+   back whatever the backend actually said. Used by /api/console?selftest=1,
+   which is behind the sign-in. */
+export async function probe() {
+  const b = backend();
+  if (!b) return { ok: false, backend: null, error: 'No storage keys are set.' };
+
+  const row = { at: new Date().toISOString(), kind: 'selftest', text: 'storage self-test' };
+  try {
+    await write(row);
+  } catch (e) {
+    return { ok: false, backend: b, stage: 'write', error: String(e && e.message).slice(0, 400) };
+  }
+
+  let readBack = null;
+  try {
+    const rows = await list(5);
+    readBack = Array.isArray(rows) ? rows.some(r => r && r.kind === 'selftest') : null;
+  } catch (e) {
+    return { ok: false, backend: b, stage: 'read', error: String(e && e.message).slice(0, 400) };
+  }
+
+  /* tidy up after ourselves; Supabase only, and a failure here is harmless */
+  if (b === 'supabase') {
+    try {
+      await fetch(SB_URL().replace(/\/$/, '') + '/rest/v1/' + TABLE + '?kind=eq.selftest', {
+        method: 'DELETE', headers: sbHeaders(),
+      });
+    } catch (e) { /* leaves one row named selftest, which is obvious enough */ }
+  }
+
+  return { ok: true, backend: b, wrote: true, readBack };
+}
+
 /* Names and booleans only, for the console's own "why is this empty" line. */
 export function describe() {
   const names = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY',

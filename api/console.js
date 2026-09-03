@@ -6,6 +6,7 @@
  */
 
 import { read, logging, storageState } from './_log.js';
+import { probe } from './_store.js';
 import { bearer, whoIs, configured, diagnose } from './_auth.js';
 
 export default async function handler(req, res) {
@@ -16,6 +17,11 @@ export default async function handler(req, res) {
 
   const who = whoIs(bearer(req));
   if (!who) return json(res, 401, { error: 'Sign in again.' });
+
+  /* one real round trip through the store, reporting what it actually said */
+  if (req.query && req.query.selftest) {
+    return json(res, 200, { who, storage: await probe(), ...storageState() });
+  }
 
   if (!logging()) {
     const { seen, other } = storageState();

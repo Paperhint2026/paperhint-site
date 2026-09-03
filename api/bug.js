@@ -7,7 +7,7 @@
  * problem seen from two ends.
  */
 
-import { record } from './_log.js';
+import { recordNow } from './_log.js';
 
 const KINDS = ['error', 'rejection', 'asset', 'noted'];
 const WINDOW_MS = 60 * 60 * 1000;
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
 
   /* whereFrom is imported lazily so a malformed request costs nothing */
   const { whereFrom } = await import('./_log.js');
-  record({ ...fault, ...whereFrom(req) }).catch(() => {});
+  await recordNow({ ...fault, ...whereFrom(req) });
 
   return res.status(204).end();
 }

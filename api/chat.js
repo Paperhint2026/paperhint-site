@@ -11,7 +11,7 @@
 
 import { SYSTEM } from './chat-prompt.js';
 import { candidates, KEYS, shouldFallOver } from './chat-models.js';
-import { record, whereFrom } from './_log.js';
+import { recordNow, whereFrom } from './_log.js';
 
 /* Provider-agnostic on purpose: the model chain lives in chat-models.js,
  * the keys live in the environment. No SDK — both APIs are one fetch. */
@@ -172,12 +172,13 @@ export default async function handler(req, res) {
       q: question, chars: reply.length,
     }));
 
-    /* every question is product research; the log is best-effort */
-    record({
+    /* every question is product research, so this is awaited: a response
+       returned first would freeze the instance and lose the write */
+    await recordNow({
       kind: 'question', sid: String(body.sid || '').slice(0, 40) || null,
       text: question, reply, page: String(body.page || '').slice(0, 200),
       model: used.provider + '/' + used.model, ...whereFrom(req),
-    }).catch(() => {});
+    });
 
     return json(res, 200, { reply });
   } catch (e) {

@@ -36,17 +36,36 @@ export function whereFrom(req) {
 export async function record(entry) {
   const row = { at: new Date().toISOString(), ...entry };
   console.log('ENQUIRY ' + JSON.stringify(row));
-  /* analytics is downstream of the record, never in front of it */
-  forward(row).catch(() => {});
-  if (!storing()) return false;
-  try {
-    return await write(row);
-  } catch (e) {
+
+  /* Both go out together rather than one after the other, and analytics can
+     never fail the record: its rejection is swallowed here, not upstream. */
+  const jobs = [forward(row).catch(() => false)];
+  if (storing()) jobs.push(write(row).catch(e => {
     console.error('enquiry log write failed', e && e.message);
     return false;
-  }
+  }));
+
+  const [, wrote] = await Promise.all(jobs);
+  return storing() ? Boolean(wrote) : false;
 }
 
 export async function read(limit = 200) {
   return storing() ? list(limit) : null;
+}
+
+/* Await this before returning a response.
+ *
+ * record() on its own was fire-and-forget, and on a serverless platform that
+ * means the instance is frozen the moment the response goes out, usually
+ * before the write has left the machine. Every question asked in production
+ * was lost this way, silently, while the store itself worked fine.
+ *
+ * So the write is awaited, with a ceiling: a slow or broken store delays a
+ * reply by at most `ms` and then gets abandoned rather than holding a person
+ * waiting on a chat answer they have already earned. */
+export function recordNow(entry, ms = 2500) {
+  return Promise.race([
+    record(entry).catch(() => false),
+    new Promise(go => setTimeout(() => go('timeout'), ms)),
+  ]);
 }

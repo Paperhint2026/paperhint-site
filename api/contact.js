@@ -15,7 +15,7 @@
  * account owner's address, which is fine for testing.
  */
 
-import { record, whereFrom } from './_log.js';
+import { recordNow, whereFrom } from './_log.js';
 
 const RESEND_URL = 'https://api.resend.com/emails';
 /* hosted brand assets for the emails — star die-cut + pre-rendered ribbon */
@@ -88,13 +88,13 @@ export default async function handler(req, res) {
     let acked = false;
     try { await send(key, ack); acked = true; } catch (e) { console.error('ack failed', e.message); }
     /* the log is a convenience, never a reason to fail a delivered enquiry */
-    record({
+    await recordNow({
       kind: 'callback', sid: data.sid || null,
       name: data.name, email: data.email, school: data.school,
       role: data.role, enquiry: data.typeLabel, page: data.page, via: data.source,
       text: data.message || '', reasons: data.reasons, transcript: data.transcript || '',
       ...whereFrom(req),
-    }).catch(() => {});
+    });
     return json(res, 200, { ok: true, acked });
   } catch (e) {
     console.error('notify failed', e.message);

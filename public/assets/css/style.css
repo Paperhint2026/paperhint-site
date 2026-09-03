@@ -265,9 +265,18 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   opacity:0;transform:translateY(-8px);
   /* closed = gone: an opacity-0 popover still swallows taps without these */
   visibility:hidden;pointer-events:none;
+  /* The hierarchy made this taller than a phone: eleven links plus headings
+     and two buttons measured 850px in an 812px viewport, which put "Book a
+     demo" off the bottom with no way to reach it. Cap it to the screen and
+     let it scroll inside itself. dvh so the browser's own chrome counts. */
+  max-height:calc(100dvh - 96px);overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
   transition:opacity .3s ease, transform .35s cubic-bezier(.3,.8,.24,1), visibility .3s;
 }
-.nav-menu a{padding:13px 16px;border-radius:12px;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)}
+@supports not (height: 100dvh){
+  .nav-menu{max-height:calc(100vh - 96px)}
+}
+.nav-menu a{padding:11px 16px;border-radius:12px;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)}
 .nav-menu .btn{border-radius:999px}   /* menu links keep 12px; its CTAs stay pills */
 .nav-menu a:hover{background:var(--emerald-tint)}
 .nav-menu .btn{margin-top:6px;justify-content:center}
@@ -1340,5 +1349,5 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 
 /* the phone menu carries the same hierarchy, flattened under headings */
 .menu-group{display:flex;flex-direction:column}
-.menu-group-t{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);padding:12px 12px 6px}
+.menu-group-t{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);padding:10px 12px 4px}

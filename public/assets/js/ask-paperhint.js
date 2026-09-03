@@ -210,7 +210,47 @@ input::placeholder{color:var(--muted)}
   </form>
 </div>`;
 
+  /* ------------------------------------------------------------- session
+     What we remember about this visit: who they said they are, and where
+     they've been. Lives in sessionStorage — it follows them from page to
+     page and is gone when the tab closes. Never anything they didn't type. */
+  var SKEY = 'paperhint.visit';
+  var visit = load();
+
+  function load() {
+    var blank = { name: '', email: '', school: '', role: null, pages: [], turns: [], started: Date.now() };
+    try {
+      var raw = sessionStorage.getItem(SKEY);
+      if (!raw) return blank;
+      var v = JSON.parse(raw);
+      return Object.assign(blank, v && typeof v === 'object' ? v : {});
+    } catch (e) { return blank; }
+  }
+  function save() {
+    try {
+      visit.turns = visit.turns.slice(-12);      /* keep it small */
+      sessionStorage.setItem(SKEY, JSON.stringify(visit));
+    } catch (e) { /* private mode, quota — the widget still works */ }
+  }
+  function notePage() {
+    var here = location.pathname;
+    if (visit.pages[visit.pages.length - 1] !== here) visit.pages.push(here);
+    visit.pages = visit.pages.slice(-8);
+    save();
+  }
+  /* a line of context the model can use — never sent unless something is known */
+  function visitContext() {
+    var bits = [];
+    if (visit.name) bits.push('Their name is ' + visit.name + '.');
+    if (visit.school) bits.push('They are from ' + visit.school + '.');
+    if (visit.role && STORIES[visit.role]) bits.push('They read the ' + visit.role + ' story.');
+    if (visit.pages.length > 1) bits.push('Pages seen this visit: ' + visit.pages.join(', ') + '.');
+    return bits.length ? bits.join(' ') : null;
+  }
+
   var config = window.PaperhintChat || (window.PaperhintChat = {});
+  config.visit = visit;
+  config.forgetVisit = function () { try { sessionStorage.removeItem(SKEY); } catch (e) {} };
   config.stories = STORIES;
 
   function cannedReply(q) {
@@ -240,8 +280,17 @@ input::placeholder{color:var(--muted)}
       this.themeWatch = new MutationObserver(this.reflectTheme.bind(this));
       this.themeWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-      this.text('bot', 'Tell me who you are and I’ll show you the week Paperhint takes off your desk.');
-      this.renderChips();
+      notePage();
+      if (visit.turns.length) {
+        /* they were here a page ago — pick the thread back up */
+        visit.turns.slice(-6).forEach(function (t) {
+          this.text(t.role === 'user' ? 'me' : 'bot quiet', t.content);
+        }, this);
+        this.text('bot', (visit.name ? 'Back again, ' + visit.name.split(' ')[0] + '. ' : '') + 'Ask me anything else.');
+      } else {
+        this.text('bot', 'Tell me who you are and I’ll show you the week Paperhint takes off your desk.');
+        this.renderChips();
+      }
 
       this.$('.pill').addEventListener('click', this.open.bind(this, true));
       this.$('.close').addEventListener('click', this.open.bind(this, false));
@@ -373,6 +422,7 @@ input::placeholder{color:var(--muted)}
       var st = STORIES[role], self = this;
       if (!st) return;
       this.lead.role = role;
+      visit.role = role; save();
       this.$('.chips').hidden = true;
       this.text('me', st.ask);
       var wait = this.thinking();
@@ -391,9 +441,22 @@ input::placeholder{color:var(--muted)}
     }
 
     startLead() {
-      this.step = 'name';
-      this.text('bot', 'Happy to. What’s your name?');
-      this.$('input').placeholder = 'Your name';
+      /* don't ask twice for what they already told us this visit */
+      this.lead.name = this.lead.name || visit.name;
+      this.lead.email = this.lead.email || visit.email;
+      this.lead.school = this.lead.school || visit.school;
+
+      if (!this.lead.name)  return this.askFor('name', 'Happy to. What’s your name?', 'Your name');
+      if (!this.lead.email) return this.askFor('email', 'Thanks, ' + this.lead.name.split(' ')[0] + '. Which email should we write to?', 'you@school.edu');
+      if (!this.lead.school) return this.askFor('school', 'And which school?', 'School name');
+      this.text('bot', 'I have your details from earlier — ' + this.lead.email + ' at ' + this.lead.school + '. Sending that across now.');
+      this.fileEnquiry();
+    }
+
+    askFor(step, prompt, placeholder) {
+      this.step = step;
+      this.text('bot', prompt);
+      this.$('input').placeholder = placeholder;
       this.$('input').focus();
     }
 
@@ -404,7 +467,7 @@ input::placeholder{color:var(--muted)}
         return this.text('bot', 'No problem — ask me anything else, or write to support@paperhint.com whenever you like.');
       }
       if (this.step === 'name') {
-        this.lead.name = value; this.step = 'email';
+        this.lead.name = value; visit.name = value; save(); this.step = 'email';
         this.text('bot', 'Thanks. Which email should we write to?');
         input.placeholder = 'you@school.edu'; return;
       }
@@ -412,14 +475,22 @@ input::placeholder{color:var(--muted)}
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
           return this.text('bot', 'That doesn’t look like an email address — could you check it?');
         }
-        this.lead.email = value; this.step = 'school';
+        this.lead.email = value; visit.email = value; save(); this.step = 'school';
         this.text('bot', 'And which school?');
         input.placeholder = 'School name'; return;
       }
       if (this.step === 'school') {
         this.lead.school = value; this.step = null; input.placeholder = 'Ask anything…';
-        var wait = this.thinking();
-        var roleName = { teacher: 'Teacher', principal: 'Principal / Head', admin: 'Administrator' }[this.lead.role] || 'Other';
+        return this.fileEnquiry();
+      }
+    }
+
+    fileEnquiry() {
+      var self = this;
+      var wait = this.thinking();
+      {
+        var roleName = { teacher: 'Teacher', principal: 'Principal / Head', admin: 'Administrator' }[this.lead.role || visit.role] || 'Other';
+        visit.name = this.lead.name; visit.email = this.lead.email; visit.school = this.lead.school; save();
         fetch(this.getAttribute('contact-endpoint') || '/api/contact', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -427,7 +498,8 @@ input::placeholder{color:var(--muted)}
             role: roleName,
             message: 'Asked for a callback from the chat on the website.' +
                      (this.lead.role ? ' Read the story for: ' + STORIES[this.lead.role].ask : ''),
-            source: 'ask-paperhint', page: location.pathname + location.search, _t: this.opened
+            source: 'ask-paperhint', page: location.pathname + location.search, _t: this.opened,
+            transcript: visit.turns.slice(-10).map(function (t) { return (t.role === 'user' ? 'Q: ' : 'A: ') + t.content; }).join('\n')
           })
         }).then(function (r) { return r.json(); }).then(function (j) {
           wait.remove();
@@ -450,7 +522,11 @@ input::placeholder{color:var(--muted)}
       var pending = config.adapter ? config.adapter(q, this.history.slice(-8))
         : endpoint ? fetch(endpoint, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: q, history: this.history.slice(-8) })
+            body: JSON.stringify({
+              question: q,
+              history: this.history.slice(-8),
+              context: visitContext()
+            })
           }).then(function (r) { return r.json(); }).then(function (j) {
             if (!j || !j.reply) throw new Error(j && j.error || 'no reply');
             return j.reply;
@@ -460,6 +536,7 @@ input::placeholder{color:var(--muted)}
       pending.then(function (reply) {
         wait.remove();
         self.history.push({ role: 'user', content: q }, { role: 'assistant', content: reply });
+        visit.turns.push({ role: 'user', content: q }, { role: 'assistant', content: reply }); save();
         self.text('bot', reply);
       }).catch(function () {
         wait.remove();

@@ -11,6 +11,7 @@
 
 import { SYSTEM } from './chat-prompt.js';
 import { candidates, KEYS, shouldFallOver } from './chat-models.js';
+import { record } from './_log.js';
 
 /* Provider-agnostic on purpose: the model chain lives in chat-models.js,
  * the keys live in the environment. No SDK — both APIs are one fetch. */
@@ -114,6 +115,7 @@ export default async function handler(req, res) {
   catch { return json(res, 400, { error: 'Bad JSON' }); }
 
   const question = String(body.question || '').trim().slice(0, MAX_QUESTION);
+  const context = String(body.context || '').trim().slice(0, 400);
   if (!question) return json(res, 400, { error: 'Ask me something.' });
 
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
@@ -128,7 +130,10 @@ export default async function handler(req, res) {
     : [];
 
   try {
-    const { reply, used, tried } = await ask(SYSTEM, [...history, { role: 'user', content: question }]);
+    /* what the visit already knows about them, appended to the instructions
+       rather than the conversation, so it reads as context and not as a turn */
+    const system = context ? SYSTEM + '\n\n# About this visitor\n' + context : SYSTEM;
+    const { reply, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
 
     /* what schools ask is the cheapest product research there is; the model
        that answered (and anything skipped) is here for debugging */
@@ -137,6 +142,10 @@ export default async function handler(req, res) {
       fellBackPast: tried.length ? tried : undefined,
       q: question, chars: reply.length,
     }));
+
+    /* every question is product research; the log is best-effort */
+    record({ kind: 'question', text: question, reply, page: body.page || '', model: used.provider + '/' + used.model })
+      .catch(() => {});
 
     return json(res, 200, { reply });
   } catch (e) {

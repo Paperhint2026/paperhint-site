@@ -15,6 +15,8 @@
  * account owner's address, which is fine for testing.
  */
 
+import { record } from './_log.js';
+
 const RESEND_URL = 'https://api.resend.com/emails';
 /* hosted brand assets for the emails — star die-cut + pre-rendered ribbon */
 /* www, not the apex: paperhint.com 308-redirects and Gmail's image proxy
@@ -85,6 +87,12 @@ export default async function handler(req, res) {
     await send(key, notify);
     let acked = false;
     try { await send(key, ack); acked = true; } catch (e) { console.error('ack failed', e.message); }
+    /* the log is a convenience, never a reason to fail a delivered enquiry */
+    record({
+      kind: 'callback', name: data.name, email: data.email, school: data.school,
+      role: data.role, enquiry: data.typeLabel, page: data.page, via: data.source,
+      text: data.message || '', reasons: data.reasons,
+    }).catch(() => {});
     return json(res, 200, { ok: true, acked });
   } catch (e) {
     console.error('notify failed', e.message);
@@ -127,6 +135,7 @@ function clean(b) {
     message: s(b.message, MAX.message),
     reasons: Array.isArray(b.reasons) ? b.reasons.map(r => s(r, 80)).filter(Boolean).slice(0, 6) : [],
     page: s(b.page, 200),
+    transcript: s(b.transcript, 3000),
     source: s(b.source, 40) || 'contact-form'
   };
 }
@@ -160,6 +169,10 @@ function founderEmail(d, o) {
     ? `<p style="margin:18px 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#68766E">What they picked</p>` +
       d.reasons.map(r => `<span style="display:inline-block;margin:0 6px 6px 0;padding:6px 12px;border:1px solid #E8E4D8;border-radius:999px;font-size:13px;color:#3D4F47">${esc(r)}</span>`).join('')
     : '';
+  const convo = d.transcript
+    ? `<p style="margin:18px 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#68766E">What they asked the assistant</p>
+       <div style="padding:12px 14px;background:#FAF8F2;border:1px solid #E8E4D8;border-radius:12px;font-size:13.5px;line-height:1.5;color:#3D4F47;white-space:pre-wrap">${esc(d.transcript)}</div>`
+    : '';
   const msg = d.message
     ? `<p style="margin:18px 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#68766E">In their words</p>
        <div style="padding:14px 16px;background:#FFFFFF;border:1px solid #E8E4D8;border-radius:12px;font-size:15px;line-height:1.55;color:#14201A;white-space:pre-wrap">${esc(d.message)}</div>`
@@ -168,7 +181,7 @@ function founderEmail(d, o) {
     preheader: `${d.typeLabel} — ${d.school || d.email}`,
     title: `${esc(d.school || 'A school')} wants to talk`,
     note: null, ribbon: false,
-    body: table(rows) + chips + msg,
+    body: table(rows) + chips + msg + convo,
     cta: { href: `mailto:${d.email}?subject=${encodeURIComponent('Re: Paperhint — ' + d.typeLabel)}`, label: 'Reply to ' + (d.name ? d.name.split(' ')[0] : 'them') },
     foot: 'Sent by the contact form on paperhint.com. Reply to this email to answer them directly.'
   });

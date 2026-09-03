@@ -62,7 +62,8 @@ verbatim if it fails, plus which prompt version is live.
 | Variable | Needed for | Default |
 |---|---|---|
 | `CONSOLE_SECRET` | signing sign-in links | none — console refuses to work without it |
-| `CONSOLE_EMAILS` | who may sign in, comma-separated | `shrivathsan@paperhint.com` |
+| `CONSOLE_EMAILS` | individual addresses that may sign in | `shrivathsan@paperhint.com` |
+| `CONSOLE_DOMAINS` | whole domains that may sign in (exact match, never a suffix) | `paperhint.com` — so `support@` and all staff |
 | `SUPABASE_URL` | storing the log, prompts and panel copy | none — console shows an empty state |
 | `SUPABASE_SERVICE_ROLE_KEY` | same. Server-only, never shipped to a browser | none |
 | `KV_REST_API_URL` / `_TOKEN` | storing the log in Upstash instead | none |

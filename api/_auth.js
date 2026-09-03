@@ -6,9 +6,12 @@
  * Nothing is stored, so nothing can leak from storage, and a grant cannot be
  * forged without the secret or used after it expires.
  *
- *   CONSOLE_SECRET   any long random string — the signing key
- *   CONSOLE_EMAILS   who may sign in, comma-separated
- *                    default shrivathsan@paperhint.com
+ *   CONSOLE_SECRET    any long random string — the signing key
+ *   CONSOLE_EMAILS    individual addresses that may sign in, comma-separated
+ *                     default shrivathsan@paperhint.com
+ *   CONSOLE_DOMAINS   whole domains that may sign in, comma-separated
+ *                     default paperhint.com — so support@paperhint.com (a
+ *                     group mailbox) and anyone on staff can get a link
  */
 
 import { createHmac, timingSafeEqual, randomBytes } from 'node:crypto';
@@ -22,7 +25,7 @@ export function configured() { return Boolean(process.env.CONSOLE_SECRET); }
    deployment older than the variable, or a typo in the key. This turns all
    three into one answer. */
 export function diagnose() {
-  const want = ['CONSOLE_SECRET', 'CONSOLE_EMAILS', 'RESEND_API_KEY',
+  const want = ['CONSOLE_SECRET', 'CONSOLE_EMAILS', 'CONSOLE_DOMAINS', 'RESEND_API_KEY',
                 'KV_REST_API_URL', 'KV_REST_API_TOKEN',
                 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN'];
   const seen = {};
@@ -54,11 +57,21 @@ export function allowed() {
     .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 }
 
-/* Only a Paperhint address on the list. Compared whole — no domain-suffix
-   test, which "paperhint.com.attacker.net" would sail through. */
+export function domains() {
+  return (process.env.CONSOLE_DOMAINS || 'paperhint.com')
+    .split(',').map(s => s.trim().toLowerCase().replace(/^@/, '')).filter(Boolean);
+}
+
+/* An address on the list, or any address AT an allowed domain.
+   The domain test is exact equality on everything after the one and only
+   "@" — never a suffix test, which "paperhint.com.attacker.net" would sail
+   through, and never a split that a second "@" could confuse. */
 export function mayEnter(email) {
   const e = String(email || '').trim().toLowerCase();
-  return e.includes('@') && allowed().includes(e);
+  const parts = e.split('@');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return false;
+  if (allowed().includes(e)) return true;
+  return domains().includes(parts[1]);
 }
 
 function sign(body) {

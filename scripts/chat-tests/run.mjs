@@ -6,12 +6,16 @@ import { score } from './score.mjs';
 
 const ENDPOINT = process.env.CHAT_ENDPOINT || 'https://www.paperhint.com/api/chat';
 const label = process.argv[2] || 'run';
+/* --only z5,a2,m1 runs a subset, in suite order so threads still chain */
+const onlyArg = process.argv.find(a => a.startsWith('--only='));
+const only = onlyArg ? new Set(onlyArg.slice(7).split(',')) : null;
+const SUITE = only ? CASES.filter(c => only.has(c.id)) : CASES;
 const sleep = ms => new Promise(g => setTimeout(g, ms));
 const threads = {};
 
 
 const results = [];
-for (const c of CASES) {
+for (const c of SUITE) {
   const history = c.thread ? (threads[c.thread] || []) : [];
   const body = { question: c.q, history: history.slice(-8), context: c.context || '', sid: 'test-' + label + '-' + (c.thread || c.id), page: '/' };
   const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 30000);

@@ -170,6 +170,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* history carried over from an earlier page reads as past, not present */
 .msg.quiet{opacity:.62}
 .msg.quiet .w{animation:none;opacity:1;filter:none;transform:none}
+.curl{align-self:center;color:var(--c-line);padding:6px 0 2px;opacity:.9;
+  animation:in .4s cubic-bezier(.25,.8,.25,1) both}
+.curl svg{width:96px;height:11px;display:block}
 .past{align-self:center;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--c-muted);padding:2px 0 4px}
 .msg.err a{color:inherit}
 
@@ -191,6 +194,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .chips[hidden]{display:none}
 .chip{font-size:12.5px;color:var(--c-ink-soft);border:1px solid color-mix(in srgb,var(--c-ink) 12%,transparent);border-radius:999px;padding:6px 12px;transition:.2s;text-align:left}
 .chip:hover{border-color:var(--c-emerald);color:var(--c-emerald);background:color-mix(in srgb,var(--c-emerald) 7%,transparent)}
+.acts.follow{opacity:.92}
 .acts{display:flex;gap:6px;flex-wrap:wrap;padding:2px 0 2px 2px;animation:in .34s cubic-bezier(.25,.8,.25,1) both}
 
 form{display:flex;align-items:center;gap:8px;padding:10px 12px 12px 18px}
@@ -243,7 +247,7 @@ input::placeholder{color:var(--c-muted)}
   function load() {
     var blank = {
       sid: 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
-      name: '', email: '', school: '', role: null, pages: [], turns: [], started: Date.now()
+      name: '', email: '', school: '', role: null, pages: [], turns: [], gist: [], started: Date.now()
     };
     try {
       var raw = sessionStorage.getItem(SKEY);
@@ -271,6 +275,7 @@ input::placeholder{color:var(--c-muted)}
     if (visit.school) bits.push('They are from ' + visit.school + '.');
     if (visit.role && STORIES[visit.role]) bits.push('They read the ' + visit.role + ' story.');
     if (visit.pages.length > 1) bits.push('Pages seen this visit: ' + visit.pages.join(', ') + '.');
+    if (visit.gist && visit.gist.length) bits.push('Earlier in this visit they asked about: ' + visit.gist.join('; ') + '.');
     return bits.length ? bits.join(' ') : null;
   }
 
@@ -291,6 +296,38 @@ input::placeholder{color:var(--c-muted)}
     var first = name ? String(name).trim().split(/\s+/)[0] : '';
     var list = first ? GREET_NAMED : GREET_ANON;
     return list[Math.floor(Math.random() * list.length)].replace('{n}', first);
+  }
+
+
+  /* Follow-ups worth tapping: relatable next questions per topic, and never
+     one the assistant would have to refuse. Deterministic on purpose — no
+     extra call, no latency, no invented suggestions. */
+  var FOLLOWUPS = [
+    [/evaluat|mark|answer sheet|rubric|correct|grade/i, [
+      'What does the teacher approve?', 'Does it use our own rubric?', 'What about handwriting it can’t read?']],
+    [/pric|cost|licen|pilot|founding/i, [
+      'What does a pilot involve?', 'What’s included per student?', 'Arrange a callback']],
+    [/attendance|register/i, [
+      'Can we keep the paper register?', 'Do parents hear about absences?']],
+    [/note|copilot|librar/i, [
+      'Can notes match our syllabus?', 'Who else sees a shared note?', 'Can I paste my own notes?']],
+    [/question paper|blueprint|answer key|exam|test/i, [
+      'Can I set the weightage?', 'Does it make the answer key?', 'Do we still print papers?']],
+    [/parent|notif|whatsapp/i, [
+      'What exactly do parents get?', 'Do parents need an app?']],
+    [/admin|section|allot|migrat|portal|year/i, [
+      'How does year-end rollover work?', 'Who manages the allotments?']],
+    [/homework|assign/i, [
+      'When do parents hear about it?', 'Can it follow what I taught today?']],
+  ];
+  var FOLLOW_DEFAULT = ['How does the marking work?', 'What does it cost?', 'Arrange a callback'];
+
+  function followUps(question, reply) {
+    var hay = (question + ' ' + reply).slice(0, 600);
+    for (var i = 0; i < FOLLOWUPS.length; i++) {
+      if (FOLLOWUPS[i][0].test(hay)) return FOLLOWUPS[i][1].slice(0, 3);
+    }
+    return FOLLOW_DEFAULT;
   }
 
   var config = window.PaperhintChat || (window.PaperhintChat = {});
@@ -394,7 +431,7 @@ input::placeholder{color:var(--c-muted)}
       this.history = [];
       this.asked = 0;
       this.step = null;
-      visit.turns = []; save();
+      visit.turns = []; visit.gist = []; save();
       this.$('.fresh').hidden = true;
       this.$('input').placeholder = 'Ask anything…';
       this.text('bot', greeting(visit.name));
@@ -402,23 +439,42 @@ input::placeholder{color:var(--c-muted)}
       this.$('input').focus();
     }
 
-    /* A conversation that runs on forever costs more and helps less. Past the
-       cap, offer the two things that actually move it along. */
-    capped() {
-      if (this.asked < this.CAP) return false;
-      var last = this.$('.log').lastElementChild;
-      if (last && last.classList.contains('acts')) {   /* the offer is already up */
-        this.text('bot', 'Still the same two options — a callback, or start fresh.');
-        this.$('.log').appendChild(last);
-        this.scroll();
-        return true;
-      }
-      this.text('bot', 'We’ve covered a fair bit. A person can take it from here properly — or start fresh if you’ve got something new.');
-      this.actions([
-        { label: 'Arrange a callback', run: this.startLead.bind(this) },
-        { label: 'Start fresh', run: this.startFresh.bind(this) }
-      ]);
-      return true;
+    /* A thread that runs forever costs more and helps less — but stopping
+       someone mid-conversation is worse. Past the cap we quietly start a new
+       context and mark it with a curl, so the chat carries on and only the
+       memory behind it resets. */
+    maybeBranch() {
+      if (this.asked <= this.CAP) return;
+      /* compress what's being dropped into a line the model still sees, so
+         the new thread isn't amnesiac about what they already asked */
+      var asked = this.history.filter(function (t) { return t.role === 'user'; })
+                              .map(function (t) { return t.content.slice(0, 60); });
+      visit.gist = (visit.gist || []).concat(asked).slice(-8);
+      this.history = [];
+      visit.turns = []; save();
+      this.asked = 1;
+      var rule = document.createElement('div');
+      rule.className = 'curl';
+      rule.innerHTML = '<svg viewBox="0 0 120 12" aria-hidden="true" focusable="false">' +
+        '<path d="M2 7c8-6 16 4 24 0s16-8 24-4 16 8 24 4 16-8 22-3" fill="none" ' +
+        'stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+      this.$('.log').appendChild(rule);
+    }
+
+    /* one row of next questions under the answer; tapping asks it */
+    suggest(items) {
+      var self = this;
+      var old = this.$('.log').querySelector('.acts.follow');
+      if (old) old.remove();                    /* only the latest set stays */
+      var row = this.actions(items.map(function (label) {
+        return { label: label, run: function () {
+          if (/callback/i.test(label)) return self.startLead();
+          self.text('me', label);
+          self.asked++; self.maybeBranch();
+          self.ask(label);
+        } };
+      }));
+      if (row) row.classList.add('follow');
     }
 
     scroll() { var l = this.$('.log'); l.scrollTop = l.scrollHeight; }
@@ -630,6 +686,7 @@ input::placeholder{color:var(--c-muted)}
         self.history.push({ role: 'user', content: q }, { role: 'assistant', content: reply });
         visit.turns.push({ role: 'user', content: q }, { role: 'assistant', content: reply }); save();
         self.text('bot', reply);
+        self.suggest(followUps(q, reply));
       }).catch(function () {
         wait.remove();
         self.html('bot err', 'That didn’t go through. Try again, or write to <a href="mailto:support@paperhint.com">support@paperhint.com</a>.');
@@ -649,7 +706,7 @@ input::placeholder{color:var(--c-muted)}
       this.$('.fresh').hidden = false;
       if (this.step) return this.handleLead(q);
       this.asked++;
-      if (this.capped()) return;
+      this.maybeBranch();   /* silently, with a curl in the log */
       if (/call ?back|call me|talk to (someone|a person)|book a demo/i.test(q)) return this.startLead();
       this.ask(q);
     }

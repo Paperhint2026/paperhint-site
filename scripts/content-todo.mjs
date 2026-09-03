@@ -8,6 +8,7 @@
  */
 import { writeFileSync } from 'node:fs';
 import { ROLES, ORDER } from '../src/data/roles.js';
+import { PRODUCT } from '../src/data/product.js';
 
 const out = [];
 const say = (...l) => out.push(...l);
@@ -19,6 +20,14 @@ say('    npm run content-todo', '');
 say('Every page below is live and linked. What is missing is copy, not');
 say('plumbing. Anything marked DRAFT in `src/data/roles.js` is mine and is');
 say('meant to be replaced by the application narrative.', '');
+
+say('## /product', '');
+say('Content source: `docs/feature-list.md` (approved) — ' +
+    PRODUCT.groups.reduce((n, g) => n + g.features.length, 0) + ' features in ' +
+    PRODUCT.groups.length + ' groups');
+say('');
+for (const n of PRODUCT.needs) say('- [ ] ' + n);
+say('');
 
 for (const key of ORDER) {
   const r = ROLES[key];

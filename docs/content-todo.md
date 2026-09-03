@@ -9,6 +9,14 @@ Every page below is live and linked. What is missing is copy, not
 plumbing. Anything marked DRAFT in `src/data/roles.js` is mine and is
 meant to be replaced by the application narrative.
 
+## /product
+
+Content source: `docs/feature-list.md` (approved) — 14 features in 3 groups
+
+- [ ] Headline, standfirst and closing line
+- [ ] A screenshot per feature group
+- [ ] Whether the copilot is one product or two (teacher and office)
+
 ## /teachers
 
 Narrative source: `api/chat-content.js` → `STORIES.teacher` (approved)

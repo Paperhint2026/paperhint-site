@@ -753,10 +753,26 @@
     [/demo|start|onboard|migrat|pilot/i, 'We\u2019re onboarding founding schools hands-on right now. Book a demo \u2014 we\u2019ll set up one of your classes beforehand so you see your school, not a sample one.']
   ];
 
+  /* Flip this to '/api/chat' the day the endpoint ships — nothing else changes. */
+  var CHAT_ENDPOINT = null;
+  var history = [];
+
   window.PaperhintChat = {
+    get endpoint() { return CHAT_ENDPOINT; },
+    set endpoint(v) { CHAT_ENDPOINT = v; },
+
     adapter: function (question) {
-      /* PLACEHOLDER brain: canned matches + a graceful fallback.
-         Replace with: return fetch(YOUR_ENDPOINT, {...}).then(r => r.json())... */
+      if (CHAT_ENDPOINT) {
+        return fetch(CHAT_ENDPOINT, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: question, history: history.slice(-8) })
+        }).then(function (r) { return r.json(); }).then(function (j) {
+          if (!j || !j.reply) throw new Error(j && j.error || 'no reply');
+          history.push({ role: 'user', content: question }, { role: 'assistant', content: j.reply });
+          return j.reply;
+        });
+      }
+      /* PLACEHOLDER brain until the endpoint lands: canned matches, honest fallback. */
       return new Promise(function (resolve) {
         setTimeout(function () {
           for (var i = 0; i < CANNED.length; i++) {
@@ -931,40 +947,73 @@
   function initChat() {
     var root = document.getElementById('ask-paperhint');
     if (!root) return;
-    var pill = root.querySelector('.chat-pill');
+    var pill  = root.querySelector('.chat-pill');
     var panel = root.querySelector('.chat-panel');
-    var log = root.querySelector('.chat-log');
-    var form = root.querySelector('.chat-form');
+    var close = root.querySelector('.chat-close');
+    var log   = root.querySelector('.chat-log');
+    var chips = root.querySelector('.chat-chips');
+    var form  = root.querySelector('.chat-form');
     var input = form.querySelector('input');
 
-    pill.addEventListener('click', function () {
-      var open = panel.hidden;
-      panel.hidden = !open;
+    function setOpen(open) {
+      root.classList.toggle('open', open);
       pill.setAttribute('aria-expanded', String(open));
-      if (open) input.focus();
+      panel.setAttribute('aria-hidden', String(!open));
+      if (open) setTimeout(function () { input.focus(); }, 120);
+      else pill.focus();
+    }
+    pill.addEventListener('click', function () { setOpen(true); });
+    close.addEventListener('click', function () { setOpen(false); });
+
+    /* Escape closes; "/" opens from anywhere the user isn't already typing */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && root.classList.contains('open')) { setOpen(false); return; }
+      if (e.key === '/' && !root.classList.contains('open')) {
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+        e.preventDefault(); setOpen(true);
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (root.classList.contains('open') && !root.contains(e.target)) setOpen(false);
     });
 
-    function add(kind, text) {
+    function add(kind, html) {
       var el = document.createElement('div');
       el.className = 'chat-msg ' + kind;
-      el.textContent = text;
+      if (kind.indexOf('typing') > -1) el.innerHTML = '<i></i><i></i><i></i>';
+      else el.textContent = html;
       log.appendChild(el);
       log.scrollTop = log.scrollHeight;
       return el;
     }
 
+    function ask(q) {
+      if (!q) return;
+      chips.classList.add('gone');       /* suggestions step aside once asked */
+      add('me', q);
+      var typing = add('bot typing', '');
+      input.disabled = true;
+      window.PaperhintChat.adapter(q).then(function (reply) {
+        typing.className = 'chat-msg bot';
+        typing.textContent = reply;
+      }).catch(function () {
+        typing.className = 'chat-msg bot err';
+        typing.textContent = 'That didn\u2019t go through. Try again, or write to support@paperhint.com.';
+      }).then(function () {
+        input.disabled = false; input.focus();
+        log.scrollTop = log.scrollHeight;
+      });
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var q = input.value.trim();
-      if (!q) return;
       input.value = '';
-      add('me', q);
-      var typing = add('bot typing', 'thinking\u2026');
-      window.PaperhintChat.adapter(q).then(function (reply) {
-        typing.classList.remove('typing');
-        typing.textContent = reply;
-        log.scrollTop = log.scrollHeight;
-      });
+      ask(q);
+    });
+    chips.querySelectorAll('.chat-chip').forEach(function (c) {
+      c.addEventListener('click', function () { ask(c.textContent.trim()); });
     });
   }
 

@@ -1,18 +1,38 @@
-  <!-- ask-paperhint: placeholder UI, wired to the adapter in main.js
-       (swap window.PaperhintChat.adapter for the real AI backend) -->
-  <div class="chat" id="ask-paperhint">
-    <button class="chat-pill" type="button" aria-expanded="false" aria-controls="chat-panel">
+<!-- Ask Paperhint — a pill that expands into a glass panel.
+     UI only for now: window.PaperhintChat.adapter answers from a canned
+     map; swapping it for POST /api/chat is a one-line change. -->
+<div class="chat" id="ask-paperhint">
+  <button class="chat-pill" type="button" aria-expanded="false" aria-controls="chat-panel">
+    <span class="chat-dot" aria-hidden="true"></span>
+    <span class="chat-pill-label">Ask Paperhint</span>
+    <span class="chat-kbd" aria-hidden="true">/</span>
+  </button>
+
+  <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Ask Paperhint" aria-hidden="true">
+    <div class="chat-head">
       <span class="chat-dot" aria-hidden="true"></span>
-      Ask Paperhint anything
-      <span class="chat-hint" aria-hidden="true">timetables · pricing · migration</span>
-    </button>
-    <div class="chat-panel" id="chat-panel" hidden>
-      <div class="chat-log" role="log" aria-live="polite">
-        <div class="chat-msg bot">Hi! Ask me anything about Paperhint — what it does, pricing, or how a school gets started.</div>
-      </div>
-      <form class="chat-form">
-        <input type="text" name="q" placeholder="e.g. How do parent updates work?" aria-label="Ask about Paperhint" autocomplete="off" maxlength="300">
-        <button class="btn btn-primary" type="submit" aria-label="Send">→</button>
-      </form>
+      <b>Ask Paperhint</b>
+      <span class="chat-sub">Answers about the product · a person follows up</span>
+      <button class="chat-close" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
+
+    <div class="chat-log" role="log" aria-live="polite">
+      <div class="chat-msg bot">Ask me anything about Paperhint — how evaluation works, what a pilot looks like, or what it costs.</div>
+    </div>
+
+    <div class="chat-chips" aria-label="Suggested questions">
+      <button type="button" class="chat-chip">How does answer-sheet evaluation work?</button>
+      <button type="button" class="chat-chip">What does it cost?</button>
+      <button type="button" class="chat-chip">How do we start a pilot?</button>
+    </div>
+
+    <form class="chat-form">
+      <input type="text" name="q" placeholder="Type your question…" aria-label="Ask about Paperhint" autocomplete="off" maxlength="300">
+      <button class="chat-send" type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+      </button>
+    </form>
   </div>
+</div>

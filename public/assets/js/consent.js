@@ -53,6 +53,7 @@
   function decide(yes) {
     state = { v: VERSION, analytics: yes, at: new Date().toISOString() };
     keep(yes);
+    document.documentElement.classList.remove('consent-open');
     var bar = document.getElementById('consent');
     if (bar) { bar.classList.remove('on'); setTimeout(function () { bar.remove(); }, 260); }
     if (yes) {
@@ -68,6 +69,8 @@
     var bar = document.getElementById('consent');
     if (!bar) return;
     bar.hidden = false;
+    /* the page lifts the chat pill out of the way while this is up */
+    document.documentElement.classList.add('consent-open');
     requestAnimationFrame(function () { bar.classList.add('on'); });
     bar.querySelector('[data-yes]').addEventListener('click', api.accept);
     bar.querySelector('[data-no]').addEventListener('click', api.decline);

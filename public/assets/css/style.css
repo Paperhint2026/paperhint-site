@@ -1073,9 +1073,9 @@ footer .wrap{position:relative;z-index:2}
   transform:translateY(120%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 .consent.on{transform:none}
 .consent-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:18px;
-  background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(16px) saturate(1.2);
+  background:color-mix(in srgb,var(--surface) 97%,transparent);backdrop-filter:blur(20px) saturate(1.2);
   border:1px solid var(--line);border-radius:18px;padding:14px 18px;
-  box-shadow:0 12px 40px -18px rgba(10,15,12,.34)}
+  box-shadow:0 18px 50px -20px rgba(10,15,12,.4),0 2px 8px -4px rgba(10,15,12,.16)}
 .consent-say{margin:0;flex:1;font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
 .consent-say a{color:var(--emerald);text-underline-offset:3px}
 .consent-do{display:flex;gap:8px;flex-shrink:0}
@@ -1084,8 +1084,14 @@ footer .wrap{position:relative;z-index:2}
 .consent .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft)}
 .consent .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink)}
 .consent .btn-primary{background:var(--emerald);border:1px solid var(--emerald);color:#fff}
+/* the chat pill lives in the same corner — lift it while the bar is up,
+   rather than letting the two sit on top of each other */
+ask-paperhint{transition:bottom .3s cubic-bezier(.2,.7,.2,1)}
+html.consent-open ask-paperhint{bottom:104px}
+
 @media (max-width:640px){
   .consent{padding:0 10px 10px}
+  html.consent-open ask-paperhint{bottom:172px}
   .consent-in{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px}
   .consent-do{justify-content:stretch}
   .consent-do button{flex:1}

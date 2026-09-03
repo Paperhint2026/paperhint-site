@@ -72,8 +72,6 @@
     /* the page lifts the chat pill out of the way while this is up */
     document.documentElement.classList.add('consent-open');
     requestAnimationFrame(function () { bar.classList.add('on'); });
-    /* and the falling characters get a new floor: the bar's own top edge, so
-       they land on it rather than behind it */
     bar.querySelector('[data-yes]').addEventListener('click', api.accept);
     bar.querySelector('[data-no]').addEventListener('click', api.decline);
   }

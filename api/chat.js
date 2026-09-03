@@ -132,13 +132,17 @@ const SUBTRACTION = [
    'get more of the week back'],
   [/\bless\s+time\s+on\s+(?:paperwork|admin\w*|administration)\b/gi, 'more of the week back'],
   [/\b(?:the\s+)?administrative\s+(?:work|burden|load|tasks?)\b/gi, 'the work around teaching'],
-  /* defining the product as a scanner: it describes the input, not the result */
-  [/\bit\s+scans\s+(?:the\s+|your\s+|existing\s+)*paper(?:work)?\s+(?:you|the school)\s+already\s+produces?\b/gi,
-   'it gets the week done alongside you'],
-  [/\bprocess(?:es|ing)?\s+(?:this\s+|your\s+|the\s+)?(?:work|paperwork)\s+efficiently\b/gi,
-   'gets it done'],
-  [/\bhandl(?:es|ing)\s+numerous\s+tasks?\b/gi, 'carries the week'],
-  [/\bkeeps?\s+everything\s+organi[sz]ed\b/gi, 'has the next class ready'],
+  /* Defining the product as a scanner. These swap the OBJECT of a phrase and
+     leave the verb alone, or match the verb's form exactly — an earlier
+     version replaced whole clauses and produced "supports teachers by carries
+     the week", which is worse than the framing it was fixing. */
+  [/\bscans?\s+(?:the\s+|your\s+|existing\s+)*paper(?:work)?\s+(?:that\s+)?(?:you|the school)\s+already\s+produces?\b/gi,
+   'works alongside you'],
+  [/\bscanning\s+(?:the\s+|your\s+|existing\s+)*paper(?:work)?\s+(?:you|the school)\s+already\s+produces?\b/gi,
+   'working alongside you'],
+  [/\bnumerous\s+tasks?\b/gi, 'the week'],
+  [/\bthis\s+work\s+efficiently\b/gi, 'the week'],
+  [/\beverything\s+organi[sz]ed\b/gi, 'the next class ready'],
 ];
 
 const OFFERS = [

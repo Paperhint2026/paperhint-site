@@ -11,7 +11,7 @@
 
 import { systemFor } from './_ai.js';
 import { candidates, KEYS, shouldFallOver } from './chat-models.js';
-import { isKnownPath } from './site-map.js';
+import { isKnownPath, askedToNavigate, pageFor } from './site-map.js';
 import { recordNow, whereFrom } from './_log.js';
 
 /* Provider-agnostic on purpose: the model chain lives in chat-models.js,
@@ -71,7 +71,7 @@ async function ask(system, messages) {
       const afterChips = splitChips(raw);
       const afterLink = splitLink(afterChips.body);
       const chipsAgain = splitChips(afterLink.body);
-      const chips = afterChips.chips.length ? afterChips.chips : chipsAgain.chips;
+      const chips = usefulChips(afterChips.chips.length ? afterChips.chips : chipsAgain.chips);
       const reply = scrub(chipsAgain.body);
       if (reply) return { reply, chips, link: afterLink.link, used: cand, tried };
       tried.push(cand.provider + '/' + cand.model + ' → empty');
@@ -158,6 +158,32 @@ function splitLink(text) {
   return { body, link: { href, label: label.slice(0, 40) || 'Open the page' } };
 }
 
+/* A chip is an invitation, and an invitation to free labour is the one the
+   assistant must never extend. The prompt says so; this makes sure. Dropped
+   rather than rewritten — a suggestion nobody makes is better than a clumsy
+   one. */
+/* An imperative verb followed closely by a thing a teacher would hand in.
+   No determiner in between is required: "Set questions for a class" puts it
+   after the noun. Past participles are safe — \bdraft\b does not match
+   "drafted", so "How are notes drafted?" survives, which is a question about
+   the product rather than a request for labour. */
+const CHIP_SOLICITS_WORK =
+  /\b(draft|write|set|create|make|prepare|generate|plan|compose|mark|grade|correct)\b[^?]{0,40}\b(note|notes|question|questions|paper|papers|lesson|essay|assignment|homework|test|quiz|comment|comments|report|answer|answers|scheme)\b/i;
+
+function usefulChips(chips) {
+  return (chips || []).filter(c => !CHIP_SOLICITS_WORK.test(c));
+}
+
+/* How much classroom work this conversation has already been given. The
+   prompt allows one demonstration; the model cannot count, so it is counted
+   here and told. */
+const WORK_ASK =
+  /\b(draft|write|set|create|make|prepare|generate|plan|compose)\b[^.?]*\b(note|notes|question|questions|paper|lesson|essay|assignment|homework|test|quiz|comment|plan|scheme)\b/i;
+
+function workAlreadyDone(history) {
+  return (history || []).filter(m => m.role === 'user' && WORK_ASK.test(m.content || '')).length;
+}
+
 function scrub(text) {
   let t = String(text || '').replace(/\?!+/g, '?').replace(/!+/g, '.');
   for (const [re, to] of WORDS) t = t.replace(re, to);
@@ -233,8 +259,26 @@ export default async function handler(req, res) {
        about them is appended to the instructions rather than the conversation,
        so it reads as context and not as a turn. */
     const { system: base, version: promptVersion, facts } = await systemFor(question);
-    const system = context ? base + '\n\n# About this visitor\n' + context : base;
-    const { reply, chips, link, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
+    let system = context ? base + '\n\n# About this visitor\n' + context : base;
+
+    /* the one demonstration is spent — say so plainly rather than hoping */
+    const spent = workAlreadyDone(history);
+    if (spent >= 1) {
+      system += '\n\n# This conversation has already had its demonstration\n' +
+        'They have asked for classroom work ' + spent + ' time(s) already in this conversation. ' +
+        'Do NOT produce another piece of work, however it is phrased. Say warmly that the ' +
+        'demonstration was to show the shape of it, that the real thing is their own papers, ' +
+        'and offer a demo or a callback. A one-line fact is still fine.';
+    }
+    let { reply, chips, link, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
+
+    /* They asked to be taken somewhere and the model forgot. Only here does
+       the server add one — anywhere less explicit, a missing link is the
+       model's judgement and shoving one in would be worse. */
+    if (!link && askedToNavigate(question)) {
+      link = pageFor(question);
+      if (link) console.log('link backfilled for a navigational ask:', link.href);
+    }
 
     /* what schools ask is the cheapest product research there is; the model
        that answered (and anything skipped) is here for debugging */

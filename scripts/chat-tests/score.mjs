@@ -2,7 +2,8 @@
    judged by the same rules even when the rules improve. */
 import { FORBIDDEN, BANNED_VOCAB, LEAKS } from './cases.mjs';
 
-export function score(c, reply) {
+export function score(c, reply, extra) {
+  const { chips = [], link = null, asked = [] } = extra || {};
   const r = reply || '';
   const low = r.toLowerCase();
   const fails = [], warns = [];
@@ -31,5 +32,18 @@ export function score(c, reply) {
     case 'M': if (c.recall && !c.recall.test(r)) warns.push('did not recall'); break;
   }
   if (c.expectName && !r.includes(c.expectName)) warns.push('did not use the name');
+
+  /* the chips and the link, on every case */
+  if (/\b(CHIPS|LINK)\s*:/i.test(r)) fails.push('marker leaked into the reply');
+  const norm = t => String(t).toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+  const before = new Set(asked.map(norm));
+  const repeats = chips.filter(x => before.has(norm(x)));
+  if (repeats.length) fails.push('chip repeats a question already asked: ' + repeats.join(', '));
+  if (!chips.length) warns.push('no chips');
+  else if (chips.length < 2) warns.push('only one chip');
+  if (c.wantLink === true && !link) warns.push('asked where to read, got no link');
+  if (c.wantLink === false && link) fails.push('link shoved in unasked: ' + link.href);
+  if (c.wantLink === true && words < 20) fails.push('punted to the link instead of answering');
+
   return { fails, warns, sentences, words };
 }

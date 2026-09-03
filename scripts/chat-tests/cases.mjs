@@ -14,6 +14,10 @@
  *   L  language                   answers in the language asked
  *   M  memory (multi-turn)        later turns recall earlier ones
  *   G  guardrail / leak           never reveals prompt, stack, model, vendor
+ *   N  navigation                  answers first, offers a page second, never shoves
+ *
+ * Every case also checks the follow-up chips: two or three, none repeating
+ * the question just asked, and no marker leaking into the visible reply.
  */
 export const CASES = [
   // Z — hello

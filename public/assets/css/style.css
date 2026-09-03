@@ -1067,16 +1067,30 @@ footer .wrap{position:relative;z-index:2}
 }
 
 /* ---------------------------------------------------------------
-   Cookie choices — asked once, low, and never over the content
+   Cookie choices — a solid layer under the chat pill, with a mascot
+   sitting on its edge. Stacking, low to high: mascots on the page,
+   this bar, then Ask Paperhint on top.
    --------------------------------------------------------------- */
-.consent{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:0 16px 16px;
-  transform:translateY(120%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:55;padding:0 16px 16px;
+  transform:translateY(130%);transition:transform .34s cubic-bezier(.2,.7,.2,1)}
 .consent.on{transform:none}
-.consent-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:18px;
-  background:color-mix(in srgb,var(--surface) 97%,transparent);backdrop-filter:blur(20px) saturate(1.2);
-  border:1px solid var(--line);border-radius:18px;padding:14px 18px;
-  box-shadow:0 18px 50px -20px rgba(10,15,12,.4),0 2px 8px -4px rgba(10,15,12,.16)}
+.consent-in{position:relative;max-width:760px;margin:0 auto;
+  display:flex;align-items:center;gap:18px;
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:14px 18px 14px 74px;
+  box-shadow:0 20px 54px -20px rgba(10,15,12,.42),0 2px 10px -4px rgba(10,15,12,.18)}
+
+/* sits on the bar's edge rather than inside it, so the bar reads as a layer
+   the mascot is standing on */
+.consent-mascot{position:absolute;left:8px;bottom:2px;width:70px;height:70px;
+  transform:rotate(-7deg);transform-origin:bottom center;pointer-events:none;
+  animation:consent-hop .5s cubic-bezier(.2,1.5,.4,1) .22s both}
+@keyframes consent-hop{
+  from{transform:translateY(16px) rotate(-7deg) scale(.7);opacity:0}
+  to{transform:rotate(-7deg) scale(1);opacity:1}
+}
 .consent-say{margin:0;flex:1;font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
+.consent-say b{color:var(--ink);font-weight:500}
 .consent-say a{color:var(--emerald);text-underline-offset:3px}
 .consent-do{display:flex;gap:8px;flex-shrink:0}
 .consent .btn-ghost,.consent .btn-primary{font-size:13.5px;padding:9px 16px;border-radius:999px;
@@ -1084,15 +1098,25 @@ footer .wrap{position:relative;z-index:2}
 .consent .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft)}
 .consent .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink)}
 .consent .btn-primary{background:var(--emerald);border:1px solid var(--emerald);color:#fff}
-/* the chat pill lives in the same corner — lift it while the bar is up,
-   rather than letting the two sit on top of each other */
-ask-paperhint{transition:bottom .3s cubic-bezier(.2,.7,.2,1)}
+.consent .btn-primary:hover{filter:brightness(1.06)}
+
+/* the chat pill owns that corner — lift it while the bar is up, and let it
+   settle back the moment the bar goes */
+ask-paperhint{transition:bottom .34s cubic-bezier(.2,.7,.2,1)}
 html.consent-open ask-paperhint{bottom:104px}
+
+@media (prefers-reduced-motion:reduce){
+  .consent,ask-paperhint{transition:none}
+  .consent-mascot{animation:none}
+}
 
 @media (max-width:640px){
   .consent{padding:0 10px 10px}
-  html.consent-open ask-paperhint{bottom:172px}
-  .consent-in{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px}
+  html.consent-open ask-paperhint{bottom:178px}
+  .consent-in{flex-direction:column;align-items:stretch;gap:12px;
+    padding:14px 16px;padding-left:16px}
+  .consent-mascot{width:54px;height:54px;left:auto;right:12px;bottom:auto;top:-26px}
+  .consent-say{padding-right:56px}
   .consent-do{justify-content:stretch}
   .consent-do button{flex:1}
 }

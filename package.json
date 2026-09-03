@@ -11,7 +11,8 @@
     "astro": "astro",
     "content-todo": "node scripts/content-todo.mjs",
     "chat-cases": "node scripts/chat-tests/doc.mjs",
-    "chat-test": "node scripts/chat-tests/run.mjs"
+    "chat-test": "node scripts/chat-tests/run.mjs",
+    "chat-report": "node scripts/chat-tests/report.mjs"
   },
   "dependencies": {
     "astro": "^5.14.0"

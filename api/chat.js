@@ -82,18 +82,26 @@ async function ask(system, messages) {
 /* The small model keeps reaching for support-desk filler however firmly the
  * prompt forbids it. The prompt is the real fix; this is the safety net —
  * a narrow set of exact phrases swapped for the house equivalent. */
-/* Support-desk filler the model still leaks despite the prompt. Substituting
-   a phrase mid-sentence used to leave wreckage — "say the word what you need",
-   "I can take that on them get back" — so a sentence that contains one is now
-   dropped whole. They are always the closing offer, never the answer, and a
-   reply is never left empty. */
-const TICS = /\b(feel free to ask|please feel free to|just let me know|let me know if|i'?m here for that|i'?m here to help|i'?m here as your assistant|i'?d be happy to|i can definitely assist|i'?m focused on|i focus on|happy to help|how can i assist)\b/i;
-const OPENERS = /^(great question|certainly|absolutely|sure)[.,!]?\s*/i;
+/* What the model still gets wrong despite the prompt, fixed where a model
+   cannot forget it.
+
+   Filler: a sentence carrying a support-desk phrase is dropped whole —
+   substituting mid-sentence used to leave "say the word what you need". They
+   are always the closing offer, never the answer. The same treatment for the
+   marketing words the founder banned outright (streamline, leverage,
+   seamless, empower): a sentence built on one of those is a sentence that
+   said nothing. A reply is never left empty.
+
+   Exclamation marks: replaced with a full stop, in any language. The prompt
+   forbids them and gpt-4o-mini reaches for them anyway when told to be warm. */
+const TICS = /\b(feel free to ask|please feel free to|just let me know|let me know if|i'?m here for that|i'?m here to help|i'?m here as your assistant|i'?d be happy to|i can definitely assist|i'?m focused on|i focus on|happy to help|how can i assist|streamlin\w*|leverag\w*|seamless\w*|empower\w*)\b/i;
+const OPENERS = /^(great question|certainly|absolutely|sure|that'?s great)[.,!]?\s*/i;
 
 function scrub(text) {
-  const parts = String(text || '').split(/(?<=[.!?])\s+/);
+  const calm = String(text || '').replace(/\?!+/g, '?').replace(/!+/g, '.');
+  const parts = calm.split(/(?<=[.?])\s+/);
   const kept = parts.filter(s => !TICS.test(s));
-  const out = (kept.length ? kept : parts).join(' ').replace(OPENERS, '').trim();
+  const out = (kept.length ? kept : parts).join(' ').replace(OPENERS, '').replace(/\.\s*\./g, '.').trim();
   return out.charAt(0).toUpperCase() + out.slice(1);
 }
 

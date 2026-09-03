@@ -1,43 +1,14 @@
 /* Posts every case at the live endpoint, scores the replies, prints them all.
    node scripts/chat-tests/run.mjs [label]   -> scripts/chat-tests/results-<label>.json */
 import { writeFileSync } from 'node:fs';
-import { CASES, FORBIDDEN, BANNED_VOCAB, LEAKS } from './cases.mjs';
+import { CASES } from './cases.mjs';
+import { score } from './score.mjs';
 
 const ENDPOINT = process.env.CHAT_ENDPOINT || 'https://www.paperhint.com/api/chat';
 const label = process.argv[2] || 'run';
 const sleep = ms => new Promise(g => setTimeout(g, ms));
 const threads = {};
 
-function score(c, reply) {
-  const r = reply || '';
-  const low = r.toLowerCase();
-  const fails = [], warns = [];
-  const sentences = (r.match(/[.!?](\s|$)/g) || []).length || (r.trim() ? 1 : 0);
-  const words = r.trim().split(/\s+/).filter(Boolean).length;
-
-  if (/!/.test(r)) fails.push('exclamation');
-  const fp = FORBIDDEN.filter(f => low.includes(f)); if (fp.length) fails.push('forbidden: ' + fp.join(', '));
-  const bv = BANNED_VOCAB.filter(v => low.includes(v)); if (bv.length) fails.push('banned vocab: ' + bv.join(', '));
-  if (LEAKS.test(r)) fails.push('leak: ' + r.match(LEAKS)[0]);
-  if (/^\s*(no|nope|yes|sorry|unfortunately|i can'?t|i cannot|i'?m sorry)\b/i.test(r)) warns.push('abrupt opener');
-  if (/\*\*|^#{1,3}\s|^\s*[-*]\s|^\s*\d+\.\s/m.test(r)) warns.push('markdown');
-  const invite = /(ask me|try me|give me|throw me|tap|callback|show you|want to|shall i|would you like|tell me|send me)/i.test(r);
-
-  switch (c.kind) {
-    case 'Z': if (sentences > 3) warns.push('long for a hello (' + sentences + ')'); if (!invite) warns.push('no offer'); break;
-    case 'A': if (sentences < 2 || sentences > 5) warns.push('length ' + sentences + ' sentences'); break;
-    case 'P': if (/₹|\$|\brs\.?\b|\b\d{2,}\b/i.test(r)) fails.push('quoted a number'); if (!/callback|call back|representative/i.test(r)) warns.push('no handover'); break;
-    case 'B': if (!/chat box/i.test(r)) warns.push('missing closer'); break;
-    case 'C': if (!/outside my desk|not my desk|isn.t my call|outside what i|i.d only be guessing/i.test(r)) warns.push('deflection not in voice'); if (!invite) warns.push('no offer after declining'); break;
-    case 'G': if (/\d+\s?%/.test(r)) fails.push('accuracy figure'); break;
-    case 'T': if (words <= 8) warns.push('curt (' + words + ' words)'); if (!invite) warns.push('no door opened'); break;
-    case 'L': if (c.lang === 'hi' && !/[ऀ-ॿ]/.test(r) && !/\b(hai|kaise|aap|hum|kar)\b/i.test(r)) warns.push('not in Hindi');
-              if (c.lang === 'ta' && !/[஀-௿]/.test(r)) warns.push('not in Tamil'); break;
-    case 'M': if (c.recall && !c.recall.test(r)) warns.push('did not recall'); break;
-  }
-  if (c.expectName && !r.includes(c.expectName)) warns.push('did not use the name');
-  return { fails, warns, sentences, words };
-}
 
 const results = [];
 for (const c of CASES) {

@@ -29,7 +29,7 @@ export const STORIES = {
     chip: 'I run the school office',
     ask: 'I run the school office — what changes for me?',
     intro: 'It’s the week before the new academic year. Last year’s lists have to become this year’s, every section needs a teacher, and last term’s registers are still stacked on the desk.',
-    lead: 'What the office stops doing by hand:',
+    lead: 'What the office can run from one place:',
     bullets: [
       '<b>Rolling the year over.</b> A whole class is promoted to the next grade in one move; the year that ended is archived, not lost.',
       '<b>Staffing every section.</b> Allotments — who teaches which class and section — are worked out for you and kept in one place. Cover a period by asking, in plain language.',
@@ -43,15 +43,15 @@ export const STORIES = {
     chip: 'I’m a principal',
     ask: 'I’m a principal — why would my school do this?',
     intro: 'You have bought software before. It was configured in June, fed until August, and quietly abandoned by October — because it asked teachers to do a second job in a second place.',
-    lead: 'Paperhint works the other way round:',
+    lead: 'Paperhint earns its place the other way round:',
     bullets: [
-      '<b>It reads the paper you already produce.</b> Answer sheets, attendance registers, written exams. Day one changes nothing about how your school runs.',
-      '<b>It gives time back to teachers first.</b> Correction, paper setting and notes — the work that eats their evenings. That’s why it actually gets used.',
-      '<b>Exams stay on paper.</b> This isn’t a digital examination portal. You print as you always have.',
+      '<b>Teachers get their week back first.</b> Marking, paper setting, notes and the follow-through home — done alongside them, so the hours go where you hired them to go.',
+      '<b>You can see the school.</b> Every class logged, every mark sheet monitored, performance across sections in one place — something to plan and budget from rather than assemble.',
+      '<b>It starts where your school already is.</b> Exams stay on pen and paper, the register stays the one you keep, and a teacher can begin on Monday without learning a new way to work.',
       '<b>One licence per student</b> covers admins, teachers, students and parent access — priced with founding schools rather than off a rate card.',
       '<b>Your school shapes it.</b> Founding schools’ ways of working land on the roadmap, and we build custom modules for how you actually run.'
     ],
-    close: 'A phone and a browser. No scanners, no new hardware.'
+    close: 'Two roles today, teachers and the office. It is being built toward a school that runs end to end in one place — and founding schools shape that order.'
   },
   parent: {
     chip: 'I’m a parent',

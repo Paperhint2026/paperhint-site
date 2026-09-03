@@ -481,11 +481,10 @@
   var SVGNS = 'http://www.w3.org/2000/svg';
 
   var BOWL_TOKENS = [
-    ['Teaching', 1], ['is', 0], ['the', 0], ['job', 1], ['\u2014', 0],
-    ['Paperhint', 0], ['drafts', 0], ['the', 0], ['teaching', 1], ['notes,', 1],
-    ['sets', 0], ['the', 0], ['question', 1], ['papers,', 1],
-    ['keeps', 0], ['the', 0], ['parents', 1], ['posted,', 0],
-    ['and', 0], ['marks', 1], ['every', 0], ['answer', 1], ['sheet', 1], ['\u00B7', 0]
+    ['Walk', 1], ['into', 0], ['every', 0], ['class', 1], ['prepared', 1], ['\u2014', 0],
+    ['notes', 1], ['ready,', 0], ['papers', 1], ['set,', 0],
+    ['sheets', 1], ['marked', 1], ['the', 0], ['same', 0], ['way,', 0],
+    ['parents', 1], ['already', 0], ['told', 1], ['\u00B7', 0]
   ];
 
   /* ---- the curve, drawn to fit whatever the hero currently is ---- */
@@ -1172,7 +1171,7 @@
   /* ---------------- role folder: tabs over one shared panel ---------------- */
   var ROLES = {
     teachers: {
-      lead: 'Prepare, teach — the paperwork is handled',
+      lead: 'Walk into every class already prepared',
       cta: 'See it on your own answer sheets',
       items: [
         /* the copilot leads: it is how the rest of this list gets asked for */
@@ -1183,8 +1182,8 @@
       ]
     },
     admins: {
-      lead: 'The portal that sets up every desk',
-      cta: 'Explore the school portal',
+      lead: 'Run the whole year from one place',
+      cta: 'See what the office can run',
       items: [
         ['Classes, sections, students, teachers', 'Build the school\u2019s structure — and move it: promote a whole batch to the next grade in one step, absorb the fresh one cleanly.'],
         ['Subjects and their books', 'Attach books and materials to each subject; they flow to every teacher in that department, seeding their libraries.'],
@@ -1192,7 +1191,7 @@
       ]
     },
     students: {
-      lead: 'The same rubric for everyone',
+      lead: 'Marked the same way as everyone else',
       cta: 'How scoring works',
       items: [
         ['Fair marks, faster', 'Every answer is scored against the same rubric, the same way, for the whole class.'],
@@ -1201,7 +1200,7 @@
       ]
     },
     parents: {
-      lead: 'You know the moment it\u2019s assigned',
+      lead: 'You hear it on the day it happens',
       cta: 'See parent updates',
       items: [
         ['Homework, delivered to you', 'The moment a teacher assigns homework, you\u2019re notified — so it actually gets done at home.'],
@@ -1486,13 +1485,13 @@
      Runs first in boot so the band engine and reveal pick it up. */
   function initCtaBanner() {
     document.querySelectorAll('[data-component="cta-banner"]').forEach(function (el) {
-      var h = el.getAttribute('data-heading') || 'Let\u2019s take the marking off your desk';
-      var sub = el.getAttribute('data-sub') || 'Tell us how correction works in your school today \u2014 we\u2019ll show you the same class running in Paperhint.';
+      var h = el.getAttribute('data-heading') || 'Let\u2019s give your teachers their week back';
+      var sub = el.getAttribute('data-sub') || 'Tell us how a week runs in your school today, and we\u2019ll show you the same week running in Paperhint.';
       var mount = document.createElement('div');
       mount.className = 'cta-card reveal';
       mount.innerHTML =
         '<div class="hero-ribbon cta-band" data-shape="twirl" data-speed="30" data-span="0.50,1.10"' +
-        ' data-words="*Answer* *sheets* \u00b7 question papers \u00b7 homework \u00b7 *teaching* *notes* \u00b7 attendance \u00b7 *shared* *library* \u00b7"' +
+        ' data-words="*Prepared* *for* *every* *class* \u00b7 marked the same way \u00b7 *parents* *told* \u00b7 the year in one place \u00b7 *ready* *before* *you* *are* \u00b7"' +
         ' style="--band:#EA7DAA;--band-echo:#2563EB;--band-text:#FAF7F0;--band-kw:#FFD84D" aria-hidden="true">' +
           '<svg preserveAspectRatio="none" focusable="false">' +
             '<path class="ribbon-echo"></path><path class="ribbon-line"></path>' +

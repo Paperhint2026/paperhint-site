@@ -32,7 +32,7 @@ export const MENUS = [
       {
         title: 'Who it’s for',
         items: [
-          ['Teachers', '/teachers', 'The week, without the paperwork'],
+          ['Teachers', '/teachers', 'Walk into every class prepared'],
           ['Schools', '/schools', 'The office stops keying things in'],
           ['Students', '/students', 'Your work, recorded properly'],
           ['Parents', '/parents', 'You hear it the day it happens'],

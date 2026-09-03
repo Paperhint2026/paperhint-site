@@ -97,9 +97,10 @@ async function ask(system, messages) {
 
    Exclamation marks become full stops, in any language.
 
-   And a reply of six words or fewer — "I can't share that." — gets one
-   offer added, because a decline with nothing after it is the abruptness
-   the founder heard. */
+   And a bare refusal of eight words or fewer — "I can't share that." —
+   gets one offer added, because a decline with nothing after it is the
+   abruptness the founder heard. Short answers that are not refusals are
+   left alone. */
 const FILLER = /\b(feel free to ask|please feel free to|just let me know|let me know if|i'?m here for that|i'?m here to help|i'?m here as your assistant|i'?d be happy to|i can definitely assist|i'?m focused on|i focus on|happy to help|how can i assist)\b/i;
 const OPENERS = /^(great question|certainly|absolutely|sure|that'?s great)[.,!]?\s*/i;
 const WORDS = [
@@ -125,8 +126,10 @@ function scrub(text) {
     .replace(/^(plus|also|and|but|so),?\s+/i, '')      /* an orphan left by a drop */
     .replace(/\.\s*\./g, '.').trim();
   out = out.charAt(0).toUpperCase() + out.slice(1);
+  /* only a bare refusal gets the offer — "You're welcome." is short and fine */
   const words = out.split(/\s+/).filter(Boolean).length;
-  if (words > 0 && words <= 6) out += ' ' + OFFERS[out.length % OFFERS.length];
+  const refusal = /\b(can'?t|cannot|won'?t|not (mine|something|able)|outside my|under the bonnet|not my (call|desk))\b/i.test(out);
+  if (refusal && words <= 8) out += ' ' + OFFERS[out.length % OFFERS.length];
   return out;
 }
 

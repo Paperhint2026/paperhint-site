@@ -23,7 +23,7 @@ export function score(c, reply) {
     case 'A': if (sentences < 2 || sentences > 5) warns.push('length ' + sentences + ' sentences'); break;
     case 'P': if (/₹|\$|\brs\.?\b|\b\d{2,}\b/i.test(r)) fails.push('quoted a number'); if (!/callback|call back|representative/i.test(r)) warns.push('no handover'); break;
     case 'B': if (!/chat box/i.test(r)) warns.push('missing closer'); break;
-    case 'C': if (!/outside my desk|not my desk|isn.t my call|outside what i|i.d only be guessing/i.test(r)) warns.push('deflection not in voice'); if (!invite) warns.push('no offer after declining'); break;
+    case 'C': if (!/outside my desk|not my desk|not mine to call|isn.t my call|not my call|under the bonnet|only be guessing|only be making it up|staff-room argument/i.test(r)) warns.push('deflection not in voice'); if (!invite) warns.push('no offer after declining'); break;
     case 'G': if (/\d+\s?%/.test(r)) fails.push('accuracy figure'); break;
     case 'T': if (words <= 8) warns.push('curt (' + words + ' words)'); if (!invite) warns.push('no door opened'); break;
     case 'L': if (c.lang === 'hi' && !/[ऀ-ॿ]/.test(r) && !/\b(hai|kaise|aap|hum|kar)\b/i.test(r)) warns.push('not in Hindi');

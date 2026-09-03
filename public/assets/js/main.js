@@ -961,63 +961,92 @@
     }
 
     /* Dropdowns.
-       Click to open (works on touch), hover to open on a pointer device, and
-       closed by an outside click, Escape, or the bar folding on scroll. One
-       open at a time: two panels overlapping is never useful. */
+       The panels are moved out of .nav-inner on init and parked on <body>.
+       That element has overflow:hidden and a mask for its end caps, and a
+       mask clips its whole subtree, so a panel left inside it is invisible
+       however it is positioned — the chevron turns and nothing appears.
+       Parked on body they are positioned under their trigger by hand. */
     (function initDropdowns() {
       var drops = [].slice.call(document.querySelectorAll('.nav-drop'));
       if (!drops.length) return;
       var hoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       var shutTimer = null;
-
-      function close(d) {
-        d.classList.remove('open');
-        var t = d.querySelector('.nav-trigger'), p = d.querySelector('.nav-panel');
-        if (t) t.setAttribute('aria-expanded', 'false');
-        if (p) p.hidden = true;
-      }
-      function open(d) {
-        drops.forEach(function (o) { if (o !== d) close(o); });
-        d.classList.add('open');
-        var t = d.querySelector('.nav-trigger'), p = d.querySelector('.nav-panel');
-        if (t) t.setAttribute('aria-expanded', 'true');
-        if (p) p.hidden = false;
-      }
-      function closeAll() { drops.forEach(close); }
-      window.PaperhintNav = { closeAll: closeAll };
+      var pairs = [];
 
       drops.forEach(function (d) {
         var trigger = d.querySelector('.nav-trigger');
-        if (!trigger) return;
+        var panel = d.querySelector('.nav-panel');
+        if (!trigger || !panel) return;
+        document.body.appendChild(panel);          /* out of the mask */
+        pairs.push({ drop: d, trigger: trigger, panel: panel });
+      });
 
-        trigger.addEventListener('click', function (e) {
+      function place(pair) {
+        var t = pair.trigger.getBoundingClientRect();
+        var p = pair.panel;
+        p.style.visibility = 'hidden';
+        p.hidden = false;                           /* measure it first */
+        var w = p.offsetWidth;
+        var left = t.left + t.width / 2 - w / 2;
+        var edge = 12;
+        left = Math.max(edge, Math.min(left, window.innerWidth - w - edge));
+        p.style.left = Math.round(left) + 'px';
+        p.style.top = Math.round(t.bottom + 12) + 'px';
+        p.style.visibility = '';
+      }
+
+      function close(pair) {
+        pair.drop.classList.remove('open');
+        pair.panel.classList.remove('open');
+        pair.trigger.setAttribute('aria-expanded', 'false');
+        pair.panel.hidden = true;
+      }
+      function open(pair) {
+        pairs.forEach(function (o) { if (o !== pair) close(o); });
+        place(pair);
+        pair.drop.classList.add('open');
+        pair.panel.classList.add('open');
+        pair.trigger.setAttribute('aria-expanded', 'true');
+      }
+      function closeAll() { pairs.forEach(close); }
+      function anyOpen() { return pairs.some(function (p) { return p.drop.classList.contains('open'); }); }
+      window.PaperhintNav = { closeAll: closeAll };
+
+      pairs.forEach(function (pair) {
+        pair.trigger.addEventListener('click', function (e) {
           e.preventDefault();
-          d.classList.contains('open') ? close(d) : open(d);
+          pair.drop.classList.contains('open') ? close(pair) : open(pair);
         });
 
         if (hoverable) {
-          d.addEventListener('mouseenter', function () {
-            clearTimeout(shutTimer);
-            open(d);
-          });
-          d.addEventListener('mouseleave', function () {
-            /* a moment's grace so the diagonal from label to panel forgives */
-            shutTimer = setTimeout(function () { close(d); }, 160);
+          /* the label and the panel are no longer parent and child, so both
+             sides keep the group alive, with a moment's grace for the
+             diagonal between them */
+          [pair.trigger, pair.panel].forEach(function (el) {
+            el.addEventListener('mouseenter', function () {
+              clearTimeout(shutTimer); open(pair);
+            });
+            el.addEventListener('mouseleave', function () {
+              clearTimeout(shutTimer);
+              shutTimer = setTimeout(function () { close(pair); }, 220);
+            });
           });
         }
 
-        /* keyboard: the panel closes when focus leaves the group entirely */
-        d.addEventListener('focusout', function (e) {
-          if (!d.contains(e.relatedTarget)) close(d);
+        pair.panel.addEventListener('focusout', function (e) {
+          if (!pair.panel.contains(e.relatedTarget) && e.relatedTarget !== pair.trigger) close(pair);
         });
       });
 
       document.addEventListener('click', function (e) {
-        if (!e.target.closest('.nav-drop')) closeAll();
+        if (!e.target.closest('.nav-drop') && !e.target.closest('.nav-panel')) closeAll();
       });
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeAll();
       });
+      /* a panel pinned to coordinates has to be re-placed or dropped */
+      addEventListener('resize', closeAll);
+      addEventListener('scroll', function () { if (anyOpen()) closeAll(); }, { passive: true });
     })();
 
     function fold() {

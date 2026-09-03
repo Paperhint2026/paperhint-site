@@ -12,15 +12,25 @@
 
 export const PRODUCT = {
   kicker: 'THE PRODUCT',
-  h1: ['Everything the paperwork ', 't', 'ouches'],              /* DRAFT */
-  sub: 'One licence covering the teacher’s desk, the school office and the people waiting to hear from both.',  /* DRAFT */
+  h1: ['Ask for it in plain ', 'l', 'anguage'],                  /* DRAFT */
+  sub: 'A copilot at the teacher’s desk and another in the office. Everything below is work you can ask for instead of doing by hand.',  /* DRAFT */
   title: 'Paperhint — Complete School Software for Teachers and Schools',
   description: 'Everything in Paperhint: answer-sheet evaluation, question papers, teaching notes, homework, shared libraries, attendance, allotments, the admin portal, student records and parent notifications.',
 
   /* the one claim that frames all the others */
   opening: 'It works from the paper a school already produces. Day one changes nothing about how the school operates, and exams stay on pen and paper.',
+  openingMore: 'What changes is how the work gets asked for.',
 
   groups: [
+    {
+      id: 'copilot',
+      title: 'The copilot',
+      lead: 'The way the work gets asked for, rather than another place to click.',
+      features: [
+        ['Teacher’s copilot', 'A chat interface at the teacher’s desk: prepare notes, work through teaching tasks, ask for what you need in plain language. Everything further down this page can be reached by asking for it.', 'Core'],
+        ['Office copilot', 'The same thing on the other side of the building. Allotment changes and every module of the admin portal can be driven by asking, in plain language, instead of working through forms.'],
+      ],
+    },
     {
       id: 'desk',
       title: 'At the teacher’s desk',
@@ -30,7 +40,6 @@ export const PRODUCT = {
         ['Question papers', 'Pick chapters, weightage and difficulty; the paper, blueprint and answer key are drafted for the syllabus, with the teacher’s notes and subject books tuning every question.'],
         ['Teaching notes', 'Notes drafted for the syllabus, ready to teach with — rewritten simpler for a weaker section, extended with diagrams, edited in a small note editor, or pasted in from the teacher’s own work.'],
         ['Homework and assignments', 'Homework drafted for what was taught today. Parents are notified the moment it’s assigned.'],
-        ['Teacher’s copilot', 'A chat interface at the teacher’s desk: prepare notes, work through teaching tasks, ask for what you need in plain language.'],
         ['Personal library', 'Everything a teacher makes or uploads lands in their own repository, private by default.'],
         ['Shared library', 'Share a note and it’s visible to everyone on the school’s email — any class, any department. One teacher’s notes become every teacher’s shelf.'],
       ],
@@ -74,6 +83,7 @@ export const PRODUCT = {
   },
 
   needs: ['Headline, standfirst and closing line',
-          'A screenshot per feature group',
-          'Whether the copilot is one product or two (teacher and office)'],
+          'A screenshot per feature group, and one of the copilot in use',
+          'What the copilot can actually be asked for, beyond notes and teaching tasks',
+          'Whether the copilot deserves its own page (it is the core feature)'],
 };

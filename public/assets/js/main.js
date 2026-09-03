@@ -960,6 +960,66 @@
       });
     }
 
+    /* Dropdowns.
+       Click to open (works on touch), hover to open on a pointer device, and
+       closed by an outside click, Escape, or the bar folding on scroll. One
+       open at a time: two panels overlapping is never useful. */
+    (function initDropdowns() {
+      var drops = [].slice.call(document.querySelectorAll('.nav-drop'));
+      if (!drops.length) return;
+      var hoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      var shutTimer = null;
+
+      function close(d) {
+        d.classList.remove('open');
+        var t = d.querySelector('.nav-trigger'), p = d.querySelector('.nav-panel');
+        if (t) t.setAttribute('aria-expanded', 'false');
+        if (p) p.hidden = true;
+      }
+      function open(d) {
+        drops.forEach(function (o) { if (o !== d) close(o); });
+        d.classList.add('open');
+        var t = d.querySelector('.nav-trigger'), p = d.querySelector('.nav-panel');
+        if (t) t.setAttribute('aria-expanded', 'true');
+        if (p) p.hidden = false;
+      }
+      function closeAll() { drops.forEach(close); }
+      window.PaperhintNav = { closeAll: closeAll };
+
+      drops.forEach(function (d) {
+        var trigger = d.querySelector('.nav-trigger');
+        if (!trigger) return;
+
+        trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          d.classList.contains('open') ? close(d) : open(d);
+        });
+
+        if (hoverable) {
+          d.addEventListener('mouseenter', function () {
+            clearTimeout(shutTimer);
+            open(d);
+          });
+          d.addEventListener('mouseleave', function () {
+            /* a moment's grace so the diagonal from label to panel forgives */
+            shutTimer = setTimeout(function () { close(d); }, 160);
+          });
+        }
+
+        /* keyboard: the panel closes when focus leaves the group entirely */
+        d.addEventListener('focusout', function (e) {
+          if (!d.contains(e.relatedTarget)) close(d);
+        });
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.nav-drop')) closeAll();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAll();
+      });
+    })();
+
     function fold() {
       /* measure BEFORE the class flips: how far the mark must glide to sit at
          the bar's centre once it has collapsed */
@@ -981,6 +1041,8 @@
       }
       inner.classList.add('nav-shrink');
       folded = true;
+      /* a panel left hanging while the bar collapses would float free of it */
+      if (window.PaperhintNav) window.PaperhintNav.closeAll();
     }
     function unfold() {
       inner.classList.remove('nav-shrink');

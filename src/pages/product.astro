@@ -1,0 +1,105 @@
+---
+/* The product, in full.
+ *
+ * Same spine as the role pages and the same measure: a statement, then the
+ * work grouped by where it happens, each feature a row with its screenshot
+ * beside it, then what it asks of the school, then the close.
+ *
+ * Content is src/data/product.js, lifted from docs/feature-list.md.
+ */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Chat from '../components/Chat.astro';
+import { PRODUCT as p } from '../data/product.js';
+
+const internal = process.env.VERCEL_ENV !== 'production';
+---
+<Base title={p.title} description={p.description} canonical="https://paperhint.com/product">
+<Nav />
+
+<header class="role-hero">
+  <div class="wrap wrap-read">
+    <span class="tagline"><span class="tag">{p.kicker}</span> Paperhint <i>·</i></span>
+    <h1 class="display role-h1">{p.h1[0]}<em>{p.h1[1]}</em>{p.h1[2]}</h1>
+    <p class="role-sub">{p.sub}</p>
+    <div class="role-cta">
+      <a class="btn btn-primary btn-lg" href="/contact?type=demo">Book a demo</a>
+      <a class="btn btn-ghost btn-lg" href="/teachers">Start with a teacher’s week</a>
+    </div>
+    {internal && (
+      <div class="role-needs">
+        <b>Waiting on content</b>
+        <ul>{p.needs.map(n => <li>{n}</li>)}</ul>
+      </div>
+    )}
+  </div>
+</header>
+
+<section class="role-scene">
+  <div class="wrap wrap-read">
+    <p class="scene-text reveal" set:html={p.opening} />
+  </div>
+</section>
+
+{p.groups.map((g, gi) => (
+  <section class="role-beats prod-group" id={g.id}>
+    <div class="wrap wrap-read">
+      <h2 class="sec-h2 reveal">{g.title}</h2>
+      <p class="beats-turn reveal">{g.lead}</p>
+      <ol class="beat-list">
+        {g.features.map(([label, text, badge], i) => (
+          <li class={`beat reveal ${(gi + i) % 2 ? 'flip' : ''}`}>
+            <div class="beat-copy">
+              <h3 class="beat-label">
+                {label}
+                {badge && <span class="beat-badge">{badge}</span>}
+              </h3>
+              <p set:html={text} />
+            </div>
+            <div class="beat-visual" aria-hidden="true">
+              <div class={`beat-tint tint-${(gi + i) % 4}`}></div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+))}
+
+<section class="role-keeps">
+  <div class="wrap wrap-read">
+    <h2 class="sec-h2 reveal">{p.factsTitle}</h2>
+    <div class="stop-grid">
+      {p.facts.map(([label, text]) => (
+        <div class="stop reveal">
+          <h3 set:html={label} />
+          <p set:html={text} />
+        </div>
+      ))}
+    </div>
+    <p class="role-close reveal" set:html={p.close} />
+  </div>
+</section>
+
+<section class="role-others">
+  <div class="wrap wrap-read">
+    <h2 class="sec-h2 reveal">The same product, from where they sit</h2>
+    <div class="other-grid">
+      <a class="other reveal" href="/teachers"><span class="other-kicker">Teachers</span><p>The week, without the paperwork.</p><span class="other-go" aria-hidden="true">→</span></a>
+      <a class="other reveal" href="/schools"><span class="other-kicker">Schools</span><p>The office stops keying things in.</p><span class="other-go" aria-hidden="true">→</span></a>
+      <a class="other reveal" href="/students"><span class="other-kicker">Students<em class="other-soon">more soon</em></span><p>Your work, recorded properly.</p><span class="other-go" aria-hidden="true">→</span></a>
+      <a class="other reveal" href="/parents"><span class="other-kicker">Parents</span><p>You hear it the day it happens.</p><span class="other-go" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="cta role-cta-band">
+  <div class="wrap wrap-read">
+    <div data-component="cta-banner" data-heading={p.cta.heading} data-sub={p.cta.sub}></div>
+  </div>
+</section>
+
+<Footer />
+<Chat />
+</Base>

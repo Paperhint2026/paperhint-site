@@ -85,6 +85,11 @@
 
   /* Fallback brain while no endpoint is set. */
   var CANNED = [
+    [/^\s*(hi|hey|hello|yo|namaste|hola|good (morning|afternoon|evening))\b[\s!.?]*$/i,
+     'Hello. Ask me how Paperhint works, what a pilot looks like, or give me something to draft for a class — I’ll show you rather than describe it.'],
+    [/^\s*(thanks|thank you|ok|okay|cool|great)\b[\s!.?]*$/i, 'Any time. Anything else you want off your desk?'],
+    [/who are you|are you (a )?(bot|human|ai|real)/i,
+     'I’m Paperhint’s assistant — I answer questions about the product, and I can draft something for a class if you want to see how it works. A person follows up on anything I can’t settle.'],
     [/evaluat|grade|grading|answer sheet|scan|correct/i, 'Photograph answer sheets with the mobile app — Paperhint checks each answer against its question and scores it on your rubric, the same way for every student. You review and approve.'],
     [/pric|cost|fee|plan/i, 'Pricing is per enrolled student, and we’re setting it with our founding schools right now — there’s no rate card yet. Tap “Arrange a callback” and we’ll work it out together.'],
     [/parent|notif|whatsapp|absen/i, 'Parents hear the moment homework is assigned, and absences read from the attendance sheet reach them the same day.'],

@@ -132,6 +132,13 @@ const SUBTRACTION = [
    'get more of the week back'],
   [/\bless\s+time\s+on\s+(?:paperwork|admin\w*|administration)\b/gi, 'more of the week back'],
   [/\b(?:the\s+)?administrative\s+(?:work|burden|load|tasks?)\b/gi, 'the work around teaching'],
+  /* defining the product as a scanner: it describes the input, not the result */
+  [/\bit\s+scans\s+(?:the\s+|your\s+|existing\s+)*paper(?:work)?\s+(?:you|the school)\s+already\s+produces?\b/gi,
+   'it gets the week done alongside you'],
+  [/\bprocess(?:es|ing)?\s+(?:this\s+|your\s+|the\s+)?(?:work|paperwork)\s+efficiently\b/gi,
+   'gets it done'],
+  [/\bhandl(?:es|ing)\s+numerous\s+tasks?\b/gi, 'carries the week'],
+  [/\bkeeps?\s+everything\s+organi[sz]ed\b/gi, 'has the next class ready'],
 ];
 
 const OFFERS = [

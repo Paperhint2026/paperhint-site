@@ -305,6 +305,7 @@ input::placeholder{color:var(--muted)}
       this.themeWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
       notePage();
+      this.renderChips();          /* the menu is there on every fresh panel */
       if (visit.turns.length) {
         /* they were here a page ago — pick the thread back up */
         visit.turns.slice(-6).forEach(function (t) {
@@ -313,7 +314,6 @@ input::placeholder{color:var(--muted)}
         this.text('bot', greeting(visit.name));
       } else {
         this.text('bot', 'Tell me who you are and I’ll show you the week Paperhint takes off your desk.');
-        this.renderChips();
       }
 
       this.$('.pill').addEventListener('click', this.open.bind(this, true));
@@ -434,6 +434,8 @@ input::placeholder{color:var(--muted)}
 
     renderChips() {
       var box = this.$('.chips'), self = this;
+      box.hidden = false;
+      box.textContent = '';
       Object.keys(STORIES).forEach(function (role) {
         var b = document.createElement('button');
         b.type = 'button'; b.className = 'chip'; b.textContent = STORIES[role].chip;

@@ -4,8 +4,11 @@ const v = import.meta.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || 'dev';
 ---
 <div class="consent" id="consent" role="region" aria-label="Cookie choices" hidden>
   <div class="consent-in">
-    <img class="consent-mascot" src="/assets/img/stickers/char-02.png" alt=""
-         width="254" height="254" loading="lazy" decoding="async">
+    <picture class="consent-mascot">
+      <source srcset="/assets/img/stickers/cookie.webp" type="image/webp">
+      <img src="/assets/img/stickers/cookie.png" alt="" width="317" height="320"
+           loading="lazy" decoding="async">
+    </picture>
     <p class="consent-say">
       <b>Cookies, honestly.</b> We'd like to see which pages actually help.
       Nothing measures you until you say yes. <a href="/privacy">What we collect</a>

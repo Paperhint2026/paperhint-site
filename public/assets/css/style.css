@@ -1155,8 +1155,11 @@ html.consent-open ask-paperhint{bottom:104px}
    and matches the rest.
    --------------------------------------------------------------- */
 .role-hero{padding:168px 0 0;position:relative;z-index:2}
-.role-h1{max-width:15ch;margin:14px 0 0;font-size:clamp(38px,5vw,56px);
-  line-height:1;letter-spacing:-.05em}
+/* h1.display carries `margin: 32px auto`, which centred this line while
+   everything under it stayed left. Same specificity to beat it, and the
+   site's own size, line-height and tracking are left alone so the role
+   hero and the home hero read as the same typeface decision. */
+h1.role-h1{max-width:15ch;margin:14px auto 0 0}
 .role-sub{max-width:44ch;margin:20px 0 0;font-size:clamp(17px,1.7vw,20px);
   line-height:1.5;color:var(--ink-soft)}
 .role-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}

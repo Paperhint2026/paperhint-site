@@ -127,6 +127,11 @@ const SUBTRACTION = [
   [/\bcuts?\s+(?:down\s+on\s+)?(?:the\s+)?(?:paperwork|admin)\b/gi, 'moves faster'],
   [/\bpaperwork\s+(?:is\s+)?(?:handled|reduced|taken care of)\b/gi, 'the week is carried'],
   [/\bsav\w+\s+(?:you\s+)?time\s+on\b/gi, 'gets you further with'],
+  /* "you'll spend less time on paperwork" — the same pitch, one clause longer */
+  [/\b(?:you'?ll\s+|you\s+)?spend(?:ing)?\s+less\s+time\s+on\s+(?:paperwork|admin\w*|administration)\b/gi,
+   'get more of the week back'],
+  [/\bless\s+time\s+on\s+(?:paperwork|admin\w*|administration)\b/gi, 'more of the week back'],
+  [/\b(?:the\s+)?administrative\s+(?:work|burden|load|tasks?)\b/gi, 'the work around teaching'],
 ];
 
 const OFFERS = [

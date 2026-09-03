@@ -22,14 +22,35 @@ questions they asked, when they were last seen, and their network. Open a row
 for the full exchange in order, with the callback details raised to the top
 when they left any.
 
+## Storage
+
+Two backends, picked by whichever variables exist, neither needing a package.
+
+**Supabase (preferred).** A real table, kept indefinitely and queryable in SQL.
+Run `docs/schema.sql` once in the SQL editor, then set `SUPABASE_URL` and
+`SUPABASE_SERVICE_ROLE_KEY`. The table lifts a few fields into their own
+indexed columns and keeps the whole event in a `jsonb` column, so new fields
+never need a migration. RLS is enabled with no policy on purpose: the browser
+key reaches nothing, and the site reads and writes with the service role key,
+which lives only in Vercel's environment.
+
+Three views come with the schema for reading it by hand: `questions_asked`,
+`callbacks` and `faults`.
+
+**Upstash Redis.** A rolling window of the most recent 500 events. Simpler to
+attach, but you cannot query it and old rows fall off.
+
+With neither set, nothing is stored and the console says so.
+
 ## Environment
 
 | Variable | Needed for | Default |
 |---|---|---|
 | `CONSOLE_SECRET` | signing sign-in links | none — console refuses to work without it |
 | `CONSOLE_EMAILS` | who may sign in, comma-separated | `shrivathsan@paperhint.com` |
-| `KV_REST_API_URL` | storing the log | none — console shows an empty state |
-| `KV_REST_API_TOKEN` | storing the log | none |
+| `SUPABASE_URL` | storing the log | none — console shows an empty state |
+| `SUPABASE_SERVICE_ROLE_KEY` | storing the log | none |
+| `KV_REST_API_URL` / `_TOKEN` | storing the log in Upstash instead | none |
 | `RESEND_API_KEY` | sending the sign-in link | already set for the contact form |
 | `FEED_TOKEN` | machine access to `/api/events` | none — feed then needs a human grant |
 | `POSTHOG_KEY` | live forwarding to PostHog | none — forwarding is off |

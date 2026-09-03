@@ -5,7 +5,7 @@
  * order, and whether they left a way to reach them.
  */
 
-import { read, logging, storageKeys } from './_log.js';
+import { read, logging, storageState } from './_log.js';
 import { bearer, whoIs, configured, diagnose } from './_auth.js';
 
 export default async function handler(req, res) {
@@ -18,14 +18,14 @@ export default async function handler(req, res) {
   if (!who) return json(res, 401, { error: 'Sign in again.' });
 
   if (!logging()) {
-    const { seen, other } = storageKeys();
+    const { seen, other } = storageState();
     const notice = other.length
       ? 'Storage is half-connected: this deployment sees ' + other.join(', ') +
-        ', but not a REST url and token pair. A redis:// connection string is no use here — ' +
-        'take the REST URL and token from the Upstash dashboard and add them as ' +
-        'KV_REST_API_URL and KV_REST_API_TOKEN, then redeploy.'
+        ', but not a pair it can use. Supabase needs SUPABASE_URL and ' +
+        'SUPABASE_SERVICE_ROLE_KEY; a bare postgres:// or redis:// string is no use ' +
+        'to a REST client. Add the pair, then redeploy.'
       : 'Nothing is being stored yet. No storage keys are visible to this deployment — ' +
-        'connect an Upstash Redis to the project in Vercel, then redeploy.';
+        'add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Vercel, then redeploy.';
     return json(res, 200, {
       who, sessions: [], faults: [], summary: empty(), notice, storageKeys: seen,
     });

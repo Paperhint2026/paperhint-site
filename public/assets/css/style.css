@@ -1071,7 +1071,7 @@ footer .wrap{position:relative;z-index:2}
    sitting on its edge. Stacking, low to high: mascots on the page,
    this bar, then Ask Paperhint on top.
    --------------------------------------------------------------- */
-.consent{position:fixed;left:0;right:0;bottom:0;z-index:55;padding:0 16px 16px;
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:65;padding:0 16px 16px;
   transform:translateY(130%);transition:transform .34s cubic-bezier(.2,.7,.2,1)}
 .consent.on{transform:none}
 .consent-in{position:relative;max-width:760px;margin:0 auto;

@@ -33,6 +33,7 @@
   });
 
   var layer, engine, bodies = [], els = [], M;
+  var lift = 0, floorBody = null;   /* how far the floor sits above the viewport edge */
 
   function makeLayer() {
     layer = document.createElement('div');
@@ -55,8 +56,10 @@
 
   function walls() {
     var W = innerWidth, H = innerHeight, T = 200; /* thickness */
+    floorBody = M.Bodies.rectangle(W / 2, H - lift + T / 2 - 4, W + 800, T,
+      { isStatic: true, label: 'floor' });
     return [
-      M.Bodies.rectangle(W / 2, H + T / 2 - 4, W + 800, T, { isStatic: true, label: 'floor' }),
+      floorBody,
       M.Bodies.rectangle(-T / 2, H / 2, T, H * 6, { isStatic: true }),
       M.Bodies.rectangle(W + T / 2, H / 2, T, H * 6, { isStatic: true })
     ];
@@ -221,6 +224,30 @@
       requestAnimationFrame(loop);
     })();
   }
+
+  /* Anything that occupies the bottom of the screen — the cookie bar today —
+     raises the floor so the characters come to rest on top of it instead of
+     disappearing behind it. */
+  function setFloor(px) {
+    var want = Math.max(0, px | 0);
+    if (want === lift) return;
+    lift = want;
+    if (!M || !floorBody) return;
+    M.Body.setPosition(floorBody, {
+      x: innerWidth / 2, y: innerHeight - lift + 200 / 2 - 4
+    });
+    /* nudge whoever was already asleep on the old floor so they settle again */
+    for (var i = 0; i < bodies.length; i++) {
+      M.Sleeping.set(bodies[i], false);
+      if (bodies[i].position.y > innerHeight - lift) {
+        M.Body.setPosition(bodies[i], {
+          x: bodies[i].position.x, y: innerHeight - lift - 60
+        });
+      }
+    }
+  }
+
+  window.PaperhintGravity = { setFloor: setFloor };
 
   function boot() {
     import('https://esm.sh/matter-js@0.20.0')

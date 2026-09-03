@@ -50,12 +50,24 @@
   };
   window.PaperhintConsent = api;
 
+  /* the gravity layer may not have loaded yet, or at all */
+  function floor(px) {
+    try {
+      if (window.PaperhintGravity) return window.PaperhintGravity.setFloor(px);
+      /* it boots after us on a slow connection — try once more */
+      setTimeout(function () {
+        if (window.PaperhintGravity) window.PaperhintGravity.setFloor(px);
+      }, 1200);
+    } catch (e) {}
+  }
+
   function decide(yes) {
     state = { v: VERSION, analytics: yes, at: new Date().toISOString() };
     keep(yes);
     document.documentElement.classList.remove('consent-open');
+    floor(0);                        /* the characters get their floor back */
     var bar = document.getElementById('consent');
-    if (bar) { bar.classList.remove('on'); setTimeout(function () { bar.remove(); }, 260); }
+    if (bar) { bar.classList.remove('on'); setTimeout(function () { bar.remove(); }, 300); }
     if (yes) {
       waiting.splice(0).forEach(function (fn) { try { fn(); } catch (e) {} });
       document.dispatchEvent(new CustomEvent('paperhint:consent', { detail: { analytics: true } }));
@@ -72,6 +84,12 @@
     /* the page lifts the chat pill out of the way while this is up */
     document.documentElement.classList.add('consent-open');
     requestAnimationFrame(function () { bar.classList.add('on'); });
+    /* and the falling characters get a new floor: the bar's own top edge, so
+       they land on it rather than behind it */
+    var box = bar.querySelector('.consent-in');
+    if (box) setTimeout(function () {
+      floor(Math.round(window.innerHeight - box.getBoundingClientRect().top));
+    }, 380);
     bar.querySelector('[data-yes]').addEventListener('click', api.accept);
     bar.querySelector('[data-no]').addEventListener('click', api.decline);
   }

@@ -335,7 +335,7 @@ input::placeholder{color:var(--c-muted)}
     }).then(function (r) {
       clearTimeout(timer);
       return r.json().catch(function () { return {}; }).then(function (j) {
-        if (j && j.reply) return j.reply;
+        if (j && j.reply) return { reply: j.reply, chips: (j.chips || []) };
         var err = new Error(j && j.error || 'no reply');
         err.status = r.status;
         if (j && j.error) err.said = j.error;
@@ -555,6 +555,36 @@ input::placeholder{color:var(--c-muted)}
       this.$('.log').appendChild(rule);
     }
 
+    /* Every question this visit, flattened for comparison: a chip offering
+       something they have already asked is the bug the founder spotted. */
+    askedAlready() {
+      var seen = {};
+      var norm = function (t) { return String(t).toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim(); };
+      (visit.turns || []).concat(this.history || []).forEach(function (t) {
+        if (t && t.role === 'user') seen[norm(t.content)] = 1;
+      });
+      return { has: function (t) { return !!seen[norm(t)]; }, norm: norm };
+    }
+
+    /* What to offer next. The model's own follow-ups come first — it wrote
+       the answer, so it knows what follows from it — with the curated pool
+       backfilling when it sends too few, and nothing offered twice. */
+    nextQuestions(q, reply, fromModel) {
+      var seen = this.askedAlready();
+      var out = [], taken = {};
+      var take = function (list) {
+        (list || []).forEach(function (c) {
+          var k = seen.norm(c);
+          if (out.length >= 3 || !k || taken[k] || seen.has(c) || k === seen.norm(q)) return;
+          taken[k] = 1; out.push(c);
+        });
+      };
+      take(fromModel);
+      if (out.length < 2) take(followUps(q, reply));      /* thin or missing */
+      if (!out.length) take(['Arrange a callback']);
+      return out;
+    }
+
     /* one row of next questions under the answer; tapping asks it */
     suggest(items) {
       var self = this;
@@ -764,7 +794,9 @@ input::placeholder{color:var(--c-muted)}
       input.disabled = true;
       var endpoint = this.getAttribute('endpoint') || config.endpoint;
 
-      var pending = config.adapter ? config.adapter(q, this.history.slice(-8))
+      /* every branch resolves to the same shape, so ask() has one path */
+      var asObj = function (r) { return (r && typeof r === 'object') ? r : { reply: String(r), chips: [] }; };
+      var pending = config.adapter ? Promise.resolve(config.adapter(q, this.history.slice(-8))).then(asObj)
         : endpoint ? post(endpoint, {
             question: q,
             history: this.history.slice(-8),
@@ -772,14 +804,15 @@ input::placeholder{color:var(--c-muted)}
             sid: visit.sid,
             page: location.pathname
           })
-        : cannedReply(q);
+        : Promise.resolve(cannedReply(q)).then(asObj);
 
-      pending.then(function (reply) {
+      pending.then(function (got) {
+        var reply = got.reply;
         wait.remove();
         self.history.push({ role: 'user', content: q }, { role: 'assistant', content: reply });
         visit.turns.push({ role: 'user', content: q }, { role: 'assistant', content: reply }); save();
         self.text('bot', reply);
-        self.suggest(followUps(q, reply));
+        self.suggest(self.nextQuestions(q, reply, got.chips));
       }).catch(function (err) {
         wait.remove();
         /* the server says why (busy, not switched on, too many questions) —

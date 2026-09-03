@@ -65,8 +65,10 @@ async function ask(system, messages) {
   let last = null;
   for (const cand of list) {
     try {
-      const reply = scrub(await callOne(cand, system, messages));
-      if (reply) return { reply, used: cand, tried };
+      const raw = await callOne(cand, system, messages);
+      const { body, chips } = splitChips(raw);
+      const reply = scrub(body);
+      if (reply) return { reply, chips, used: cand, tried };
       tried.push(cand.provider + '/' + cand.model + ' → empty');
     } catch (e) {
       tried.push(cand.provider + '/' + cand.model + ' → ' + (e.status || 'err'));
@@ -115,6 +117,24 @@ const OFFERS = [
   'Ask me about a chapter or the marking and I’ll show you what I’m for.',
   'Throw me something from your classroom and I’ll do that one properly.',
 ];
+
+/* The model ends every reply with "CHIPS: a | b | c" — the questions the
+   person would plausibly ask next, written from what it just said. The line
+   is lifted off here and returned separately; it is never shown as text. */
+function splitChips(text) {
+  const t = String(text || '');
+  /* On its own line, any case — the shape actually asked for. Or mid-line,
+     but only when it is capitalised AND separated by pipes, so a sentence
+     like "we ship chips: crisps" is left alone. */
+  let m = t.match(/(?:^|\n)[ \t]*CHIPS[ \t]*:[ \t]*(.+?)[ \t]*$/i);
+  if (!m) m = t.match(/\bCHIPS[ \t]*:[ \t]*([^\n]*\|[^\n]*)$/);
+  if (!m) return { body: t, chips: [] };
+  const chips = m[1].split('|')
+    .map(c => c.replace(/^["'\s*_-]+|["'\s*_]+$/g, '').trim())
+    .filter(c => c.length > 2 && c.length <= 56)
+    .slice(0, 3);
+  return { body: t.slice(0, m.index).trim(), chips };
+}
 
 function scrub(text) {
   let t = String(text || '').replace(/\?!+/g, '?').replace(/!+/g, '.');
@@ -192,14 +212,14 @@ export default async function handler(req, res) {
        so it reads as context and not as a turn. */
     const { system: base, version: promptVersion, facts } = await systemFor(question);
     const system = context ? base + '\n\n# About this visitor\n' + context : base;
-    const { reply, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
+    const { reply, chips, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
 
     /* what schools ask is the cheapest product research there is; the model
        that answered (and anything skipped) is here for debugging */
     console.log(JSON.stringify({
       at: new Date().toISOString(), model: used.provider + '/' + used.model,
       fellBackPast: tried.length ? tried : undefined,
-      prompt: 'v' + promptVersion, facts,
+      prompt: 'v' + promptVersion, facts, chips: chips.length,
       q: question, chars: reply.length,
     }));
 
@@ -212,7 +232,7 @@ export default async function handler(req, res) {
       promptVersion, facts, ...whereFrom(req),
     });
 
-    return json(res, 200, { reply });
+    return json(res, 200, { reply, chips });
   } catch (e) {
     if (e.noKey) return json(res, 503, { error: 'The assistant isn’t switched on yet.' });
     console.error('chat failed', e.tried || '', e && e.message);

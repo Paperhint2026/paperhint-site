@@ -1439,3 +1439,17 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 @media (prefers-reduced-motion:reduce){
   .fw{opacity:1;filter:none;transform:none;animation:none}
 }
+
+/* Ten stacked backdrop-filters is fine on a laptop and a lot to ask of a
+   cheap Android, which is most of this market — and this site already runs a
+   WebGL gradient and a physics layer. Phones keep the ramp with four layers
+   instead of ten; the difference is invisible at that width and the
+   compositing cost drops with it. */
+@media (max-width:720px){
+  .nav-blur{height:72px}
+  .pb-5,.pb-6,.pb-7,.pb-8,.pb-9,.pb-10{display:none}
+}
+/* and nothing at all where the device says it cannot spare it */
+@media (max-width:720px) and (prefers-reduced-transparency:reduce){
+  .nav-blur{display:none}
+}

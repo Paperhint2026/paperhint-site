@@ -196,6 +196,15 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .chips[hidden]{display:none}
 .chip{font-size:12.5px;color:var(--c-ink-soft);border:1px solid color-mix(in srgb,var(--c-ink) 12%,transparent);border-radius:999px;padding:6px 12px;transition:.2s;text-align:left}
 .chip:hover{border-color:var(--c-emerald);color:var(--c-emerald);background:color-mix(in srgb,var(--c-emerald) 7%,transparent)}
+.go{align-self:flex-start;display:inline-flex;align-items:center;gap:9px;
+  max-width:88%;margin:2px 0 2px;padding:10px 14px;border-radius:14px;
+  text-decoration:none;font-size:13.5px;font-weight:500;
+  color:var(--c-emerald);background:color-mix(in srgb,var(--c-emerald) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--c-emerald) 22%,transparent);
+  animation:in .3s cubic-bezier(.25,.8,.25,1) both}
+.go:hover{background:color-mix(in srgb,var(--c-emerald) 15%,transparent)}
+.go i{font-style:normal;transition:transform .2s ease}
+.go:hover i{transform:translateX(3px)}
 .acts.follow{opacity:.92}
 .acts{display:flex;gap:6px;flex-wrap:wrap;padding:2px 0 2px 2px;animation:in .34s cubic-bezier(.25,.8,.25,1) both}
 
@@ -335,7 +344,7 @@ input::placeholder{color:var(--c-muted)}
     }).then(function (r) {
       clearTimeout(timer);
       return r.json().catch(function () { return {}; }).then(function (j) {
-        if (j && j.reply) return { reply: j.reply, chips: (j.chips || []) };
+        if (j && j.reply) return { reply: j.reply, chips: (j.chips || []), link: j.link || null };
         var err = new Error(j && j.error || 'no reply');
         err.status = r.status;
         if (j && j.error) err.said = j.error;
@@ -585,6 +594,34 @@ input::placeholder{color:var(--c-muted)}
       return out;
     }
 
+    /* A page worth opening, offered under the answer — never instead of it.
+       An anchor on the page they are already reading scrolls to it and steps
+       the panel aside, because the point is to look at the thing. */
+    offerLink(link) {
+      var self = this;
+      var a = document.createElement('a');
+      a.className = 'go';
+      a.href = link.href;
+      a.innerHTML = '<span></span><i aria-hidden="true">→</i>';
+      a.querySelector('span').textContent = link.label;
+      a.addEventListener('click', function (e) {
+        var hash = link.href.indexOf('#') > -1 ? link.href.slice(link.href.indexOf('#')) : '';
+        var path = hash ? link.href.slice(0, link.href.indexOf('#')) : link.href;
+        var here = (path === '' || path === location.pathname ||
+                    (path === '/' && location.pathname === '/'));
+        if (!hash || !here) return;                 /* let the browser navigate */
+        var target = document.querySelector(hash);
+        if (!target) return;
+        e.preventDefault();
+        self.open(false);   /* the panel steps aside so they can see it */
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', link.href);
+      });
+      this.$('.log').appendChild(a);
+      this.scroll();
+      return a;
+    }
+
     /* one row of next questions under the answer; tapping asks it */
     suggest(items) {
       var self = this;
@@ -795,7 +832,7 @@ input::placeholder{color:var(--c-muted)}
       var endpoint = this.getAttribute('endpoint') || config.endpoint;
 
       /* every branch resolves to the same shape, so ask() has one path */
-      var asObj = function (r) { return (r && typeof r === 'object') ? r : { reply: String(r), chips: [] }; };
+      var asObj = function (r) { return (r && typeof r === 'object') ? r : { reply: String(r), chips: [], link: null }; };
       var pending = config.adapter ? Promise.resolve(config.adapter(q, this.history.slice(-8))).then(asObj)
         : endpoint ? post(endpoint, {
             question: q,
@@ -812,6 +849,7 @@ input::placeholder{color:var(--c-muted)}
         self.history.push({ role: 'user', content: q }, { role: 'assistant', content: reply });
         visit.turns.push({ role: 'user', content: q }, { role: 'assistant', content: reply }); save();
         self.text('bot', reply);
+        if (got.link) self.offerLink(got.link);
         self.suggest(self.nextQuestions(q, reply, got.chips));
       }).catch(function (err) {
         wait.remove();

@@ -11,6 +11,7 @@
 
 import { systemFor } from './_ai.js';
 import { candidates, KEYS, shouldFallOver } from './chat-models.js';
+import { isKnownPath } from './site-map.js';
 import { recordNow, whereFrom } from './_log.js';
 
 /* Provider-agnostic on purpose: the model chain lives in chat-models.js,
@@ -66,9 +67,13 @@ async function ask(system, messages) {
   for (const cand of list) {
     try {
       const raw = await callOne(cand, system, messages);
-      const { body, chips } = splitChips(raw);
-      const reply = scrub(body);
-      if (reply) return { reply, chips, used: cand, tried };
+      /* chips last, then the link — either order in the output is fine */
+      const afterChips = splitChips(raw);
+      const afterLink = splitLink(afterChips.body);
+      const chipsAgain = splitChips(afterLink.body);
+      const chips = afterChips.chips.length ? afterChips.chips : chipsAgain.chips;
+      const reply = scrub(chipsAgain.body);
+      if (reply) return { reply, chips, link: afterLink.link, used: cand, tried };
       tried.push(cand.provider + '/' + cand.model + ' → empty');
     } catch (e) {
       tried.push(cand.provider + '/' + cand.model + ' → ' + (e.status || 'err'));
@@ -134,6 +139,23 @@ function splitChips(text) {
     .filter(c => c.length > 2 && c.length <= 56)
     .slice(0, 3);
   return { body: t.slice(0, m.index).trim(), chips };
+}
+
+/* "LINK: /product#copilot | The copilot" — one per reply, lifted off and
+   checked against the site map. A path the map does not know is dropped
+   silently: a 404 offered by the assistant is worse than no link. */
+function splitLink(text) {
+  const t = String(text || '');
+  const m = t.match(/(?:^|\n)[ \t]*LINK[ \t]*:[ \t]*([^\n|]+?)(?:[ \t]*\|[ \t]*([^\n]+?))?[ \t]*$/i);
+  if (!m) return { body: t, link: null };
+  const href = m[1].trim();
+  const body = t.slice(0, m.index).trim();
+  if (!isKnownPath(href)) {
+    console.warn('chat offered an unknown path', href);
+    return { body, link: null };
+  }
+  const label = (m[2] || '').trim().replace(/^["'\s]+|["'\s]+$/g, '');
+  return { body, link: { href, label: label.slice(0, 40) || 'Open the page' } };
 }
 
 function scrub(text) {
@@ -212,7 +234,7 @@ export default async function handler(req, res) {
        so it reads as context and not as a turn. */
     const { system: base, version: promptVersion, facts } = await systemFor(question);
     const system = context ? base + '\n\n# About this visitor\n' + context : base;
-    const { reply, chips, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
+    const { reply, chips, link, used, tried } = await ask(system, [...history, { role: 'user', content: question }]);
 
     /* what schools ask is the cheapest product research there is; the model
        that answered (and anything skipped) is here for debugging */
@@ -220,6 +242,7 @@ export default async function handler(req, res) {
       at: new Date().toISOString(), model: used.provider + '/' + used.model,
       fellBackPast: tried.length ? tried : undefined,
       prompt: 'v' + promptVersion, facts, chips: chips.length,
+      chipsMissing: chips.length ? undefined : true, link: link ? link.href : undefined,
       q: question, chars: reply.length,
     }));
 
@@ -232,7 +255,7 @@ export default async function handler(req, res) {
       promptVersion, facts, ...whereFrom(req),
     });
 
-    return json(res, 200, { reply, chips });
+    return json(res, 200, { reply, chips, link });
   } catch (e) {
     if (e.noKey) return json(res, 503, { error: 'The assistant isn’t switched on yet.' });
     console.error('chat failed', e.tried || '', e && e.message);

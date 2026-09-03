@@ -11,6 +11,7 @@
  */
 
 import { SYSTEM as FILE_SYSTEM } from './chat-prompt.js';
+import { sitemapText } from './site-map.js';
 
 const KEY = 'chat_system';
 const TTL_MS = 60 * 1000;          /* an edit lands within a minute */
@@ -95,19 +96,25 @@ function pick(knowledge, question) {
 /* The instructions for one question. Falls back to the file on any failure,
    which is the difference between a wrong answer and no answer at all. */
 export async function systemFor(question) {
-  if (!live()) return { system: FILE_SYSTEM, version: 'file', facts: 0 };
+  const withMap = t => t + '\n\n# The site you are on — the only paths you may link to\n' + sitemapText();
+  if (!live()) return { system: withMap(FILE_SYSTEM), version: 'file', facts: 0 };
 
   try {
     if (Date.now() - cache.at > TTL_MS || !cache.prompt) await refresh();
   } catch (e) {
     console.error('prompt load failed, using the file', e && e.message);
-    return { system: FILE_SYSTEM, version: 'file', facts: 0 };
+    return { system: withMap(FILE_SYSTEM), version: 'file', facts: 0 };
   }
 
   const facts = pick(cache.knowledge || [], question);
-  const system = facts.length
+  let system = facts.length
     ? cache.prompt + '\n\n# Facts you may use\nThese are current and approved. Prefer them over anything you recall.\n' + facts.join('\n')
     : cache.prompt;
+
+  /* appended at request time rather than stored in the prompt row: the map is
+     generated from the pages themselves, so it cannot go stale behind a
+     prompt version */
+  system += '\n\n# The site you are on — the only paths you may link to\n' + sitemapText();
 
   return { system, version: cache.version, facts: facts.length };
 }

@@ -147,7 +147,8 @@ const SUBTRACTION = [
      itself. There is no sanctioned use of it in a reply — the specific
      patterns catch the pitches, and whatever is left is a stray. "the work
      around it" reads correctly wherever the noun stood. */
-  [/\bpaper\s?work\b/gi, 'the work around it'],
+  [/\b(?:all\s+(?:the\s+)?|the\s+|your\s+|our\s+|existing\s+|any\s+)*paper\s?work\b/gi,
+   'the work around it'],
 ];
 
 const OFFERS = [

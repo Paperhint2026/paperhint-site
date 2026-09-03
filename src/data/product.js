@@ -18,20 +18,20 @@
 
 export const PRODUCT = {
   kicker: 'THE PRODUCT',
-  h1: ['Ask for it in plain ', 'l', 'anguage'],                  /* DRAFT */
-  sub: 'A copilot at the teacher’s desk and another in the office. Everything below is work you can ask for instead of doing by hand.',  /* DRAFT */
+  h1: ['Everything a school ', 'd', 'oes in a week'],            /* DRAFT */
+  sub: 'An assistant at the teacher’s desk and another in the office — preparing, remembering and following through, so the hours go to teaching.',  /* DRAFT */
   title: 'Paperhint — Complete School Software for Teachers and Schools',
-  description: 'Everything in Paperhint: answer-sheet evaluation, question papers, teaching notes, homework, shared libraries, attendance, allotments, the admin portal, student records and parent notifications.',
+  description: 'Everything Paperhint carries: attendance, answer-sheet evaluation, question papers, teaching notes, homework, shared libraries, allotments, the admin portal, student records and parent notifications — so a school runs faster.',
 
   /* the one claim that frames all the others */
-  opening: 'It works from the paper a school already produces. Day one changes nothing about how the school operates, and exams stay on pen and paper.',
-  openingMore: 'What changes is how the work gets asked for.',
+  opening: 'A teaching week is a stack of jobs that are not teaching. Attendance, homework, notes for the next class, papers to set, sheets to mark, parents to tell, a period to cover.',
+  openingMore: 'Paperhint carries them.',
 
   groups: [
     {
       id: 'copilot',
       title: 'The copilot',
-      lead: 'The way the work gets asked for, rather than another place to click.',
+      lead: 'Ask for the work in plain language, at the desk where you are already standing.',
       features: [
         ['Teacher’s copilot', 'A chat interface at the teacher’s desk: prepare notes, work through teaching tasks, ask for what you need in plain language. Everything further down this page can be reached by asking for it.', ['teachers']],
         ['Office copilot', 'The same thing on the other side of the building. Allotment changes and every module of the admin portal can be driven by asking, in plain language, instead of working through forms.', ['schools']],
@@ -40,7 +40,7 @@ export const PRODUCT = {
     {
       id: 'desk',
       title: 'At the teacher’s desk',
-      lead: 'The work that fills a teacher’s evenings.',
+      lead: 'The jobs that fill a teaching week, carried alongside you.',
       features: [
         ['Answer-sheet evaluation', 'Photograph answer sheets with the mobile app. Every answer is checked against its question and scored on the teacher’s rubric, the same way for every student. The teacher reviews, adjusts and approves; each result lands on that student’s record.', ['teachers', 'students']],
         ['Question papers', 'Pick chapters, weightage and difficulty; the paper, blueprint and answer key are drafted for the syllabus, with the teacher’s notes and subject books tuning every question.', ['teachers']],
@@ -53,7 +53,7 @@ export const PRODUCT = {
     {
       id: 'office',
       title: 'In the school office',
-      lead: 'The lists, the allotments and the year itself.',
+      lead: 'The things that do not scale by hand: the lists, the allotments, the year itself.',
       features: [
         ['Attendance scanning', 'Attendance marked on the paper register the school already uses, scanned in; the day’s roll is recorded and absences reach parents. Manual entry works too.', 'Live today', ['schools', 'parents']],
         ['Resource planning and allotment', 'Automation works out which teacher is allotted to each class and section, kept in one clean interface, with an office copilot handling changes in plain language.', ['schools']],
@@ -76,12 +76,12 @@ export const PRODUCT = {
   factsTitle: 'What it asks of the school',
   facts: [
     ['Nothing new to buy', 'Runs on a phone and a browser. No scanners, no new hardware.'],
-    ['Nothing to change on day one', 'It works from the paper the school already produces.'],
+    ['Nothing to change on day one', 'It starts from the paper the school already produces, so nobody has to work differently to begin.'],
     ['Nothing leaves the school', 'School data is scoped to the school’s account; teacher libraries are private until shared; nothing is visible outside the school’s email.'],
     ['One licence', 'One licence per enrolled student covers admins, teachers, students and parents.'],
   ],
 
-  close: 'A teacher photographs a stack of answer sheets. Everything else on this page follows from that.',  /* DRAFT */
+  close: 'Two roles today, teachers and the office. The direction is a school that runs end to end in one place.',  /* DRAFT */
 
   cta: {
     heading: 'See it on your own answer sheets',

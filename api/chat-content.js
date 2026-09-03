@@ -46,7 +46,7 @@ export const STORIES = {
     lead: 'Paperhint earns its place the other way round:',
     bullets: [
       '<b>Teachers get their week back first.</b> Marking, paper setting, notes and the follow-through home — done alongside them, so the hours go where you hired them to go.',
-      '<b>You can see the school.</b> Every class logged, every mark sheet monitored, performance across sections in one place — something to plan and budget from rather than assemble.',
+      '<b>It is one system, not five.</b> Classes, students, staff, who teaches what, the day’s roll and every result — in one place, driven in plain language rather than through forms.',
       '<b>It starts where your school already is.</b> Exams stay on pen and paper, the register stays the one you keep, and a teacher can begin on Monday without learning a new way to work.',
       '<b>One licence per student</b> covers admins, teachers, students and parent access — priced with founding schools rather than off a rate card.',
       '<b>Your school shapes it.</b> Founding schools’ ways of working land on the roadmap, and we build custom modules for how you actually run.'

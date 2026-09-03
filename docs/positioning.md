@@ -104,6 +104,24 @@ parents told, the week carried — and AI is how. Name it in the detail, in the
 mechanics, in the answer to "how does that work". Never on the face of a page
 as the product itself.
 
+## Only say what ships
+
+`docs/modules.md` is the module map with the founder's own status tags. The
+website may describe **DONE** and **TWEAK** modules as things a school gets.
+Anything tagged **BUILD** is direction, written as direction, with no date.
+
+This is not theoretical: on 3 September the site claimed a school could see
+every class logged and every mark sheet monitored and plan a budget from it
+(A14, not started), start mid-term with timetables (A3, not started), and
+borrow a colleague's period by asking (T2, not started) — and a placeholder
+testimonial had a vice principal praising the timetable module. All corrected.
+Check any new claim against the map before it ships.
+
+Live today, in short: the assistant on both sides · knowledge sources ·
+personal and shared libraries · teaching notes · homework · question papers ·
+grading · results · attendance and its oversight · classes and sections ·
+subjects and books · students · teachers · allotments.
+
 ## The rules that do not move
 
 1. **Never promise what has not shipped.** The committee role and the student

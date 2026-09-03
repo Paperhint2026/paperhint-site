@@ -6,5 +6,5 @@ const v = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || String
      the custom element: public/assets/js/ask-paperhint.js
      Set endpoint="/api/chat" to use the real brain; without it the element
      answers from its own canned map. -->
-<ask-paperhint endpoint="/api/chat" contact-endpoint="/api/contact"></ask-paperhint>
+<ask-paperhint endpoint="/api/chat" contact-endpoint="/api/contact" config-endpoint="/api/chat-config"></ask-paperhint>
 <script src={`/assets/js/ask-paperhint.js?v=${v}`} is:inline defer></script>

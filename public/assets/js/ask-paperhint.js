@@ -21,67 +21,57 @@
 
   var MARK = '<svg class="mark" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M13.0084 1.3766C13.7737 2.14565 14.2463 3.15379 14.3544 4.22631C15.3798 2.58856 15.6072 1.73351 15.6072 1.73351C16.6106 2.46619 17.2834 3.56947 17.4774 4.80065C17.6467 5.87486 17.4395 6.96965 16.8996 7.90118C18.6871 7.18196 19.3711 6.62453 19.3711 6.62453C19.7544 7.81004 19.6534 9.10001 19.0903 10.2107C18.599 11.1797 17.791 11.943 16.8095 12.3777C18.6762 12.8518 19.5556 12.8049 19.5556 12.8049C19.1723 13.9904 18.3361 14.9743 17.231 15.5402C16.2668 16.034 15.1667 16.1742 14.1183 15.9461C15.3513 17.4323 16.0902 17.9139 16.0902 17.9139C15.0867 18.6465 13.8348 18.9486 12.6097 18.7536C11.5408 18.5835 10.5688 18.0471 9.85413 17.2432C9.98239 19.1739 10.2985 20 10.2985 20C9.0582 20 7.86867 19.5048 6.99163 18.6234C6.2264 17.8544 5.75375 16.8462 5.64567 15.7737C4.62023 17.4115 4.39286 18.2665 4.39286 18.2665C3.38941 17.5338 2.71668 16.4305 2.52265 15.1994C2.35335 14.1252 2.56059 13.0304 3.10043 12.0989C1.31296 12.8181 0.628921 13.3755 0.628921 13.3755C0.245639 12.19 0.346658 10.9 0.909756 9.78937C1.40106 8.82031 2.20902 8.05702 3.19058 7.6223C1.32385 7.14827 0.444435 7.19517 0.444435 7.19517C0.827718 6.00966 1.66391 5.02572 2.76905 4.45982C3.7333 3.96606 4.83338 3.82582 5.88173 4.05395C4.64875 2.56773 3.90986 2.08618 3.90986 2.08618C4.9133 1.3535 6.16527 1.05143 7.39032 1.24643C8.4592 1.41657 9.4312 1.95295 10.1459 2.75678C10.0177 0.826064 9.70151 0 9.70151 0C10.9418 2.42706e-07 12.1314 0.495178 13.0084 1.3766Z"/></svg>';
 
-  /* ---------------------------------------------------------------- stories
-     Written, not improvised: every visitor gets the pitch right, and nothing
-     is promised that doesn't ship. Authored here, rendered as trusted HTML —
-     anything from a person or a model goes in as text, never markup. */
-  var STORIES = {
-    teacher: {
-      chip: 'I’m a teacher',
-      ask: 'I’m a teacher — how does Paperhint help me?',
-      intro: 'It’s Sunday evening. Forty-odd answer sheets from Friday’s test are still in the bag, tomorrow’s notes aren’t written, and next week’s question paper is a blank page. None of that is teaching — it’s the work around teaching.',
-      lead: 'Here’s the same week with Paperhint:',
-      bullets: [
-        '<b>Monday.</b> You photograph the answer sheets with your phone. Every answer is checked against its question and scored on your rubric — the same way for every student. You read through, adjust what you disagree with, approve.',
-        '<b>Tuesday.</b> You ask for notes on the next chapter. They come back drafted for your syllabus — simpler for the weaker section if you ask, with a board-style diagram if you want one.',
-        '<b>Wednesday.</b> Homework goes out in a minute, and parents know the moment it’s assigned. No group message to write.',
-        '<b>Thursday.</b> Next week’s paper: you pick chapters, weightage and difficulty. Paper, blueprint and answer key come back for your syllabus.',
-        '<b>Friday.</b> Attendance is the same paper register you already keep — scanned, not retyped.'
-      ],
-      close: 'The marks land on each student’s record as you approve them. Nothing goes out without you signing off.'
-    },
-    admin: {
-      chip: 'I run the school office',
-      ask: 'I run the school office — what changes for me?',
-      intro: 'It’s the week before the new academic year. Last year’s lists have to become this year’s, every section needs a teacher, and last term’s registers are still stacked on the desk.',
-      lead: 'What the office stops doing by hand:',
-      bullets: [
-        '<b>Rolling the year over.</b> A whole class is promoted to the next grade in one move; the year that ended is archived, not lost.',
-        '<b>Staffing every section.</b> Allotments — who teaches which class and section — are worked out for you and kept in one place. Cover a period by asking, in plain language.',
-        '<b>Subjects and books.</b> Attach a book to a subject once; it reaches every teacher in that department.',
-        '<b>Attendance.</b> The paper register the school already uses, scanned in — absences reach parents the same day.',
-        '<b>People and structure.</b> Classes, sections, students, teachers and subjects in one portal instead of four spreadsheets.'
-      ],
-      close: 'Nothing gets migrated by you — we set the school up alongside your office, in one sitting.'
-    },
-    principal: {
-      chip: 'I’m a principal',
-      ask: 'I’m a principal — why would my school do this?',
-      intro: 'You have bought software before. It was configured in June, fed until August, and quietly abandoned by October — because it asked teachers to do a second job in a second place.',
-      lead: 'Paperhint works the other way round:',
-      bullets: [
-        '<b>It reads the paper you already produce.</b> Answer sheets, attendance registers, written exams. Day one changes nothing about how your school runs.',
-        '<b>It gives time back to teachers first.</b> Correction, paper setting and notes — the work that eats their evenings. That’s why it actually gets used.',
-        '<b>Exams stay on paper.</b> This isn’t a digital examination portal. You print as you always have.',
-        '<b>One licence per student</b> covers admins, teachers, students and parent access — priced with founding schools rather than off a rate card.',
-        '<b>Your school shapes it.</b> Founding schools’ ways of working land on the roadmap, and we build custom modules for how you actually run.'
-      ],
-      close: 'A phone and a browser. No scanners, no new hardware.'
-    },
-    parent: {
-      chip: 'I’m a parent',
-      ask: 'I’m a parent — what would I see?',
-      intro: 'Most of what you learn about school arrives late — the test that happened last week, the homework you hear about at bedtime, the absence nobody mentioned.',
-      lead: 'With Paperhint in the school:',
-      bullets: [
-        '<b>Homework, when it’s set.</b> You hear the moment a teacher assigns it — not the night before it’s due.',
-        '<b>Absences, the same day.</b> Read straight from the attendance sheet, no phone call needed.',
-        '<b>Marks, when the teacher shares them.</b> Each evaluation is recorded to your child, exam over exam.',
-        '<b>Nothing to install.</b> Updates come to where you already are.'
-      ],
-      close: 'Paperhint is bought by your school, not by you — if you’d like them to see it, we’re happy to talk to them.'
-    }
-  };
+  /* ------------------------------------------------------------ content
+     The role stories and the follow-up suggestions used to live here. They
+     now come from /api/chat-config, which reads them from the database with
+     the repo's api/chat-content.js as its fallback, so the copy can change
+     without a deploy. Until it arrives the panel still takes questions; only
+     the story chips wait. */
+  var CONTENT = { stories: [], followups: [], fallback: [] };
+  var byRole = {};
+  var contentReady = null;
+
+  function loadContent(endpoint) {
+    if (contentReady) return contentReady;
+    contentReady = fetch(endpoint || '/api/chat-config', { credentials: 'omit' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        CONTENT = {
+          stories: (j && j.stories) || [],
+          followups: (j && j.followups) || [],
+          fallback: (j && j.fallback) || []
+        };
+        byRole = {};
+        CONTENT.stories.forEach(function (s) { byRole[s.key] = s; });
+        return CONTENT;
+      })
+      .catch(function () { return CONTENT; });   /* input still works */
+    return contentReady;
+  }
+
+  /* Authored copy may use a little emphasis; everything else is stripped, so
+     a row in the database can never inject markup into the page. */
+  var OK_TAGS = /^(b|i|em|strong|br)$/i;
+  function trusted(html) {
+    var box = document.createElement('div');
+    box.innerHTML = String(html == null ? '' : html);
+    (function walk(node) {
+      var kids = [].slice.call(node.childNodes);
+      kids.forEach(function (kid) {
+        if (kid.nodeType === 1) {
+          if (!OK_TAGS.test(kid.tagName)) {
+            var text = document.createTextNode(kid.textContent);
+            node.replaceChild(text, kid);
+            return;
+          }
+          [].slice.call(kid.attributes).forEach(function (a) { kid.removeAttribute(a.name); });
+          walk(kid);
+        }
+      });
+    })(box);
+    return box.innerHTML;
+  }
+
 
   /* Fallback brain while no endpoint is set. */
   var CANNED = [
@@ -285,7 +275,7 @@ input::placeholder{color:var(--c-muted)}
     var bits = [];
     if (visit.name) bits.push('Their name is ' + visit.name + '.');
     if (visit.school) bits.push('They are from ' + visit.school + '.');
-    if (visit.role && STORIES[visit.role]) bits.push('They read the ' + visit.role + ' story.');
+    if (visit.role && byRole[visit.role]) bits.push('They read the ' + visit.role + ' story.');
     if (visit.pages.length > 1) bits.push('Pages seen this visit: ' + visit.pages.join(', ') + '.');
     if (visit.gist && visit.gist.length) bits.push('Earlier in this visit they asked about: ' + visit.gist.join('; ') + '.');
     return bits.length ? bits.join(' ') : null;
@@ -313,33 +303,18 @@ input::placeholder{color:var(--c-muted)}
 
   /* Follow-ups worth tapping: relatable next questions per topic, and never
      one the assistant would have to refuse. Deterministic on purpose — no
-     extra call, no latency, no invented suggestions. */
-  var FOLLOWUPS = [
-    [/evaluat|mark|answer sheet|rubric|correct|grade/i, [
-      'What does the teacher approve?', 'Does it use our own rubric?', 'What about handwriting it can’t read?']],
-    [/pric|cost|licen|pilot|founding/i, [
-      'What does a pilot involve?', 'What’s included per student?', 'Arrange a callback']],
-    [/attendance|register/i, [
-      'Can we keep the paper register?', 'Do parents hear about absences?']],
-    [/note|copilot|librar/i, [
-      'Can notes match our syllabus?', 'Who else sees a shared note?', 'Can I paste my own notes?']],
-    [/question paper|blueprint|answer key|exam|test/i, [
-      'Can I set the weightage?', 'Does it make the answer key?', 'Do we still print papers?']],
-    [/parent|notif|whatsapp/i, [
-      'What exactly do parents get?', 'Do parents need an app?']],
-    [/admin|section|allot|migrat|portal|year/i, [
-      'How does year-end rollover work?', 'Who manages the allotments?']],
-    [/homework|assign/i, [
-      'When do parents hear about it?', 'Can it follow what I taught today?']],
-  ];
-  var FOLLOW_DEFAULT = ['How does the marking work?', 'What does it cost?', 'Arrange a callback'];
-
+     extra call and no invented suggestions; the patterns come from the
+     database with the repo as the fallback. */
   function followUps(question, reply) {
     var hay = (question + ' ' + reply).slice(0, 600);
-    for (var i = 0; i < FOLLOWUPS.length; i++) {
-      if (FOLLOWUPS[i][0].test(hay)) return FOLLOWUPS[i][1].slice(0, 3);
+    var rules = CONTENT.followups || [];
+    for (var i = 0; i < rules.length; i++) {
+      try {
+        /* the pattern is authored copy, but a bad one must not break a reply */
+        if (new RegExp(rules[i].pattern, 'i').test(hay)) return rules[i].suggestions.slice(0, 3);
+      } catch (e) { /* skip a malformed pattern */ }
     }
-    return FOLLOW_DEFAULT;
+    return (CONTENT.fallback || []).slice(0, 3);
   }
 
 
@@ -452,7 +427,7 @@ input::placeholder{color:var(--c-muted)}
   var config = window.PaperhintChat || (window.PaperhintChat = {});
   config.visit = visit;
   config.forgetVisit = function () { try { sessionStorage.removeItem(SKEY); } catch (e) {} };
-  config.stories = STORIES;
+  config.content = function () { return CONTENT; };   /* for debugging */
 
   function cannedReply(q) {
     return new Promise(function (resolve) {
@@ -666,18 +641,25 @@ input::placeholder{color:var(--c-muted)}
 
     renderChips() {
       var box = this.$('.chips'), self = this;
-      box.hidden = false;
       box.textContent = '';
-      Object.keys(STORIES).forEach(function (role) {
-        var b = document.createElement('button');
-        b.type = 'button'; b.className = 'chip'; b.textContent = STORIES[role].chip;
-        b.addEventListener('click', function () { self.tellStory(role); });
-        box.appendChild(b);
+      box.hidden = true;
+      /* the copy is fetched, so the chips appear a moment after the panel;
+         if it never arrives the panel still takes typed questions */
+      loadContent(this.getAttribute('config-endpoint')).then(function (c) {
+        if (!c.stories.length) return;
+        box.textContent = '';
+        c.stories.forEach(function (st) {
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'chip'; b.textContent = st.chip;
+          b.addEventListener('click', function () { self.tellStory(st.key); });
+          box.appendChild(b);
+        });
+        box.hidden = false;
       });
     }
 
     tellStory(role) {
-      var st = STORIES[role], self = this;
+      var st = byRole[role], self = this;
       if (!st) return;
       this.lead.role = role;
       visit.role = role; save();
@@ -686,10 +668,14 @@ input::placeholder{color:var(--c-muted)}
       var wait = this.thinking();
       setTimeout(function () {
         wait.remove();
+        /* authored copy, but stripped to a little emphasis all the same */
         var story = self.html('bot story',
-          '<p>' + st.intro + '</p><p class="lead">' + st.lead + '</p><ul>' +
-          st.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('') +
-          '</ul><p class="end">' + st.close + '</p>');
+          '<p>' + trusted(st.intro) + '</p>' +
+          (st.lead ? '<p class="lead">' + trusted(st.lead) + '</p>' : '') +
+          '<ul>' + (st.bullets || []).map(function (b) {
+            return '<li>' + trusted(b) + '</li>';
+          }).join('') + '</ul>' +
+          (st.close ? '<p class="end">' + trusted(st.close) + '</p>' : ''));
         self.actions([
           { label: 'Arrange a callback', run: self.startLead.bind(self) },
           { label: 'Ask something else', run: function () { self.$('input').focus(); } }
@@ -755,7 +741,7 @@ input::placeholder{color:var(--c-muted)}
             etype: 'demo', name: this.lead.name, email: this.lead.email, school: this.lead.school,
             role: roleName,
             message: 'Asked for a callback from the chat on the website.' +
-                     (this.lead.role ? ' Read the story for: ' + STORIES[this.lead.role].ask : ''),
+                     (this.lead.role && byRole[this.lead.role] ? ' Read the story for: ' + byRole[this.lead.role].ask : ''),
             source: 'ask-paperhint', page: location.pathname + location.search, _t: this.opened,
             sid: visit.sid,
             transcript: visit.turns.slice(-10).map(function (t) { return (t.role === 'user' ? 'Q: ' : 'A: ') + t.content; }).join('\n')

@@ -143,6 +143,11 @@ const SUBTRACTION = [
   [/\bnumerous\s+tasks?\b/gi, 'the week'],
   [/\bthis\s+work\s+efficiently\b/gi, 'the week'],
   [/\beverything\s+organi[sz]ed\b/gi, 'the next class ready'],
+  /* Last, after every specific phrasing above has had its turn: the bare word
+     itself. There is no sanctioned use of it in a reply — the specific
+     patterns catch the pitches, and whatever is left is a stray. "the work
+     around it" reads correctly wherever the noun stood. */
+  [/\bpaper\s?work\b/gi, 'the work around it'],
 ];
 
 const OFFERS = [

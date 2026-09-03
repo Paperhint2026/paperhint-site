@@ -6,11 +6,13 @@
  */
 
 import { read, logging } from './_log.js';
-import { bearer, whoIs, configured } from './_auth.js';
+import { bearer, whoIs, configured, diagnose } from './_auth.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  if (!configured()) return json(res, 503, { error: 'CONSOLE_SECRET is not set.' });
+  if (!configured()) return json(res, 503, {
+    error: 'CONSOLE_SECRET is not visible to this deployment.', ...diagnose(),
+  });
 
   const who = whoIs(bearer(req));
   if (!who) return json(res, 401, { error: 'Sign in again.' });

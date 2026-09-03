@@ -4,7 +4,7 @@
  * can open the console is telling them who to go after.
  */
 
-import { configured, mayEnter, mint } from './_auth.js';
+import { configured, mayEnter, mint, diagnose } from './_auth.js';
 
 const SITE = (process.env.EMAIL_ASSET_BASE || 'https://www.paperhint.com').replace(/\/$/, '');
 const SAME = { ok: true, sent: 'If that address can open the console, the link is on its way.' };
@@ -16,7 +16,9 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return json(res, 405, { error: 'POST only' });
 
-  if (!configured()) return json(res, 503, { error: 'The console isn’t switched on yet — CONSOLE_SECRET is missing.' });
+  if (!configured()) return json(res, 503, {
+    error: 'The console isn’t switched on yet — CONSOLE_SECRET is missing.', ...diagnose(),
+  });
 
   let body;
   try { body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {}); }

@@ -17,6 +17,30 @@ const DAYS = 30;
 
 export function configured() { return Boolean(process.env.CONSOLE_SECRET); }
 
+/* Why the console won't open, in terms someone can act on. Names only, never
+   a value: the usual causes are a variable saved to the wrong environment, a
+   deployment older than the variable, or a typo in the key. This turns all
+   three into one answer. */
+export function diagnose() {
+  const want = ['CONSOLE_SECRET', 'CONSOLE_EMAILS', 'RESEND_API_KEY',
+                'KV_REST_API_URL', 'KV_REST_API_TOKEN',
+                'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN'];
+  const seen = {};
+  for (const k of want) seen[k] = Boolean(process.env[k]);
+  /* a near miss is almost always the answer: CONSOLE_SECERT, a trailing space */
+  const near = Object.keys(process.env)
+    .filter(k => !want.includes(k) && /console|upstash|redis|^kv_/i.test(k))
+    .slice(0, 12);
+  return {
+    keysVisibleToThisDeployment: seen,
+    similarlyNamedKeys: near,
+    deployment: process.env.VERCEL_GIT_COMMIT_SHA ?
+      process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7) : 'local',
+    environment: process.env.VERCEL_ENV || 'unknown',
+    hint: 'A variable added after this deployment was built is invisible to it. Redeploy.',
+  };
+}
+
 /* A fresh secret every cold start would invalidate live links, so an unset
    CONSOLE_SECRET is a refusal, not a fallback. */
 function secret() {

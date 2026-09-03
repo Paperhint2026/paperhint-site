@@ -248,6 +248,25 @@ input::placeholder{color:var(--muted)}
     return bits.length ? bits.join(' ') : null;
   }
 
+  /* Coming back to the widget on another page shouldn't feel like signing in
+     again — pick up the conversation the way a colleague would. */
+  var GREET_NAMED = [
+    'Where were we, {n}?',
+    'Good to have you back, {n}. What else is on your desk?',
+    'Still here, {n}. Ask away.',
+    'Carrying on, {n} — anything else you want off your plate?'
+  ];
+  var GREET_ANON = [
+    'Where were we?',
+    'Still here — ask away.',
+    'Carry on wherever you like.'
+  ];
+  function greeting(name) {
+    var first = name ? String(name).trim().split(/\s+/)[0] : '';
+    var list = first ? GREET_NAMED : GREET_ANON;
+    return list[Math.floor(Math.random() * list.length)].replace('{n}', first);
+  }
+
   var config = window.PaperhintChat || (window.PaperhintChat = {});
   config.visit = visit;
   config.forgetVisit = function () { try { sessionStorage.removeItem(SKEY); } catch (e) {} };
@@ -286,7 +305,7 @@ input::placeholder{color:var(--muted)}
         visit.turns.slice(-6).forEach(function (t) {
           this.text(t.role === 'user' ? 'me' : 'bot quiet', t.content);
         }, this);
-        this.text('bot', (visit.name ? 'Back again, ' + visit.name.split(' ')[0] + '. ' : '') + 'Ask me anything else.');
+        this.text('bot', greeting(visit.name));
       } else {
         this.text('bot', 'Tell me who you are and I’ll show you the week Paperhint takes off your desk.');
         this.renderChips();

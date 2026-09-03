@@ -9,6 +9,7 @@
  * Content comes from src/data/roles.js. Nothing is authored here.
  */
 import { ROLES, ORDER } from '../data/roles.js';
+import { featuresFor } from '../data/product.js';
 
 const { role } = Astro.props;
 const r = ROLES[role];
@@ -24,6 +25,11 @@ const others = ORDER.filter(k => k !== role).map(k => ({ key: k, ...ROLES[k] }))
  * content it is waiting for, so the gaps are visible while working rather
  * than tracked in someone's head. docs/content-todo.md is the full list. */
 const internal = process.env.VERCEL_ENV !== 'production';
+
+/* The product told through this person's eyes rather than one shared
+   catalogue: only the features the feature list says reach them, in the
+   order the product page tells them. */
+const mine = featuresFor(role);
 ---
 <header class="role-hero">
   <div class="wrap wrap-read">
@@ -89,6 +95,28 @@ const internal = process.env.VERCEL_ENV !== 'production';
     </div>
   </div>
 </section>
+
+<!-- the product, but only the part of it this person touches -->
+{mine.length > 0 && (
+  <section class="role-uses">
+    <div class="wrap wrap-read">
+      <h2 class="sec-h2 reveal">What you’d actually use</h2>
+      <p class="beats-turn reveal">
+        {mine.length} of the {15} things Paperhint does. The rest belongs to
+        someone else in the building.
+      </p>
+      <div class="use-grid">
+        {mine.map(f => (
+          <a class="use reveal" href={`/product#${f.group}`}>
+            <h3>{f.label}{f.badge && <span class="use-badge">{f.badge}</span>}</h3>
+            <p set:html={f.text} />
+            <span class="use-group">{f.groupTitle}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
 
 <!-- the second movement, where a role has one (the school's case) -->
 {r.second && (

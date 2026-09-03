@@ -948,6 +948,17 @@
     if (!inner) return;
 
     var folded = false, wantFolded = false, booted = false;
+
+    /* The pill is not drawn at the very top of the page — the frost arrives
+       with the first scroll. Kept separate from the fold so the two can never
+       fight: bare is about scroll POSITION, folded is about scroll DIRECTION. */
+    var BARE_UNTIL = 10;
+    function bare() {
+      if (!inner) return;
+      inner.classList.toggle('nav-bare', (window.scrollY || 0) <= BARE_UNTIL);
+    }
+    bare();
+    addEventListener('scroll', bare, { passive: true });
     var mark = inner.querySelector('.brand .mark svg');
 
     /* the boot entrance animation holds its final keyframe (fill:both), which
@@ -1242,6 +1253,52 @@
     render('teachers');
   }
 
+
+  /* ---------------- banner text floats in ----------------
+     Every hero line is split into words and each word fades up out of a
+     blur, a beat behind the one before it, so the sentence arrives rather
+     than appears. The same mechanic the chat panel uses for a reply.
+
+     Text nodes only: the walk leaves the serif <em> inside a headline, and
+     any other markup, exactly where it was. Nothing is re-parented, so
+     selection and screen readers still read one continuous sentence.
+     Skipped entirely for anyone who asked for less motion. */
+  function initTextFloat() {
+    if (reduceMotion) return;
+    var TARGETS = [
+      'h1.display', '.role-h1',            /* the line itself */
+      '.hero-sub', '.role-sub',            /* what sits under it */
+      '.nf-copy h1'                        /* 404 */
+    ];
+    var STEP = 42;        /* ms between words */
+    var LEAD = 120;       /* ms before the first one */
+
+    document.querySelectorAll(TARGETS.join(',')).forEach(function (host, hi) {
+      if (host.dataset.floated) return;
+      host.dataset.floated = '1';
+
+      var walk = document.createTreeWalker(host, NodeFilter.SHOW_TEXT, null);
+      var nodes = [];
+      while (walk.nextNode()) nodes.push(walk.currentNode);
+
+      var n = 0;
+      nodes.forEach(function (node) {
+        if (!node.nodeValue.trim()) return;
+        var frag = document.createDocumentFragment();
+        node.nodeValue.split(/(\s+)/).forEach(function (word) {
+          if (!word) return;
+          if (!word.trim()) return frag.appendChild(document.createTextNode(word));
+          var sp = document.createElement('span');
+          sp.className = 'fw';
+          sp.textContent = word;
+          sp.style.animationDelay = (LEAD + hi * 90 + n++ * STEP) + 'ms';
+          frag.appendChild(sp);
+        });
+        node.parentNode.replaceChild(frag, node);
+      });
+    });
+  }
+
   /* ---------------- scroll reveal ---------------- */
   function initReveal() {
     /* every major block takes part — auto-tag the ones the markup missed */
@@ -1445,7 +1502,8 @@
   }
 
   function boot() {
-    initCtaBanner();   /* before the band engine and reveal */
+    initCtaBanner();
+    initTextFloat();   /* before the band engine and reveal */
     initNeat();
     initSpec();
     initDeck();

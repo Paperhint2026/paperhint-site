@@ -1,6 +1,24 @@
 ---
 import { MENUS, FLAT } from '../data/nav.js';
 ---
+<!-- Progressive blur under the header: ten stacked panels, each blurring
+     half as much as the one above and masked to a window that steps down the
+     strip, which ramps the blur instead of ending it on a hard line. Lives
+     OUTSIDE .nav on purpose — a filtered ancestor becomes a backdrop root and
+     silently kills the frost on the pill. -->
+<div class="nav-blur" aria-hidden="true">
+    <div class="pb-panel pb-1"></div>
+    <div class="pb-panel pb-2"></div>
+    <div class="pb-panel pb-3"></div>
+    <div class="pb-panel pb-4"></div>
+    <div class="pb-panel pb-5"></div>
+    <div class="pb-panel pb-6"></div>
+    <div class="pb-panel pb-7"></div>
+    <div class="pb-panel pb-8"></div>
+    <div class="pb-panel pb-9"></div>
+    <div class="pb-panel pb-10"></div>
+</div>
+
 <div class="nav">
   <div class="nav-inner nav-shrink nav-boot">
     <a class="brand" href="/">

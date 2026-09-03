@@ -65,7 +65,7 @@ async function ask(system, messages) {
   let last = null;
   for (const cand of list) {
     try {
-      const reply = await callOne(cand, system, messages);
+      const reply = scrub(await callOne(cand, system, messages));
       if (reply) return { reply, used: cand, tried };
       tried.push(cand.provider + '/' + cand.model + ' → empty');
     } catch (e) {
@@ -77,6 +77,33 @@ async function ask(system, messages) {
   const e = last || new Error('every model failed');
   e.tried = tried;
   throw e;
+}
+
+/* The small model keeps reaching for support-desk filler however firmly the
+ * prompt forbids it. The prompt is the real fix; this is the safety net —
+ * a narrow set of exact phrases swapped for the house equivalent. */
+const TICS = [
+  [/\bfeel free to ask\b/gi, 'ask away'],
+  [/\bplease feel free to\b/gi, 'do'],
+  [/\bjust let me know\b/gi, 'say the word'],
+  [/\blet me know if you\b/gi, 'say the word if you'],
+  [/\bI'm here for that\b/gi, 'that’s my desk'],
+  [/\bI'?m here to help( with)?\b/gi, 'I can take that on'],
+  [/\bI'?d be happy to\b/gi, 'I can'],
+  [/\bI can definitely assist with that\b/gi, 'I can take that on'],
+  [/\bI'?m focused on\b/gi, 'my desk is'],
+  [/\bI focus on\b/gi, 'my desk is'],
+  [/\bhappy to help\b/gi, 'glad to'],
+  [/\bGreat question[.,!]?\s*/gi, ''],
+  [/\bCertainly[.,!]?\s*/gi, ''],
+  [/\bAbsolutely[.,!]?\s*/gi, ''],
+];
+function scrub(text) {
+  let out = String(text);
+  for (const [re, to] of TICS) out = out.replace(re, to);
+  out = out.replace(/!/g, '.');                 /* the house voice has no exclamations */
+  out = out.replace(/\.\.+/g, '.').replace(/\s+([.,])/g, '$1');
+  return out.trim();
 }
 
 function providerError(status, body) {

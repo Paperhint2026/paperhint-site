@@ -149,9 +149,16 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 .head{display:flex;align-items:center;gap:8px;padding:15px 14px 6px 17px}
 .head b{font-weight:500;font-size:14.5px;letter-spacing:-.01em}
-.close{margin-left:auto;width:28px;height:28px;border-radius:999px;display:grid;place-items:center;color:var(--c-muted);transition:.2s}
+.fresh{margin-left:auto;width:28px;height:28px;border-radius:999px;display:grid;place-items:center;color:var(--c-muted);transition:.2s}
+.fresh:hover{background:color-mix(in srgb,var(--c-ink) 7%,transparent);color:var(--c-ink)}
+.fresh svg{width:14px;height:14px}
+.fresh[hidden]{display:none}
+.close{width:28px;height:28px;border-radius:999px;display:grid;place-items:center;color:var(--c-muted);transition:.2s}
 .close:hover{background:color-mix(in srgb,var(--c-ink) 7%,transparent);color:var(--c-ink)}
+.close{width:28px;height:28px;border-radius:999px;display:grid;place-items:center;color:var(--c-muted);transition:.2s;flex:none}
 .close svg{width:14px;height:14px}
+.head .fresh + .close{margin-left:2px}
+.head:not(:has(.fresh:not([hidden]))) .close{margin-left:auto}
 
 .log{position:relative;max-height:min(46vh,320px);overflow-y:auto;overscroll-behavior:contain;padding:10px 16px 4px;display:flex;flex-direction:column;gap:9px;scrollbar-width:thin}
 .msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:14.5px;line-height:1.55;color:var(--c-ink);animation:in .3s cubic-bezier(.25,.8,.25,1) both}
@@ -209,6 +216,9 @@ input::placeholder{color:var(--c-muted)}
 <div class="panel" id="panel" role="dialog" aria-label="Ask Paperhint" aria-hidden="true">
   <div class="head">
     ${MARK}<b>Ask Paper<em>h</em>int</b>
+    <button class="fresh" type="button" aria-label="Start a new chat" title="Start a new chat" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
     <button class="close" type="button" aria-label="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
@@ -310,6 +320,8 @@ input::placeholder{color:var(--c-muted)}
       this.lead = { role: null, name: '', email: '', school: '' };
       this.step = null;
       this.slowMo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      this.asked = 0;
+      this.CAP = Number(this.getAttribute('max-turns') || 15);
 
       this.reflectTheme();
       this.themeWatch = new MutationObserver(this.reflectTheme.bind(this));
@@ -326,10 +338,13 @@ input::placeholder{color:var(--c-muted)}
           this.text(t.role === 'user' ? 'me quiet' : 'bot quiet', t.content);
         }, this);
         this.text('bot', greeting(visit.name));
+        this.$('.fresh').hidden = false;
+        this.asked = Math.floor(visit.turns.length / 2);
       } else {
         this.text('bot', 'Tell me who you are and I’ll show you the week Paperhint takes off your desk.');
       }
 
+      this.$('.fresh').addEventListener('click', this.startFresh.bind(this));
       this.$('.pill').addEventListener('click', this.open.bind(this, true));
       this.$('.close').addEventListener('click', this.open.bind(this, false));
       this.$('form').addEventListener('submit', this.onSubmit.bind(this));
@@ -370,6 +385,40 @@ input::placeholder{color:var(--c-muted)}
       this.$('.panel').setAttribute('aria-hidden', String(!yes));
       if (yes) setTimeout(function () { this.$('input').focus(); }.bind(this), 120);
       else this.$('.pill').focus();
+    }
+
+    /* Jump out and begin again — clears the thread but keeps who they are,
+       so the callback flow doesn't ask for their name a second time. */
+    startFresh() {
+      this.$('.log').textContent = '';
+      this.history = [];
+      this.asked = 0;
+      this.step = null;
+      visit.turns = []; save();
+      this.$('.fresh').hidden = true;
+      this.$('input').placeholder = 'Ask anything…';
+      this.text('bot', greeting(visit.name));
+      this.renderChips();
+      this.$('input').focus();
+    }
+
+    /* A conversation that runs on forever costs more and helps less. Past the
+       cap, offer the two things that actually move it along. */
+    capped() {
+      if (this.asked < this.CAP) return false;
+      var last = this.$('.log').lastElementChild;
+      if (last && last.classList.contains('acts')) {   /* the offer is already up */
+        this.text('bot', 'Still the same two options — a callback, or start fresh.');
+        this.$('.log').appendChild(last);
+        this.scroll();
+        return true;
+      }
+      this.text('bot', 'We’ve covered a fair bit. A person can take it from here properly — or start fresh if you’ve got something new.');
+      this.actions([
+        { label: 'Arrange a callback', run: this.startLead.bind(this) },
+        { label: 'Start fresh', run: this.startFresh.bind(this) }
+      ]);
+      return true;
     }
 
     scroll() { var l = this.$('.log'); l.scrollTop = l.scrollHeight; }
@@ -597,7 +646,10 @@ input::placeholder{color:var(--c-muted)}
       if (!q) return;
       this.text('me', q);
       this.$('.chips').hidden = true;
+      this.$('.fresh').hidden = false;
       if (this.step) return this.handleLead(q);
+      this.asked++;
+      if (this.capped()) return;
       if (/call ?back|call me|talk to (someone|a person)|book a demo/i.test(q)) return this.startLead();
       this.ask(q);
     }

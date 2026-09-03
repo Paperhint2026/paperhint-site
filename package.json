@@ -9,7 +9,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "content-todo": "node scripts/content-todo.mjs"
+    "content-todo": "node scripts/content-todo.mjs",
+    "chat-cases": "node scripts/chat-tests/doc.mjs",
+    "chat-test": "node scripts/chat-tests/run.mjs"
   },
   "dependencies": {
     "astro": "^5.14.0"

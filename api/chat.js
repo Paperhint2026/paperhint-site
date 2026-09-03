@@ -82,28 +82,19 @@ async function ask(system, messages) {
 /* The small model keeps reaching for support-desk filler however firmly the
  * prompt forbids it. The prompt is the real fix; this is the safety net —
  * a narrow set of exact phrases swapped for the house equivalent. */
-const TICS = [
-  [/\bfeel free to ask\b/gi, 'ask away'],
-  [/\bplease feel free to\b/gi, 'do'],
-  [/\bjust let me know\b/gi, 'say the word'],
-  [/\blet me know if you\b/gi, 'say the word if you'],
-  [/\bI'm here for that\b/gi, 'that’s my desk'],
-  [/\bI'?m here to help( with)?\b/gi, 'I can take that on'],
-  [/\bI'?d be happy to\b/gi, 'I can'],
-  [/\bI can definitely assist with that\b/gi, 'I can take that on'],
-  [/\bI'?m focused on\b/gi, 'my desk is'],
-  [/\bI focus on\b/gi, 'my desk is'],
-  [/\bhappy to help\b/gi, 'glad to'],
-  [/\bGreat question[.,!]?\s*/gi, ''],
-  [/\bCertainly[.,!]?\s*/gi, ''],
-  [/\bAbsolutely[.,!]?\s*/gi, ''],
-];
+/* Support-desk filler the model still leaks despite the prompt. Substituting
+   a phrase mid-sentence used to leave wreckage — "say the word what you need",
+   "I can take that on them get back" — so a sentence that contains one is now
+   dropped whole. They are always the closing offer, never the answer, and a
+   reply is never left empty. */
+const TICS = /\b(feel free to ask|please feel free to|just let me know|let me know if|i'?m here for that|i'?m here to help|i'?m here as your assistant|i'?d be happy to|i can definitely assist|i'?m focused on|i focus on|happy to help|how can i assist)\b/i;
+const OPENERS = /^(great question|certainly|absolutely|sure)[.,!]?\s*/i;
+
 function scrub(text) {
-  let out = String(text);
-  for (const [re, to] of TICS) out = out.replace(re, to);
-  out = out.replace(/!/g, '.');                 /* the house voice has no exclamations */
-  out = out.replace(/\.\.+/g, '.').replace(/\s+([.,])/g, '$1');
-  return out.trim();
+  const parts = String(text || '').split(/(?<=[.!?])\s+/);
+  const kept = parts.filter(s => !TICS.test(s));
+  const out = (kept.length ? kept : parts).join(' ').replace(OPENERS, '').trim();
+  return out.charAt(0).toUpperCase() + out.slice(1);
 }
 
 function providerError(status, body) {

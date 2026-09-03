@@ -1113,12 +1113,19 @@
     var tabs = folder.querySelectorAll('.rf-tab');
     var panel = folder.querySelector('.rf-panel');
 
+    /* the tab keys and the page URLs differ in one place: the office tab is
+       called 'admins' here and the page is /schools */
+    var ROLE_PAGE = { teachers: '/teachers', admins: '/schools', students: '/students', parents: '/parents' };
+
     function render(key) {
       var d = ROLES[key];
       if (!d) return;
+      var page = ROLE_PAGE[key];
       panel.innerHTML =
         '<div class="rf-lead"><h3>' + d.lead + '</h3>' +
-        '<a class="btn btn-ghost" href="/contact?type=demo">' + d.cta + '</a></div>' +
+        '<a class="btn btn-ghost" href="/contact?type=demo">' + d.cta + '</a>' +
+        (page ? '<a class="rf-more" href="' + page + '">Read the whole story <span aria-hidden="true">→</span></a>' : '') +
+        '</div>' +
         '<div class="rf-items">' + d.items.map(function (it) {
           return '<div class="rf-item"><b>' + it[0] + '</b><p>' + it[1] + '</p></div>';
         }).join('') + '</div>';

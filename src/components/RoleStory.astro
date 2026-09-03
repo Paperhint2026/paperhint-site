@@ -1,0 +1,116 @@
+---
+/* One role, told as a story and built as a page.
+ *
+ * The spine, top to bottom: the scene they recognise, the turn, the week as
+ * numbered beats, what leaves their desk, what stays theirs, and who else is
+ * in the building. Narrative order, so it can be read straight through, with
+ * every section standing on its own for someone scanning.
+ *
+ * Content comes from src/data/roles.js. Nothing is authored here.
+ */
+import { ROLES, ORDER } from '../data/roles.js';
+
+const { role } = Astro.props;
+const r = ROLES[role];
+const others = ORDER.filter(k => k !== role).map(k => ({ key: k, ...ROLES[k] }));
+---
+<header class="role-hero">
+  <div class="wrap">
+    <span class="tagline"><span class="tag">{r.kicker}</span> Paperhint <i>·</i></span>
+    <h1 class="display role-h1">{r.h1[0]}<em>{r.h1[1]}</em>{r.h1[2]}</h1>
+    <p class="role-sub">{r.sub}</p>
+    <div class="role-cta">
+      <a class="btn btn-primary btn-lg" href={`/contact?type=demo&role=${role}`}>Book a demo</a>
+      <a class="btn btn-ghost btn-lg" href="/#capabilities">See the whole product</a>
+    </div>
+  </div>
+</header>
+
+<!-- the scene: the evening they already know -->
+<section class="role-scene">
+  <div class="wrap">
+    <p class="scene-text reveal" set:html={r.scene} />
+  </div>
+</section>
+
+<!-- the turn, then the beats -->
+<section class="role-beats">
+  <div class="wrap">
+    <p class="beats-turn reveal" set:html={r.turn} />
+    <ol class="beat-list">
+      {r.beats.map((b, i) => (
+        <li class="beat reveal">
+          <span class="beat-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div class="beat-copy">
+            {b.label && <h2 class="beat-label" set:html={b.label} />}
+            <p set:html={b.text} />
+          </div>
+        </li>
+      ))}
+    </ol>
+    {r.storyClose && <p class="beats-close reveal" set:html={r.storyClose} />}
+  </div>
+</section>
+
+<!-- what leaves the desk -->
+<section class="role-stops">
+  <div class="wrap">
+    <h2 class="sec-h2 reveal">{r.stopsTitle}</h2>
+    <div class="stop-grid">
+      {r.stops.map(([label, text]) => (
+        <div class="stop reveal">
+          <h3 set:html={label} />
+          <p set:html={text} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- the second movement, where a role has one (the school's case) -->
+{r.second && (
+  <section class="role-second">
+    <div class="wrap">
+      <h2 class="sec-h2 reveal">{r.secondTitle}</h2>
+      {r.secondNote && <p class="second-note reveal" set:html={r.secondNote} />}
+      <p class="scene-text reveal" set:html={r.second.intro} />
+      <p class="beats-turn reveal" set:html={r.second.lead} />
+      <ul class="second-list">
+        {r.second.beats.map(b => (
+          <li class="reveal">
+            {b.label && <b set:html={b.label} />}
+            <span set:html={b.text} />
+          </li>
+        ))}
+      </ul>
+      {r.second.close && <p class="beats-close reveal" set:html={r.second.close} />}
+    </div>
+  </section>
+)}
+
+<!-- what stays theirs -->
+<section class="role-keeps">
+  <div class="wrap">
+    <h2 class="sec-h2 reveal">{r.keepsTitle}</h2>
+    <ul class="keep-list">
+      {r.keeps.map(k => <li class="reveal" set:html={k} />)}
+    </ul>
+    <p class="role-close reveal" set:html={r.close} />
+  </div>
+</section>
+
+<!-- everyone else in the building -->
+<section class="role-others">
+  <div class="wrap">
+    <h2 class="sec-h2 reveal">The same school, from where they sit</h2>
+    <div class="other-grid">
+      {others.map(o => (
+        <a class="other reveal" href={`/${o.key}`}>
+          <span class="other-kicker">{o.nav}</span>
+          <p set:html={o.sub} />
+          <span class="other-go" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

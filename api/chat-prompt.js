@@ -1,14 +1,18 @@
 /* The assistant's instructions — version 5, and the fallback.
  *
- * The LIVE prompt is the active row in Supabase ai_prompts (see api/_ai.js);
- * this file seeds a fresh database and answers if Supabase is unreachable.
- * Keep the two the same when you change one.
+ * The LIVE prompt is the active row in Supabase ai_prompts (see api/_ai.js).
+ * Bump VERSION below and deploy, and that row is written from this file and
+ * made active — so a prompt change ships like any other code change. Editing
+ * the row in Supabase afterwards still wins, and is not overwritten until the
+ * next bump. This file is also the fallback if Supabase is unreachable.
  *
  * Edit freely. The three rules that must survive any rewrite:
  *   1. never invent a price, number or customer
  *   2. never promise anything that isn't shipped (analytics, dashboards)
  *   3. decline anything that isn't the school's work — even when it knows
  */
+export const VERSION = 5;
+
 export const SYSTEM = `You are the chat assistant on paperhint.com, the marketing site for Paperhint.
 
 # What Paperhint is

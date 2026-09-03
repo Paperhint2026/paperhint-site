@@ -10,7 +10,7 @@
  *   ai_knowledge  facts the assistant may draw on, pulled in by relevance
  */
 
-import { SYSTEM as FILE_SYSTEM } from './chat-prompt.js';
+import { SYSTEM as FILE_SYSTEM, VERSION as FILE_VERSION } from './chat-prompt.js';
 import { sitemapText } from './site-map.js';
 
 const KEY = 'chat_system';
@@ -35,28 +35,52 @@ async function get(path) {
   return r.json();
 }
 
-/* First run on a fresh database: the file becomes version 1 and goes active,
-   so there is always something to edit rather than an empty table. A race
-   between two cold starts is harmless — the unique index lets one win. */
-async function seed() {
+/* Publishing a prompt version.
+ *
+ * On a fresh database, and whenever the file's VERSION is ahead of the active
+ * row, the file is written as that version and made active — so a prompt
+ * change ships with a deploy instead of a hand-written SQL statement. Editing
+ * the row in Supabase still wins and survives, because nothing here touches a
+ * version that already exists. A race between two cold starts is harmless:
+ * the insert conflicts on (key, version) and the loser gives up. */
+async function publish(version) {
   try {
-    await fetch(SB_URL().replace(/\/$/, '') + '/rest/v1/ai_prompts', {
+    const base = SB_URL().replace(/\/$/, '');
+    const r = await fetch(base + '/rest/v1/ai_prompts?on_conflict=key,version', {
       method: 'POST',
-      headers: { ...headers(), Prefer: 'return=minimal' },
+      headers: { ...headers(), Prefer: 'resolution=ignore-duplicates,return=representation' },
       body: JSON.stringify({
-        key: KEY, version: 1, body: FILE_SYSTEM, active: true,
-        note: 'Seeded from api/chat-prompt.js on first run.',
+        key: KEY, version, body: FILE_SYSTEM, active: false,
+        note: 'Published from api/chat-prompt.js v' + version + ' on deploy.',
       }),
     });
-  } catch (e) { /* the fallback covers it */ }
+    const rows = await r.json().catch(() => []);
+    if (!r.ok || !Array.isArray(rows) || !rows.length) return false;   /* someone got there first */
+    /* one active per key: stand the old one down, then raise this one */
+    await fetch(base + '/rest/v1/ai_prompts?key=eq.' + KEY + '&active=is.true',
+      { method: 'PATCH', headers: { ...headers(), Prefer: 'return=minimal' }, body: JSON.stringify({ active: false }) });
+    await fetch(base + '/rest/v1/ai_prompts?key=eq.' + KEY + '&version=eq.' + version,
+      { method: 'PATCH', headers: { ...headers(), Prefer: 'return=minimal' }, body: JSON.stringify({ active: true }) });
+    console.log('published prompt v' + version + ' from the file');
+    return true;
+  } catch (e) { console.error('prompt publish failed', e && e.message); return false; }
 }
 
 async function refresh() {
-  const rows = await get('ai_prompts?key=eq.' + KEY + '&active=is.true&select=body,version&limit=1');
+  let rows = await get('ai_prompts?key=eq.' + KEY + '&active=is.true&select=body,version&limit=1');
   let prompt = rows[0]?.body || null;
   let version = rows[0]?.version || null;
 
-  if (!prompt) { await seed(); prompt = FILE_SYSTEM; version = 1; }
+  /* the file has moved ahead of what is live — publish it and use it */
+  if (!prompt || (FILE_VERSION > version)) {
+    const done = await publish(FILE_VERSION);
+    if (done) { prompt = FILE_SYSTEM; version = FILE_VERSION; }
+    else {
+      rows = await get('ai_prompts?key=eq.' + KEY + '&active=is.true&select=body,version&limit=1').catch(() => []);
+      prompt = rows[0]?.body || FILE_SYSTEM;
+      version = rows[0]?.version || FILE_VERSION;
+    }
+  }
 
   const knowledge = await get(
     'ai_knowledge?active=is.true&select=topic,content,tags,weight&order=weight.desc&limit=300'

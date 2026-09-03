@@ -1146,103 +1146,115 @@ html.consent-open ask-paperhint{bottom:104px}
 
 /* ---------------------------------------------------------------
    Role pages (/teachers /schools /students /parents)
-   A narrative read top to bottom: the scene, the turn, the week as
-   numbered beats, what leaves the desk, what stays theirs, who else
-   is in the building. Type scale matches the rest of the site —
-   H1 56 max, section H2 44 max, all Geist Medium.
+
+   Built on the geometry measured off amplemarket.com at 1440: a wide
+   container with the TEXT narrowed inside it rather than the column
+   narrowed, left-aligned, and a generous vertical rhythm. Their
+   numbers: container 1104, hero line 56/1.0/-5%, section heading
+   44/-4%, section padding 144. Ours keeps the site's own 1180 wrap
+   and matches the rest.
    --------------------------------------------------------------- */
-/* One measure for the whole page, centred: a role page is an article, so
-   it reads down a single column rather than across the site's wide grid.
-   Text stays left-aligned inside it — the column is centred, not the words. */
-.role-read{width:min(720px,92vw);margin-inline:auto}
-
-.role-hero{padding:150px 0 34px;position:relative;z-index:2}
-.role-h1{max-width:18ch;margin:14px 0 0}
-.role-sub{max-width:46ch;margin:18px 0 0;font-size:clamp(17px,1.7vw,20px);
+.role-hero{padding:168px 0 0;position:relative;z-index:2}
+.role-h1{max-width:15ch;margin:14px 0 0;font-size:clamp(38px,5vw,56px);
+  line-height:1;letter-spacing:-.05em}
+.role-sub{max-width:44ch;margin:20px 0 0;font-size:clamp(17px,1.7vw,20px);
   line-height:1.5;color:var(--ink-soft)}
-.role-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.role-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 
-h2.sec-h2{font-family:var(--font-display);font-size:clamp(24px,3vw,36px);
-  line-height:1.12;letter-spacing:-.03em;font-weight:500;max-width:24ch;margin:0 0 26px}
+h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
+  line-height:1.1;letter-spacing:-.04em;font-weight:500;max-width:22ch;margin:0 0 34px}
 
-/* the scene: set slightly larger and looser than body copy, because it is
-   the one paragraph everybody actually reads */
-.role-scene{padding:38px 0 0}
-.scene-text{max-width:30ch;font-family:var(--font-display);
-  font-size:clamp(21px,2.5vw,30px);line-height:1.32;letter-spacing:-.02em;
+/* the scene: the one paragraph everybody reads, set as a statement */
+.role-scene{padding:110px 0 0}
+.scene-text{max-width:26ch;font-family:var(--font-display);
+  font-size:clamp(24px,3.2vw,40px);line-height:1.16;letter-spacing:-.04em;
   font-weight:500;color:var(--ink);margin:0}
 
-.role-beats{padding:56px 0 0}
-.beats-turn{margin:0 0 34px;font-size:clamp(16px,1.6vw,18px);color:var(--muted)}
-.beat-list{list-style:none;margin:0;padding:0;
-  display:grid;gap:2px;border-top:1px solid var(--line)}
-.beat{display:grid;grid-template-columns:78px 1fr;gap:20px;
-  padding:26px 0;border-bottom:1px solid var(--line);align-items:start}
-.beat-n{font-variant-numeric:tabular-nums;font-size:13px;letter-spacing:.08em;
-  color:var(--muted);padding-top:5px}
-.beat-copy{max-width:62ch}
-.beat-label{font-family:var(--font-display);font-size:clamp(19px,2vw,24px);
-  line-height:1.2;letter-spacing:-.02em;font-weight:500;margin:0 0 8px}
-.beat-copy p{margin:0;font-size:16px;line-height:1.6;color:var(--ink-soft)}
-.beats-close{margin:30px 0 0;max-width:56ch;font-size:16.5px;line-height:1.6;
-  color:var(--ink)}
+/* the week, as rows: copy one side, the screenshot the other */
+.role-beats{padding:120px 0 0}
+.beats-turn{margin:0 0 44px;font-size:clamp(16px,1.6vw,18px);color:var(--muted)}
+.beat-list{list-style:none;margin:0;padding:0;display:grid;gap:96px}
+.beat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:84px;align-items:center}
+.beat.flip .beat-copy{order:2}
+.beat-n{display:block;font-variant-numeric:tabular-nums;font-size:12px;
+  letter-spacing:.14em;color:var(--muted);margin-bottom:14px}
+.beat-copy{max-width:44ch}
+.beat-label{font-family:var(--font-display);font-size:clamp(24px,2.7vw,34px);
+  line-height:1.12;letter-spacing:-.03em;font-weight:500;margin:0 0 14px}
+.beat-copy p{margin:0;font-size:17px;line-height:1.6;color:var(--ink-soft)}
 
-.role-stops{padding:80px 0 0}
-.stop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:12px}
+/* stand-in for the product shot: the brand gradient, blurred, on the
+   surface — same trick the hero uses until real art lands */
+.beat-visual{border:1px solid var(--line);border-radius:22px;overflow:hidden;
+  background:var(--surface);aspect-ratio:4/3;position:relative}
+.beat-visual img{width:100%;height:100%;object-fit:cover;display:block}
+.beat-tint{position:absolute;inset:-20%;filter:blur(46px);opacity:.5}
+.tint-0{background:radial-gradient(60% 60% at 30% 30%,var(--emerald),transparent 70%),
+  radial-gradient(50% 50% at 75% 70%,var(--yellow),transparent 70%)}
+.tint-1{background:radial-gradient(60% 60% at 70% 30%,var(--violet),transparent 70%),
+  radial-gradient(50% 50% at 25% 75%,var(--orange),transparent 70%)}
+.tint-2{background:radial-gradient(60% 60% at 40% 70%,var(--orange),transparent 70%),
+  radial-gradient(50% 50% at 80% 25%,var(--emerald),transparent 70%)}
+.tint-3{background:radial-gradient(60% 60% at 25% 40%,var(--yellow),transparent 70%),
+  radial-gradient(50% 50% at 70% 75%,var(--violet),transparent 70%)}
+.beats-close{margin:64px 0 0;max-width:46ch;font-size:17px;line-height:1.6;color:var(--ink)}
+
+.role-stops{padding:144px 0 0}
+.stop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(256px,1fr));gap:14px}
 .stop{background:var(--surface);border:1px solid var(--line);border-radius:18px;
-  padding:22px 24px}
-.stop h3{font-family:var(--font-display);font-size:19px;line-height:1.25;
-  letter-spacing:-.02em;font-weight:500;margin:0 0 8px}
+  padding:24px 26px}
+.stop h3{font-family:var(--font-display);font-size:20px;line-height:1.25;
+  letter-spacing:-.02em;font-weight:500;margin:0 0 9px}
 .stop p{margin:0;font-size:15px;line-height:1.6;color:var(--ink-soft)}
 
-/* the school's case, second movement on /schools */
-.role-second{padding:80px 0 0}
-.second-note{max-width:56ch;margin:0 0 26px;font-size:15px;line-height:1.6;
+.role-second{padding:144px 0 0}
+.second-note{max-width:52ch;margin:0 0 30px;font-size:15px;line-height:1.6;
   color:var(--muted);padding-left:16px;border-left:2px solid var(--emerald)}
-.second-list{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:14px;max-width:66ch}
-.second-list li{font-size:16px;line-height:1.6;color:var(--ink-soft);
-  padding-left:20px;position:relative}
-.second-list li::before{content:"";position:absolute;left:0;top:9px;
+.second-list{list-style:none;margin:30px 0 0;padding:0;display:grid;gap:15px;max-width:60ch}
+.second-list li{font-size:17px;line-height:1.6;color:var(--ink-soft);
+  padding-left:22px;position:relative}
+.second-list li::before{content:"";position:absolute;left:0;top:10px;
   width:7px;height:7px;border-radius:50%;background:var(--emerald)}
 .second-list b{color:var(--ink);font-weight:500}
 
-.role-keeps{padding:80px 0 0}
-.keep-list{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:64ch}
-.keep-list li{font-size:16px;line-height:1.6;color:var(--ink-soft);
-  padding-left:26px;position:relative}
-.keep-list li::before{content:"✓";position:absolute;left:0;top:0;
+.role-keeps{padding:144px 0 0}
+.keep-list{list-style:none;margin:0;padding:0;display:grid;gap:14px;max-width:58ch}
+.keep-list li{font-size:17px;line-height:1.6;color:var(--ink-soft);
+  padding-left:28px;position:relative}
+.keep-list li::before{content:"✓";position:absolute;left:0;top:1px;
   color:var(--emerald);font-size:14px;font-weight:500}
-.role-close{margin:34px 0 0;max-width:52ch;font-family:var(--font-display);
-  font-size:clamp(18px,2vw,23px);line-height:1.35;letter-spacing:-.02em;
+.role-close{margin:44px 0 0;max-width:40ch;font-family:var(--font-display);
+  font-size:clamp(22px,2.6vw,32px);line-height:1.2;letter-spacing:-.03em;
   font-weight:500;color:var(--ink)}
 
-.role-others{padding:84px 0 96px}
-.other-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px}
+.role-others{padding:144px 0 96px}
+.other-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .other{display:block;position:relative;background:var(--surface);
-  border:1px solid var(--line);border-radius:18px;padding:22px 24px 46px;
+  border:1px solid var(--line);border-radius:18px;padding:24px 26px 50px;
   text-decoration:none;transition:border-color .2s ease,transform .2s ease}
 .other:hover{border-color:var(--emerald);transform:translateY(-2px)}
 .other-kicker{display:block;font-size:12px;letter-spacing:.09em;
-  text-transform:uppercase;color:var(--emerald);margin-bottom:10px}
-.other p{margin:0;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
-.other-go{position:absolute;left:24px;bottom:20px;color:var(--muted);font-size:16px}
+  text-transform:uppercase;color:var(--emerald);margin-bottom:11px}
+.other p{margin:0;font-size:15px;line-height:1.55;color:var(--ink-soft)}
+.other-go{position:absolute;left:26px;bottom:22px;color:var(--muted);font-size:16px}
 .other:hover .other-go{color:var(--emerald)}
 
-@media (max-width:720px){
-  .role-hero{padding:124px 0 26px}
-  .beat{grid-template-columns:1fr;gap:6px;padding:22px 0}
-  .beat-n{padding-top:0}
-  .role-beats,.role-stops,.role-second,.role-keeps{padding-top:56px}
-  .role-others{padding:60px 0 72px}
-  .role-cta .btn{flex:1 1 auto;text-align:center;justify-content:center}
+@media (max-width:900px){
+  .beat{grid-template-columns:1fr;gap:26px}
+  .beat.flip .beat-copy{order:0}
+  .beat-list{gap:64px}
+  .beat-visual{aspect-ratio:16/10}
 }
-
-/* the home role folder's way through to the full role page — the only
-   action in that panel now, so it keeps the button weight the contact
-   link used to have */
-.rf-go{display:inline-flex;align-items:center;gap:9px}
-.rf-go span{transition:transform .2s ease;display:inline-block}
-.rf-go:hover span{transform:translateX(3px)}
+@media (max-width:720px){
+  .role-hero{padding:124px 0 0}
+  .role-scene{padding-top:64px}
+  .role-beats{padding-top:72px}
+  .role-stops,.role-second,.role-keeps{padding-top:80px}
+  .role-others{padding:80px 0 60px}
+  .role-cta .btn{flex:1 1 auto;text-align:center;justify-content:center}
+  .beats-close{margin-top:44px}
+}
 
 /* a page still waiting on its narrative says so, quietly */
 .role-soon{display:inline-block;margin:16px 0 0;font-size:12.5px;letter-spacing:.06em;
@@ -1258,3 +1270,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(24px,3vw,36px);
   color:var(--amber,#B4761A);font-weight:500;margin-bottom:8px}
 .role-needs ul{margin:0;padding-left:18px}
 .role-needs li{font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+
+/* the role page's closing band sits tighter to the cross-links above it */
+.role-cta-band{padding-top:0}

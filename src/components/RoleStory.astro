@@ -26,7 +26,7 @@ const others = ORDER.filter(k => k !== role).map(k => ({ key: k, ...ROLES[k] }))
 const internal = process.env.VERCEL_ENV !== 'production';
 ---
 <header class="role-hero">
-  <div class="wrap role-read">
+  <div class="wrap">
     <span class="tagline"><span class="tag">{r.kicker}</span> Paperhint <i>·</i></span>
     <h1 class="display role-h1">{r.h1[0]}<em>{r.h1[1]}</em>{r.h1[2]}</h1>
     <p class="role-sub">{r.sub}</p>
@@ -46,22 +46,27 @@ const internal = process.env.VERCEL_ENV !== 'production';
 
 <!-- the scene: the evening they already know -->
 <section class="role-scene">
-  <div class="wrap role-read">
+  <div class="wrap">
     <p class="scene-text reveal" set:html={r.scene} />
   </div>
 </section>
 
 <!-- the turn, then the beats -->
 <section class="role-beats">
-  <div class="wrap role-read">
+  <div class="wrap">
     <p class="beats-turn reveal" set:html={r.turn} />
     <ol class="beat-list">
       {r.beats.map((b, i) => (
-        <li class="beat reveal">
-          <span class="beat-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <li class={`beat reveal ${i % 2 ? 'flip' : ''}`}>
           <div class="beat-copy">
+            <span class="beat-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             {b.label && <h2 class="beat-label" set:html={b.label} />}
             <p set:html={b.text} />
+          </div>
+          {/* the screenshot goes here; until then a tinted panel holds the
+              shape so the rhythm is right when the real thing lands */}
+          <div class="beat-visual" aria-hidden="true">
+            <div class={`beat-tint tint-${i % 4}`}></div>
           </div>
         </li>
       ))}
@@ -72,7 +77,7 @@ const internal = process.env.VERCEL_ENV !== 'production';
 
 <!-- what leaves the desk -->
 <section class="role-stops">
-  <div class="wrap role-read">
+  <div class="wrap">
     <h2 class="sec-h2 reveal">{r.stopsTitle}</h2>
     <div class="stop-grid">
       {r.stops.map(([label, text]) => (
@@ -88,7 +93,7 @@ const internal = process.env.VERCEL_ENV !== 'production';
 <!-- the second movement, where a role has one (the school's case) -->
 {r.second && (
   <section class="role-second">
-    <div class="wrap role-read">
+    <div class="wrap">
       <h2 class="sec-h2 reveal">{r.secondTitle}</h2>
       {r.secondNote && <p class="second-note reveal" set:html={r.secondNote} />}
       <p class="scene-text reveal" set:html={r.second.intro} />
@@ -108,7 +113,7 @@ const internal = process.env.VERCEL_ENV !== 'production';
 
 <!-- what stays theirs -->
 <section class="role-keeps">
-  <div class="wrap role-read">
+  <div class="wrap">
     <h2 class="sec-h2 reveal">{r.keepsTitle}</h2>
     <ul class="keep-list">
       {r.keeps.map(k => <li class="reveal" set:html={k} />)}
@@ -119,7 +124,7 @@ const internal = process.env.VERCEL_ENV !== 'production';
 
 <!-- everyone else in the building -->
 <section class="role-others">
-  <div class="wrap role-read">
+  <div class="wrap">
     <h2 class="sec-h2 reveal">The same school, from where they sit</h2>
     <div class="other-grid">
       {others.map(o => (
@@ -130,5 +135,12 @@ const internal = process.env.VERCEL_ENV !== 'production';
         </a>
       ))}
     </div>
+  </div>
+</section>
+
+<!-- the close: the site's own CTA band, in this role's words -->
+<section class="cta role-cta-band">
+  <div class="wrap">
+    <div data-component="cta-banner" data-heading={r.cta.heading} data-sub={r.cta.sub}></div>
   </div>
 </section>

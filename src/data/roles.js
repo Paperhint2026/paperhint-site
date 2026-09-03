@@ -26,7 +26,10 @@ function beats(bullets) {
 const PAGES = {
   teachers: {
     story: 'teacher',
-    needs: ['Headline and standfirst', 'Closing line', 'A product screenshot per beat'],
+    needs: ['Headline and standfirst', 'Closing line', 'A product screenshot per beat',
+            'A quote from a real teacher, for this page'],
+    cta: { heading: 'Let’s take the marking off your desk',
+           sub: 'Tell us how correction works in your school today, and we’ll show you the same class running in Paperhint.' },
     nav: 'Teachers',
     kicker: 'FOR TEACHERS',
     h1: ['The week, without the ', 'p', 'aperwork'],           /* DRAFT */
@@ -53,7 +56,11 @@ const PAGES = {
 
   schools: {
     story: 'admin',
-    needs: ['Headline and standfirst', 'Closing line', 'A screenshot of the allotment board and the admin portal'],
+    needs: ['Headline and standfirst', 'Closing line',
+            'A screenshot of the allotment board and the admin portal',
+            'A quote from a real school office or principal, for this page'],
+    cta: { heading: 'We set the school up alongside your office',
+           sub: 'Tell us how your year runs today, and we’ll show you the same year in Paperhint. Nothing gets migrated by you.' },
     second: 'principal',                       /* the case for the school, below */
     /* A principal is not a separate product and has no interface of their
        own: the same portal, with permissions between a teacher's and the
@@ -86,7 +93,11 @@ const PAGES = {
 
   parents: {
     story: 'parent',
-    needs: ['Headline and standfirst', 'Closing line', 'An example of what a parent actually receives'],
+    needs: ['Headline and standfirst', 'Closing line',
+            'An example of what a parent actually receives',
+            'A quote from a real parent, for this page'],
+    cta: { heading: 'Ask your school about Paperhint',
+           sub: 'If you would rather hear from school on the day than at the end of term, this is the page to send them.' },
     nav: 'Parents',
     kicker: 'FOR PARENTS',
     h1: ['You hear it the ', 'd', 'ay it happens'],             /* DRAFT */
@@ -112,7 +123,10 @@ const PAGES = {
     story: null,                               /* no approved narrative yet */
     thin: true,                                /* says so on the page, quietly */
     needs: ['The whole narrative — scene, turn and beats', 'Headline and standfirst',
-            'What a student actually sees on their record', 'Whether students get their own login'],
+            'What a student actually sees on their record', 'Whether students get their own login',
+            'A quote from a real student, for this page'],
+    cta: { heading: 'Show this to your school',
+           sub: 'If your teachers are still carrying answer sheets home at the weekend, send them this page.' },
     nav: 'Students',
     kicker: 'FOR STUDENTS',
     h1: ['Your work, ', 'r', 'ecorded properly'],               /* DRAFT */

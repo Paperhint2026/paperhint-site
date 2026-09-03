@@ -16,6 +16,7 @@ Narrative source: `api/chat-content.js` → `STORIES.teacher` (approved)
 - [ ] Headline and standfirst
 - [ ] Closing line
 - [ ] A product screenshot per beat
+- [ ] A quote from a real teacher, for this page
 
 ## /schools
 
@@ -25,6 +26,7 @@ Second movement: `STORIES.principal` (approved), framed as the case for the scho
 - [ ] Headline and standfirst
 - [ ] Closing line
 - [ ] A screenshot of the allotment board and the admin portal
+- [ ] A quote from a real school office or principal, for this page
 
 ## /students  — reads thin in public
 
@@ -34,6 +36,7 @@ Narrative source: **none yet** — scene and beats are built from `docs/feature-
 - [ ] Headline and standfirst
 - [ ] What a student actually sees on their record
 - [ ] Whether students get their own login
+- [ ] A quote from a real student, for this page
 
 ## /parents
 
@@ -42,6 +45,7 @@ Narrative source: `api/chat-content.js` → `STORIES.parent` (approved)
 - [ ] Headline and standfirst
 - [ ] Closing line
 - [ ] An example of what a parent actually receives
+- [ ] A quote from a real parent, for this page
 
 ## Not a role page
 

@@ -102,38 +102,42 @@
   var CSS = `
 :host{
   /* the page's tokens if it has them, sensible values if it doesn't */
-  --ink:var(--ph-ink,#14201A); --ink-soft:var(--ph-ink-soft,#3D4F47); --muted:var(--ph-muted,#68766E);
-  --emerald:var(--ph-emerald,#0B8A5C); --surface:var(--ph-surface,#FFFFFF); --line:var(--ph-line,#E2DED1);
+  /* the page's own tokens, with standalone fallbacks. Internal names are
+     distinct (--c-*) so referring to the inherited value isn't a cycle. */
+  --c-ink:var(--ink,#14201A); --c-ink-soft:var(--ink-soft,#3D4F47); --c-muted:var(--muted,#68766E);
+  --c-emerald:var(--emerald,#0B8A5C); --c-surface:var(--surface,#FFFFFF); --c-line:var(--line,#E2DED1);
   --glass-edge:rgba(255,255,255,.46); --glass-top:rgba(255,255,255,.62);
   position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:70;
   width:min(520px,calc(100vw - 24px));
   display:flex;flex-direction:column-reverse;align-items:center;gap:12px;
   pointer-events:none;
-  font-family:var(--ph-font,inherit);
+  font-family:var(--font-display,inherit);
 }
-:host([theme="dark"]){--glass-edge:rgba(255,255,255,.12);--glass-top:rgba(255,255,255,.08)}
+:host([theme="dark"]){--glass-edge:rgba(255,255,255,.13);--glass-top:rgba(255,255,255,.07)}
+:host([theme="dark"]) .panel{box-shadow:0 34px 90px -30px rgba(0,0,0,.66),inset 0 1px 0 var(--glass-top)}
+:host([theme="dark"]) .pill{box-shadow:0 12px 30px -14px rgba(0,0,0,.6),inset 0 1px 0 var(--glass-top)}
 :host([hidden]){display:none}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .pill,.panel{pointer-events:auto}
-.mark{width:17px;height:17px;flex:none;color:var(--emerald)}
+.mark{width:17px;height:17px;flex:none;color:var(--c-emerald)}
 .mark.spin{width:15px;height:15px;animation:spin 1.1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .pill{
   display:inline-flex;align-items:center;gap:7px;padding:8px 15px 8px 12px;border-radius:999px;
-  background:color-mix(in srgb,var(--surface) 70%,transparent);
+  background:color-mix(in srgb,var(--c-surface) 70%,transparent);
   backdrop-filter:blur(26px) saturate(1.8);-webkit-backdrop-filter:blur(26px) saturate(1.8);
   border:1px solid var(--glass-edge);
   box-shadow:0 12px 30px -14px rgba(20,32,26,.38),inset 0 1px 0 var(--glass-top);
-  font-weight:500;font-size:13.5px;letter-spacing:-.01em;color:var(--ink);
+  font-weight:500;font-size:13.5px;letter-spacing:-.01em;color:var(--c-ink);
   transition:transform .3s cubic-bezier(.3,.8,.24,1),opacity .25s,box-shadow .25s;
 }
 .pill:hover{transform:translateY(-2px);box-shadow:0 18px 38px -14px rgba(11,138,92,.42),inset 0 1px 0 var(--glass-top)}
-.wm em,.head b em{font-family:var(--ph-font-serif,Georgia,serif);font-style:italic;font-weight:500;color:var(--emerald);font-size:1.02em}
+.wm em,.head b em{font-family:var(--font-serif,Georgia,serif);font-style:italic;font-weight:500;color:var(--c-emerald);font-size:1.02em}
 
 .panel{
   width:100%;overflow:hidden;border-radius:26px;
-  background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 80%,transparent),color-mix(in srgb,var(--surface) 62%,transparent));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--c-surface) 80%,transparent),color-mix(in srgb,var(--c-surface) 62%,transparent));
   backdrop-filter:blur(44px) saturate(1.9);-webkit-backdrop-filter:blur(44px) saturate(1.9);
   border:1px solid var(--glass-edge);
   box-shadow:0 34px 90px -30px rgba(20,32,26,.46),inset 0 1px 0 var(--glass-top);
@@ -145,17 +149,21 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 .head{display:flex;align-items:center;gap:8px;padding:15px 14px 6px 17px}
 .head b{font-weight:500;font-size:14.5px;letter-spacing:-.01em}
-.close{margin-left:auto;width:28px;height:28px;border-radius:999px;display:grid;place-items:center;color:var(--muted);transition:.2s}
-.close:hover{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)}
+.close{margin-left:auto;width:28px;height:28px;border-radius:999px;display:grid;place-items:center;color:var(--c-muted);transition:.2s}
+.close:hover{background:color-mix(in srgb,var(--c-ink) 7%,transparent);color:var(--c-ink)}
 .close svg{width:14px;height:14px}
 
 .log{position:relative;max-height:min(46vh,320px);overflow-y:auto;overscroll-behavior:contain;padding:10px 16px 4px;display:flex;flex-direction:column;gap:9px;scrollbar-width:thin}
-.msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:14.5px;line-height:1.55;color:var(--ink);animation:in .3s cubic-bezier(.25,.8,.25,1) both}
+.msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:14.5px;line-height:1.55;color:var(--c-ink);animation:in .3s cubic-bezier(.25,.8,.25,1) both}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.msg.bot{background:color-mix(in srgb,var(--ink) 5%,transparent);border-bottom-left-radius:6px;align-self:flex-start}
-.msg.me{background:color-mix(in srgb,var(--emerald) 13%,transparent);border-bottom-right-radius:6px;align-self:flex-end}
-.msg.typing{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13.5px;background:none;padding:6px 4px}
+.msg.bot{background:color-mix(in srgb,var(--c-ink) 5%,transparent);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:color-mix(in srgb,var(--c-emerald) 13%,transparent);border-bottom-right-radius:6px;align-self:flex-end}
+.msg.typing{display:inline-flex;align-items:center;gap:8px;color:var(--c-muted);font-size:13.5px;background:none;padding:6px 4px}
 .msg.err{background:color-mix(in srgb,#B3261E 9%,transparent);color:#B3261E}
+/* history carried over from an earlier page reads as past, not present */
+.msg.quiet{opacity:.62}
+.msg.quiet .w{animation:none;opacity:1;filter:none;transform:none}
+.past{align-self:center;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--c-muted);padding:2px 0 4px}
 .msg.err a{color:inherit}
 
 /* words resolve out of a blur instead of landing as a block */
@@ -164,25 +172,25 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 .msg.story{max-width:100%;padding:14px 16px 12px}
 .msg.story p{margin:0 0 9px}
-.msg.story .lead{color:var(--ink);font-weight:500;margin-bottom:7px}
+.msg.story .lead{color:var(--c-ink);font-weight:500;margin-bottom:7px}
 .msg.story ul{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:7px}
-.msg.story li{position:relative;padding-left:15px;font-size:14px;line-height:1.5;color:var(--ink-soft)}
-.msg.story li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:99px;background:var(--emerald)}
-.msg.story li b{color:var(--ink);font-weight:500}
-.msg.story .end{margin:0;color:var(--muted);font-size:13.5px}
+.msg.story li{position:relative;padding-left:15px;font-size:14px;line-height:1.5;color:var(--c-ink-soft)}
+.msg.story li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:99px;background:var(--c-emerald)}
+.msg.story li b{color:var(--c-ink);font-weight:500}
+.msg.story .end{margin:0;color:var(--c-muted);font-size:13.5px}
 .msg.story p,.msg.story li{opacity:0;filter:blur(7px);transform:translateY(4px);animation:word .6s cubic-bezier(.2,.7,.2,1) both}
 
 .chips{display:flex;gap:6px;padding:8px 16px 4px;flex-wrap:wrap}
 .chips[hidden]{display:none}
-.chip{font-size:12.5px;color:var(--ink-soft);border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);border-radius:999px;padding:6px 12px;transition:.2s;text-align:left}
-.chip:hover{border-color:var(--emerald);color:var(--emerald);background:color-mix(in srgb,var(--emerald) 7%,transparent)}
+.chip{font-size:12.5px;color:var(--c-ink-soft);border:1px solid color-mix(in srgb,var(--c-ink) 12%,transparent);border-radius:999px;padding:6px 12px;transition:.2s;text-align:left}
+.chip:hover{border-color:var(--c-emerald);color:var(--c-emerald);background:color-mix(in srgb,var(--c-emerald) 7%,transparent)}
 .acts{display:flex;gap:6px;flex-wrap:wrap;padding:2px 0 2px 2px;animation:in .34s cubic-bezier(.25,.8,.25,1) both}
 
 form{display:flex;align-items:center;gap:8px;padding:10px 12px 12px 18px}
-input{flex:1;font:inherit;font-size:15px;color:var(--ink);background:none;border:none;outline:none;padding:8px 0}
-input::placeholder{color:var(--muted)}
-.send{width:36px;height:36px;border-radius:999px;flex:none;display:grid;place-items:center;background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink-soft);transition:.22s}
-.send:hover{background:var(--emerald);color:#fff;transform:translateY(-1px)}
+input{flex:1;font:inherit;font-size:15px;color:var(--c-ink);background:none;border:none;outline:none;padding:8px 0}
+input::placeholder{color:var(--c-muted)}
+.send{width:36px;height:36px;border-radius:999px;flex:none;display:grid;place-items:center;background:color-mix(in srgb,var(--c-ink) 8%,transparent);color:var(--c-ink-soft);transition:.22s}
+.send:hover{background:var(--c-emerald);color:#fff;transform:translateY(-1px)}
 .send svg{width:16px;height:16px}
 
 @media (max-width:640px){
@@ -311,8 +319,11 @@ input::placeholder{color:var(--muted)}
       this.renderChips();          /* the menu is there on every fresh panel */
       if (visit.turns.length) {
         /* they were here a page ago — pick the thread back up */
+        var mark = document.createElement('div');
+        mark.className = 'past'; mark.textContent = 'earlier';
+        this.$('.log').appendChild(mark);
         visit.turns.slice(-6).forEach(function (t) {
-          this.text(t.role === 'user' ? 'me' : 'bot quiet', t.content);
+          this.text(t.role === 'user' ? 'me quiet' : 'bot quiet', t.content);
         }, this);
         this.text('bot', greeting(visit.name));
       } else {

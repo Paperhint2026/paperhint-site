@@ -11,6 +11,8 @@
  * Read it at /api/enquiries?token=… (ENQUIRY_TOKEN).
  */
 
+import { forward } from './_events.js';
+
 const URL_ = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOK_ = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const LIST = 'paperhint:enquiries';
@@ -40,6 +42,8 @@ export function whereFrom(req) {
 export async function record(entry) {
   const row = { at: new Date().toISOString(), ...entry };
   console.log('ENQUIRY ' + JSON.stringify(row));
+  /* analytics is downstream of the record, never in front of it */
+  forward(row).catch(() => {});
   if (!logging()) return false;
   try {
     const base = URL_().replace(/\/$/, '');

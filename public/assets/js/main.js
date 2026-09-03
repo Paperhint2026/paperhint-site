@@ -1043,16 +1043,37 @@
 
     /* text() for anything from a person or a model; html() only for the
        stories authored in this file. */
+    var slowMo = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     function text(kind, str) {
       var el = document.createElement('div');
       el.className = 'chat-msg ' + kind;
-      el.textContent = str;
+      /* the reply doesn't land as a block — words resolve out of a blur,
+         left to right, the way a sentence is read */
+      if (kind.indexOf('bot') > -1 && !slowMo) {
+        var words = String(str).split(/(\s+)/);
+        var n = 0;
+        words.forEach(function (w) {
+          if (!w.trim()) { el.appendChild(document.createTextNode(w)); return; }
+          var sp = document.createElement('span');
+          sp.className = 'w'; sp.textContent = w;
+          sp.style.animationDelay = Math.min(n * 26, 1500) + 'ms';
+          el.appendChild(sp); n++;
+        });
+      } else {
+        el.textContent = str;
+      }
       log.appendChild(el); scroll(); return el;
     }
     function html(kind, markup) {
       var el = document.createElement('div');
       el.className = 'chat-msg ' + kind;
       el.innerHTML = markup;
+      if (!slowMo) {
+        el.classList.add('staggered');
+        var blocks = el.querySelectorAll('p, li');
+        for (var i = 0; i < blocks.length; i++) blocks[i].style.animationDelay = (i * 90) + 'ms';
+      }
       log.appendChild(el); scroll(); return el;
     }
     function thinking() {

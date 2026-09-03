@@ -1151,19 +1151,24 @@ html.consent-open ask-paperhint{bottom:104px}
    is in the building. Type scale matches the rest of the site —
    H1 56 max, section H2 44 max, all Geist Medium.
    --------------------------------------------------------------- */
+/* One measure for the whole page, centred: a role page is an article, so
+   it reads down a single column rather than across the site's wide grid.
+   Text stays left-aligned inside it — the column is centred, not the words. */
+.role-read{width:min(720px,92vw);margin-inline:auto}
+
 .role-hero{padding:150px 0 34px;position:relative;z-index:2}
-.role-h1{max-width:20ch;margin:14px 0 0}
-.role-sub{max-width:52ch;margin:18px 0 0;font-size:clamp(17px,1.7vw,20px);
+.role-h1{max-width:18ch;margin:14px 0 0}
+.role-sub{max-width:46ch;margin:18px 0 0;font-size:clamp(17px,1.7vw,20px);
   line-height:1.5;color:var(--ink-soft)}
 .role-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 
-h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
-  line-height:1.1;letter-spacing:-.04em;font-weight:500;max-width:24ch;margin:0 0 30px}
+h2.sec-h2{font-family:var(--font-display);font-size:clamp(24px,3vw,36px);
+  line-height:1.12;letter-spacing:-.03em;font-weight:500;max-width:24ch;margin:0 0 26px}
 
 /* the scene: set slightly larger and looser than body copy, because it is
    the one paragraph everybody actually reads */
 .role-scene{padding:38px 0 0}
-.scene-text{max-width:34ch;font-family:var(--font-display);
+.scene-text{max-width:30ch;font-family:var(--font-display);
   font-size:clamp(21px,2.5vw,30px);line-height:1.32;letter-spacing:-.02em;
   font-weight:500;color:var(--ink);margin:0}
 
@@ -1183,7 +1188,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   color:var(--ink)}
 
 .role-stops{padding:80px 0 0}
-.stop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:14px}
+.stop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:12px}
 .stop{background:var(--surface);border:1px solid var(--line);border-radius:18px;
   padding:22px 24px}
 .stop h3{font-family:var(--font-display);font-size:19px;line-height:1.25;
@@ -1212,7 +1217,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   font-weight:500;color:var(--ink)}
 
 .role-others{padding:84px 0 96px}
-.other-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.other-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px}
 .other{display:block;position:relative;background:var(--surface);
   border:1px solid var(--line);border-radius:18px;padding:22px 24px 46px;
   text-decoration:none;transition:border-color .2s ease,transform .2s ease}

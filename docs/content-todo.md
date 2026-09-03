@@ -11,11 +11,12 @@ meant to be replaced by the application narrative.
 
 ## /product
 
-Content source: `docs/feature-list.md` (approved) — 14 features in 3 groups
+Content source: `docs/feature-list.md` (approved) — 15 features in 4 groups
 
 - [ ] Headline, standfirst and closing line
-- [ ] A screenshot per feature group
-- [ ] Whether the copilot is one product or two (teacher and office)
+- [ ] A screenshot per feature group, and one of the copilot in use
+- [ ] What the copilot can actually be asked for, beyond notes and teaching tasks
+- [ ] Whether the copilot deserves its own page (it is the core feature)
 
 ## /teachers
 

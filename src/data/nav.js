@@ -16,6 +16,7 @@ export const MENUS = [
       {
         title: 'Where the work happens',
         items: [
+          ['The copilot', '/product#copilot', 'Ask for the work in plain language'],
           ['At the teacher’s desk', '/product#desk', 'Marking, question papers, notes, homework'],
           ['In the school office', '/product#office', 'Allotments, attendance, the year itself'],
           ['Around the classroom', '/product#classroom', 'Records, results and the people at home'],

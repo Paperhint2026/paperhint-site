@@ -30,6 +30,23 @@ const internal = process.env.VERCEL_ENV !== 'production';
    catalogue: only the features the feature list says reach them, in the
    order the product page tells them. */
 const mine = featuresFor(role);
+
+/* The teacher's story runs Monday to Friday. Where a beat's label is a day,
+   the day itself becomes the marker instead of a counter — 01..05 beside
+   "Monday." was saying the same thing twice — and the label keeps whatever
+   follows it. */
+const DAY = /^(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day\.?\s*/i;
+const beats = r.beats.map((b, i) => {
+  const label = b.label || '';
+  const day = label.match(DAY);
+  return {
+    ...b,
+    day: day ? day[0].replace(/[.\s]+$/, '') : null,
+    label: day ? label.replace(DAY, '') : label,
+    n: String(i + 1).padStart(2, '0'),
+  };
+});
+const isWeek = beats.every(b => b.day);
 ---
 <header class="role-hero">
   <div class="wrap wrap-read">
@@ -61,11 +78,13 @@ const mine = featuresFor(role);
 <section class="role-beats">
   <div class="wrap wrap-read">
     <p class="beats-turn reveal" set:html={r.turn} />
-    <ol class="beat-list">
-      {r.beats.map((b, i) => (
+    <ol class={`beat-list ${isWeek ? 'is-week' : ''}`}>
+      {beats.map((b, i) => (
         <li class={`beat reveal ${i % 2 ? 'flip' : ''}`}>
           <div class="beat-copy">
-            <span class="beat-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            {b.day
+              ? <span class="beat-day">{b.day}</span>
+              : <span class="beat-n" aria-hidden="true">{b.n}</span>}
             {b.label && <h2 class="beat-label" set:html={b.label} />}
             <p set:html={b.text} />
           </div>
@@ -105,15 +124,19 @@ const mine = featuresFor(role);
         {mine.length} of the {15} things Paperhint does. The rest belongs to
         someone else in the building.
       </p>
-      <div class="use-grid">
-        {mine.map(f => (
-          <a class="use reveal" href={`/product#${f.group}`}>
-            <h3>{f.label}{f.badge && <span class="use-badge">{f.badge}</span>}</h3>
-            <p set:html={f.text} />
-            <span class="use-group">{f.groupTitle}</span>
-          </a>
-        ))}
-      </div>
+      {[...new Set(mine.map(f => f.group))].map(g => (
+        <div class="use-block">
+          <h3 class="use-block-t">{mine.find(f => f.group === g).groupTitle}</h3>
+          <div class="use-grid">
+            {mine.filter(f => f.group === g).map(f => (
+              <a class="use reveal" href={`/product#${f.group}`}>
+                <h4>{f.label}{f.badge && <span class="use-badge">{f.badge}</span>}</h4>
+                <p set:html={f.text} />
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   </section>
 )}

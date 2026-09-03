@@ -1453,3 +1453,25 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 @media (max-width:720px) and (prefers-reduced-transparency:reduce){
   .nav-blur{display:none}
 }
+
+/* the day is the marker on a week-shaped story, so the counter steps aside */
+.beat-day{display:inline-block;font-size:11.5px;font-weight:500;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--emerald);background:var(--emerald-tint);
+  border-radius:999px;padding:5px 11px;margin-bottom:14px}
+.beat-list.is-week .beat-label{font-size:clamp(21px,2.3vw,29px)}
+
+/* the per-role feature list, in the product's own groups rather than one
+   wall of identical cards */
+.use-block{margin:0 0 30px}
+.use-block:last-child{margin-bottom:0}
+.use-block-t{font-size:11.5px;font-weight:500;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.use h4{font-family:var(--font-display);font-size:17px;line-height:1.25;
+  letter-spacing:-.02em;font-weight:500;color:var(--ink);margin:0 0 8px}
+.use p{margin:0}
+
+/* the item the rest of a role's list hangs off */
+.rf-item-lead{position:relative;padding-left:16px}
+.rf-item-lead::before{content:"";position:absolute;left:0;top:4px;bottom:4px;
+  width:3px;border-radius:2px;background:var(--emerald)}
+.rf-item-lead b{color:var(--emerald)}

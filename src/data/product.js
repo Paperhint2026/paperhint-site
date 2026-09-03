@@ -33,7 +33,7 @@ export const PRODUCT = {
       title: 'The copilot',
       lead: 'The way the work gets asked for, rather than another place to click.',
       features: [
-        ['Teacher’s copilot', 'A chat interface at the teacher’s desk: prepare notes, work through teaching tasks, ask for what you need in plain language. Everything further down this page can be reached by asking for it.', 'Core', ['teachers']],
+        ['Teacher’s copilot', 'A chat interface at the teacher’s desk: prepare notes, work through teaching tasks, ask for what you need in plain language. Everything further down this page can be reached by asking for it.', ['teachers']],
         ['Office copilot', 'The same thing on the other side of the building. Allotment changes and every module of the admin portal can be driven by asking, in plain language, instead of working through forms.', ['schools']],
       ],
     },

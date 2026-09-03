@@ -1175,6 +1175,8 @@
       lead: 'Prepare, teach — the paperwork is handled',
       cta: 'See it on your own answer sheets',
       items: [
+        /* the copilot leads: it is how the rest of this list gets asked for */
+        ['The copilot at your desk', 'A chat interface where the work happens: prepare notes, work through teaching tasks, ask for what you need in plain language.', 'lead'],
         ['Teaching notes, prepared with you', 'Ask the copilot for notes you can actually teach with, or paste your own; keep them private or share to everyone on your school\u2019s email.'],
         ['Homework that reaches home', 'Drafted for what you taught today \u2014 and parents are notified the moment it\u2019s assigned.'],
         ['The exam, set and marked', 'Question papers with blueprint and answer key, drafted for your syllabus \u2014 then every answer sheet photographed and scored on your rubric. You review and approve.']
@@ -1234,7 +1236,9 @@
           : '') +
         '</div>' +
         '<div class="rf-items">' + d.items.map(function (it) {
-          return '<div class="rf-item"><b>' + it[0] + '</b><p>' + it[1] + '</p></div>';
+          /* a third entry marks the item that carries the others */
+          return '<div class="rf-item' + (it[2] === 'lead' ? ' rf-item-lead' : '') + '">' +
+                 '<b>' + it[0] + '</b><p>' + it[1] + '</p></div>';
         }).join('') + '</div>';
     }
 
@@ -1320,16 +1324,25 @@
     }
 
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var el = en.target;
-        /* stagger: nth revealed sibling in the same parent waits its turn */
-        var sibs = Array.prototype.filter.call(el.parentElement.children, function (c) {
-          return c.classList && c.classList.contains('reveal');
-        });
-        var k = sibs.indexOf(el);
+      /* Strictly top to bottom.
+         The stagger used to be each block's index among its revealed
+         siblings, so a section whose first child was already past started
+         its cascade halfway down, and an observer hands its entries over in
+         no particular order anyway. Sorting the batch by where things
+         actually are on the page means the sequence always runs downward,
+         whatever arrived first. */
+      var showing = [];
+      entries.forEach(function (en) { if (en.isIntersecting) showing.push(en.target); });
+      if (!showing.length) return;
+
+      showing.sort(function (a, b) {
+        return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+      });
+
+      showing.forEach(function (el, k) {
         if (k > 0) {
-          el.style.transitionDelay = (k * 90) + 'ms';
+          /* capped: a batch of twenty should not take two seconds to arrive */
+          el.style.transitionDelay = Math.min(k * 80, 520) + 'ms';
           el.addEventListener('transitionend', function h() {
             el.style.transitionDelay = '';           /* don't lag later hovers */
             el.removeEventListener('transitionend', h);

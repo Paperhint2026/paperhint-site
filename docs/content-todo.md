@@ -36,11 +36,11 @@ Second movement: `STORIES.principal` (approved), framed as the case for the scho
 - [ ] A screenshot of the allotment board and the admin portal
 - [ ] A quote from a real school office or principal, for this page
 
-## /students  — reads thin in public
+## /students
 
 Narrative source: **none yet** — scene and beats are built from `docs/feature-list.md` and stand in
 
-- [ ] The whole narrative — scene, turn and beats
+- [ ] The real narrative — this one is a stand-in
 - [ ] Headline and standfirst
 - [ ] What a student actually sees on their record
 - [ ] Whether students get their own login

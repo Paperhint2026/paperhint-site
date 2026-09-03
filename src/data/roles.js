@@ -121,41 +121,52 @@ const PAGES = {
 
   students: {
     story: null,                               /* no approved narrative yet */
-    thin: true,                                /* says so on the page, quietly */
-    needs: ['The whole narrative — scene, turn and beats', 'Headline and standfirst',
-            'What a student actually sees on their record', 'Whether students get their own login',
-            'A quote from a real student, for this page'],
-    cta: { heading: 'Show this to your school',
-           sub: 'If your teachers are still carrying answer sheets home at the weekend, send them this page.' },
     nav: 'Students',
     kicker: 'FOR STUDENTS',
     h1: ['Your work, ', 'r', 'ecorded properly'],               /* DRAFT */
-    sub: 'Every paper you sit is marked the same way, kept on your record, and the notes your teachers share are there when you need them.',  /* DRAFT */
-    title: 'Paperhint for Students — Results and Shared Notes',
-    description: 'What students see in Paperhint: results from every evaluation building a record over the year, and the notes their teachers choose to share.',
-    /* DRAFT: the scene and beats below stand in until the founder's student
-       narrative arrives. Every line is from docs/feature-list.md. */
-    scene: 'You get a paper back and the mark is a number in red. What it does not tell you is which questions you actually lost it on, or whether the same thing happened last term.',
-    turn: 'What changes:',
+    sub: 'Every paper you sit is marked the same way as everyone else’s, approved by your teacher, and kept on a record that builds across the year.',  /* DRAFT */
+    title: 'Paperhint for Students — Results, Records and Shared Notes',
+    description: 'What students get from Paperhint: every paper marked on the same rubric, approved by a teacher before it reaches them, a record that builds exam over exam, and the notes their teachers share.',
+    needs: ['The real narrative — this one is a stand-in', 'Headline and standfirst',
+            'What a student actually sees on their record', 'Whether students get their own login',
+            'A quote from a real student, for this page'],
+
+    /* DRAFT. Stand-in narrative, written to be replaced. Every sentence is
+       held to docs/feature-list.md: marking on the teacher's rubric, the
+       teacher's approval, the record built exam over exam, notes shared with
+       the class, exams staying on paper, and unreadable answers being flagged
+       rather than guessed. Nothing here claims a student sees homework or
+       attendance, because the feature list does not say they do. */
+    scene: 'A paper comes back with a number in red at the top. It does not tell you which questions cost you the marks, whether the person next to you was marked the same way, or whether the thing you got wrong is the same thing you got wrong last term.',
+    turn: 'What changes on your side of the desk:',
     beats: [
-      { label: 'Every paper, the same way.', text: 'Your answers are checked against the question and scored on the same rubric as everyone else in the class, before your teacher reviews and approves.' },
-      { label: 'It goes on your record.', text: 'Every evaluation is recorded to you, exam over exam, building a picture across the year rather than a stack of loose papers.' },
-      { label: 'You see your results.', text: 'Once your teacher has approved them, they are yours to look at.' },
-      { label: 'The notes are there too.', text: 'Whatever your teachers choose to share reaches you, in the same place.' },
+      { label: 'The paper you sit does not change.',
+        text: 'Same hall, same pen, same paper. Exams stay exactly as they are — nothing about how you sit them is different.' },
+      { label: 'Everyone is marked the same way.',
+        text: 'Each answer is checked against its own question and scored on your teacher’s rubric, applied the same way across the whole class. Not the first ten papers one way and the last ten at eleven at night.' },
+      { label: 'Anything unclear goes to your teacher.',
+        text: 'Handwriting it cannot read confidently is flagged for a person to look at rather than guessed at. Nobody loses a mark to a bad scan.' },
+      { label: 'A teacher still decides.',
+        text: 'Your teacher reads through, changes anything they disagree with, and approves it. No mark reaches you that a teacher has not signed off.' },
+      { label: 'It goes on your record.',
+        text: 'Every evaluation is recorded to you, exam over exam, so a subject builds into a picture across the year instead of a stack of loose papers in a bag.' },
     ],
     stopsTitle: 'What you can look at',
     stops: [
-      ['Your results', 'Each evaluation your teacher has approved and shared.'],
-      ['Your record over time', 'The same subject, exam over exam.'],
-      ['Notes your teachers shared', 'The ones they chose to share with your class.'],
+      ['Your results', 'Each evaluation once your teacher has checked and approved it.'],
+      ['The same subject over time', 'Exam over exam, rather than one paper at a time.'],
+      ['Notes your teachers shared', 'Whatever they chose to share with your class, in the same place as your results.'],
     ],
     keepsTitle: 'Worth being clear about',
     keeps: [
       'Nothing reaches you until your teacher has reviewed and approved it.',
       'Exams stay on pen and paper. Nothing changes about how you sit them.',
-      'Your record is inside your school’s account and is not visible outside it.',
+      'Anything the marking cannot read confidently is flagged for your teacher, never guessed.',
+      'Your record sits inside your school’s account and is not visible outside it.',
     ],
-    close: 'A marked paper stops being a number in red and starts being a record you can actually read.',
+    close: 'A marked paper stops being a number in red and starts being a record you can actually read.',  /* DRAFT */
+    cta: { heading: 'Show this to your school',
+           sub: 'If your teachers are still carrying answer sheets home at the weekend, send them this page.' },
   },
 };
 

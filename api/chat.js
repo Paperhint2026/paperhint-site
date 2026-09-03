@@ -3,54 +3,44 @@
  * POST { question, history?: [{role, content}] } -> { reply }
  *
  * Env (Vercel → Settings → Environment Variables, Production ticked):
- *   OPENAI_API_KEY  or  GEMINI_API_KEY   one of them, required
- *   CHAT_MODEL      optional — the model on your account (gpt-4o-mini / gemini-2.0-flash by default)
- *   CHAT_PROVIDER   optional — force 'openai' or 'gemini' when both keys are set
+ *   OPENAI_API_KEY  and/or  GEMINI_API_KEY   at least one
+ *
+ * Which models get used, and the order they're tried in, is in
+ * chat-models.js — not here and not in the environment.
  */
 
 import { SYSTEM } from './chat-prompt.js';
+import { candidates, KEYS, shouldFallOver } from './chat-models.js';
 
-/* Provider-agnostic on purpose: set whichever key you have and it picks
- * the right API. No SDK dependency — both are one fetch call. */
+/* Provider-agnostic on purpose: the model chain lives in chat-models.js,
+ * the keys live in the environment. No SDK — both APIs are one fetch. */
 const MAX_QUESTION = 400;
 const MAX_TURNS = 8;
 
-function provider() {
-  const forced = (process.env.CHAT_PROVIDER || '').toLowerCase();
-  if (forced === 'openai' || forced === 'gemini') return forced;
-  if (process.env.OPENAI_API_KEY) return 'openai';
-  if (process.env.GEMINI_API_KEY) return 'gemini';
-  return null;
-}
+async function callOne(cand, system, messages) {
+  const key = KEYS[cand.provider]();
 
-/* Defaults are a starting point — set CHAT_MODEL to whatever your account
- * actually has; model names move faster than this file will. */
-const DEFAULT_MODEL = { openai: 'gpt-4o-mini', gemini: 'gemini-2.0-flash' };
-
-async function ask(kind, system, messages) {
-  const model = process.env.CHAT_MODEL || DEFAULT_MODEL[kind];
-
-  if (kind === 'openai') {
+  if (cand.provider === 'openai') {
     const r = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-      headers: { Authorization: 'Bearer ' + process.env.OPENAI_API_KEY, 'Content-Type': 'application/json' },
+      headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model,
+        model: cand.model,
         max_completion_tokens: 700,
         messages: [{ role: 'system', content: system }, ...messages],
       }),
     });
     if (!r.ok) throw providerError(r.status, await r.text());
     const j = await r.json();
-    return (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content || '').trim();
+    return (j.choices?.[0]?.message?.content || '').trim();
   }
 
-  /* Gemini: system goes in systemInstruction, and the assistant role is 'model' */
+  /* Gemini: system goes in systemInstruction, the assistant role is 'model' */
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' +
-              encodeURIComponent(model) + ':generateContent';
+              encodeURIComponent(cand.model) + ':generateContent';
   const r = await fetch(url, {
     method: 'POST',
-    headers: { 'x-goog-api-key': process.env.GEMINI_API_KEY, 'Content-Type': 'application/json' },
+    headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: system }] },
       contents: messages.map(m => ({
@@ -62,8 +52,30 @@ async function ask(kind, system, messages) {
   });
   if (!r.ok) throw providerError(r.status, await r.text());
   const j = await r.json();
-  const parts = j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
-  return (parts || []).map(p => p.text || '').join('').trim();
+  return (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('').trim();
+}
+
+/* Walk the chain until one answers. */
+async function ask(system, messages) {
+  const list = candidates();
+  if (!list.length) { const e = new Error('no key'); e.noKey = true; throw e; }
+
+  const tried = [];
+  let last = null;
+  for (const cand of list) {
+    try {
+      const reply = await callOne(cand, system, messages);
+      if (reply) return { reply, used: cand, tried };
+      tried.push(cand.provider + '/' + cand.model + ' → empty');
+    } catch (e) {
+      tried.push(cand.provider + '/' + cand.model + ' → ' + (e.status || 'err'));
+      last = e;
+      if (!shouldFallOver(e.status || 0)) throw e;   /* not survivable — stop */
+    }
+  }
+  const e = last || new Error('every model failed');
+  e.tried = tried;
+  throw e;
 }
 
 function providerError(status, body) {
@@ -71,10 +83,6 @@ function providerError(status, body) {
   e.status = status;
   return e;
 }
-
-/* ---------------- what the assistant knows and how it behaves ---------------- */
-
-/* the instructions live next door in chat-prompt.js */
 
 /* ---------------- rate limiting (per warm instance) ---------------- */
 const hits = new Map();
@@ -99,7 +107,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return json(res, 405, { error: 'POST only' });
 
-  if (!provider()) return json(res, 503, { error: 'The assistant isn’t switched on yet.' });
+  if (!candidates().length) return json(res, 503, { error: 'The assistant isn’t switched on yet.' });
 
   let body;
   try { body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {}); }
@@ -119,22 +127,22 @@ export default async function handler(req, res) {
         .map(m => ({ role: m.role, content: m.content.slice(0, 1200) }))
     : [];
 
-  const kind = provider();
   try {
-    const reply = await ask(kind, SYSTEM, [...history, { role: 'user', content: question }]);
-    if (!reply) return json(res, 502, { error: 'I didn’t catch that — try asking again.' });
+    const { reply, used, tried } = await ask(SYSTEM, [...history, { role: 'user', content: question }]);
 
-    /* the questions schools actually ask are the cheapest product research there is */
-    console.log(JSON.stringify({ at: new Date().toISOString(), provider: kind, q: question, chars: reply.length }));
+    /* what schools ask is the cheapest product research there is; the model
+       that answered (and anything skipped) is here for debugging */
+    console.log(JSON.stringify({
+      at: new Date().toISOString(), model: used.provider + '/' + used.model,
+      fellBackPast: tried.length ? tried : undefined,
+      q: question, chars: reply.length,
+    }));
 
     return json(res, 200, { reply });
   } catch (e) {
+    if (e.noKey) return json(res, 503, { error: 'The assistant isn’t switched on yet.' });
+    console.error('chat failed', e.tried || '', e && e.message);
     if (e.status === 429) return json(res, 429, { error: 'Busy just now — try again in a moment.' });
-    if (e.status === 401 || e.status === 403) {
-      console.error('chat auth', e.message);
-      return json(res, 503, { error: 'The assistant isn’t switched on yet.' });
-    }
-    console.error('chat failed', e && e.message);
     return json(res, 502, { error: 'That didn’t go through. Try again, or write to support@paperhint.com.' });
   }
 }

@@ -168,7 +168,7 @@ export const TILE_VISUAL = {
   'Next week\u2019s paper, already drafted': 'paper',
   'A copilot at your desk that prepares the class': 'chat',
   'Your school\u2019s shelf, not your own folder': 'library',
-  'Homework set, and home already told': 'notify',
+  'Homework set, and home already told': 'homework',
   'An office that runs on asking': 'portal',
   'Every section staffed, and covered': 'allot',
   'Configure the timetable, and every teacher has a calendar': 'timetable',

@@ -13,6 +13,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Chat from '../components/Chat.astro';
 import ScopeRow from '../components/ScopeRow.astro';
+import WeekSplit from '../components/WeekSplit.astro';
 import Tiles from '../components/Tiles.astro';
 import ChipDrift from '../components/ChipDrift.astro';
 import { PRODUCT as p } from '../data/product.js';
@@ -51,6 +52,10 @@ const internal = process.env.VERCEL_ENV !== 'production';
     <p class="intro-answer reveal" set:html={p.introAnswer} />
   </div>
 </section>
+
+<!-- third section: what a teaching week actually costs, in somebody
+     else's numbers, with the source and its caveat on the page -->
+<WeekSplit />
 
 <!-- the old world, on a ground that changes under the reader -->
 <ChipDrift who="teachers" />

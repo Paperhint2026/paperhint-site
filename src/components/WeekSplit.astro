@@ -1,0 +1,49 @@
+---
+/* Where a teaching week actually goes.
+ *
+ * The only section on the site carrying hard numbers, because these belong to
+ * the OECD rather than to us. The bar is the week; the light part is teaching
+ * and the dark part is everything else, and the three named components of
+ * "everything else" are exactly the three things Paperhint carries.
+ *
+ * The source line, including the fact that India is not in TALIS, renders
+ * with the section. It is not a footnote to be quietly dropped.
+ */
+import { WEEK as w } from '../data/product.js';
+const other = Math.round((w.total - w.teaching) * 10) / 10;
+const pct = n => (n / w.total) * 100;
+---
+<section class="week">
+  <div class="wrap wrap-read">
+    <div class="sechead reveal">
+      <span class="week-kicker">{w.kicker}</span>
+      <h2 class="sechead-h">{w.title}<span class="sechead-turn">{w.turn}</span></h2>
+    </div>
+
+    <div class="week-bar reveal" role="img"
+         aria-label={`Of a ${w.total} hour working week, ${w.teaching} hours are teaching and ${other} hours are everything else.`}>
+      <span class="wb-seg wb-teach" style={`--w:${pct(w.teaching)}%`}>
+        <b>{w.teaching}h</b><i>Teaching</i>
+      </span>
+      <span class="wb-seg wb-other" style={`--w:${pct(other)}%`}>
+        <b>{other}h</b><i>Everything else</i>
+      </span>
+    </div>
+
+    <ol class="week-parts">
+      {w.parts.map((p, i) => (
+        <li class="week-part reveal" style={`--i:${i};--w:${pct(p.h)}%`}>
+          <span class="wp-h">{p.h}<em>h</em></span>
+          <b>{p.label}</b>
+          <span class="wp-track" aria-hidden="true"><i></i></span>
+          <p>{p.ours}</p>
+        </li>
+      ))}
+    </ol>
+
+    <p class="week-rest reveal">{w.rest}</p>
+    <p class="week-source reveal">
+      <a href={w.sourceHref} rel="nofollow noopener" target="_blank">{w.source}</a>
+    </p>
+  </div>
+</section>

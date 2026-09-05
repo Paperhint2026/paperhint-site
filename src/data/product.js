@@ -110,6 +110,39 @@ export const FEATURES = PRODUCT.groups.flatMap(g =>
 );
 
 /* ---------------------------------------------------------------------------
+   WHERE THE WEEK GOES — the one section on the site that carries real
+   numbers, because these are somebody else's and they are citable.
+
+   OECD TALIS 2024, Table 3.16, full-time lower-secondary teachers, OECD
+   average: a 41-hour working week of which 22.7 hours is teaching. The rest —
+   18.3 hours, 45%% of the week — is everything around it, and the three
+   largest named components are preparation (7.4), marking and correcting
+   (4.6) and administrative work (3.0).
+
+   THE CAVEAT IS PART OF THE SECTION, not a footnote to be dropped: India does
+   not take part in TALIS. This is the OECD average and the page says so. We
+   do not have an Indian figure and must not imply one.
+
+   The three components are also, exactly, the three things Paperhint carries,
+   which is why the section belongs on the product page and not on a role page.
+   --------------------------------------------------------------------------- */
+export const WEEK = {
+  kicker: 'Where the week goes',
+  title: 'Teaching is 22.7 hours of a 41-hour week.',
+  turn: 'The other 18 are the reason we built this.',
+  total: 41,
+  teaching: 22.7,
+  parts: [
+    { h: 7.4, label: 'Preparing lessons', ours: 'Notes and question papers, drafted for your syllabus' },
+    { h: 4.6, label: 'Marking and correcting', ours: 'Answer sheets scored on your rubric, from a photo' },
+    { h: 3.0, label: 'Administrative work', ours: 'Attendance, records and the messages home' },
+  ],
+  rest: 'The remaining hours go to parents, counselling, teamwork and duties — the parts of the job that should be a person.',
+  source: 'OECD TALIS 2024, Table 3.16 — full-time lower-secondary teachers, OECD average. India does not take part in TALIS, so this is the international picture, not an Indian one.',
+  sourceHref: 'https://www.oecd.org/en/publications/results-from-talis-2024_90df6235-en.html',
+};
+
+/* ---------------------------------------------------------------------------
    THE SCOPE ROW — Mercury's divided row, but not their numbers.
    A count is only interesting if the reader already cares: "15 things it
    does" told nobody anything, and on a role page it was noise. So the row

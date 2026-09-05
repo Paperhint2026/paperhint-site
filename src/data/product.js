@@ -110,16 +110,17 @@ export const FEATURES = PRODUCT.groups.flatMap(g =>
 );
 
 /* ---------------------------------------------------------------------------
-   THE STAT ROW — Mercury's opening move: four figures, huge, divided by
-   hairlines. Ours are STRUCTURAL, not traction: a pre-launch product must not
-   borrow the form of "300K+ entrepreneurs" and fill it with invented numbers.
-   Every figure here is a fact about what ships, countable from FEATURES.
+   THE SCOPE ROW — Mercury's divided row, but not their numbers.
+   A count is only interesting if the reader already cares: "15 things it
+   does" told nobody anything, and on a role page it was noise. So the row
+   names the four things the product actually covers, in words, and it appears
+   on /product only — where knowing the scope is the point of the page.
    --------------------------------------------------------------------------- */
-export const STATS = [
-  { n: '15', label: 'things it already does' },
-  { n: '4', label: 'roles, one portal' },
-  { n: '2', label: 'copilots \u2014 the desk and the office' },
-  { n: '0', label: 'new hardware to buy' },
+export const SCOPE = [
+  { k: 'The copilot', label: 'At the teacher\u2019s desk and in the office \u2014 asked, not filled in.' },
+  { k: 'Prepare', label: 'Notes, question papers and homework, drafted for your syllabus.' },
+  { k: 'Assess', label: 'Answer sheets marked to your rubric, recorded to each student.' },
+  { k: 'Run the school', label: 'Records, allotment, attendance and the year itself.' },
 ];
 
 /* Which mini-visual leads each essential tile. The tile is visual-first —

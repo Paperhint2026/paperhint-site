@@ -12,10 +12,8 @@
  * Content comes from src/data/roles.js and src/data/product.js. Nothing is
  * authored here.
  */
-import StatRow from '../components/StatRow.astro';
 import Tiles from '../components/Tiles.astro';
 import ChipDrift from '../components/ChipDrift.astro';
-import MoreRow from '../components/MoreRow.astro';
 import { ROLES } from '../data/roles.js';
 import { featuresFor, tabFor, ESSENTIALS } from '../data/product.js';
 
@@ -65,9 +63,6 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
   </div>
 </header>
 
-<!-- the stat row, Mercury's opening move -->
-<StatRow />
-
 <!-- the grand intro: the problem, then the line that flips it -->
 <section class="role-intro">
   <div class="wrap wrap-read">
@@ -107,9 +102,6 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
         </div>
       </section>
     )}
-
-<!-- the roadmap, on the divided shelf: direction only, never availability -->
-<MoreRow items={r.soon} title="Being built next" />
 
 <!-- the close: the site's own CTA band, in this role's words -->
 <section class="cta role-cta-band">

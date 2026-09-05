@@ -1,0 +1,22 @@
+---
+/* Mercury's divided row. Four cells, hairline rules between them.
+ *
+ * It carried figures until the founder called them meaningless — "15 things
+ * it does" is a number the reader has no scale for, and on a role page it was
+ * noise. It now names what the product covers, in words, and only /product
+ * uses it, where scope is the point of the page.
+ */
+import { SCOPE } from '../data/product.js';
+---
+<section class="scoperow">
+  <div class="wrap wrap-read">
+    <dl class="scope-grid">
+      {SCOPE.map(s => (
+        <div class="scope reveal">
+          <dt>{s.k}</dt>
+          <dd>{s.label}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

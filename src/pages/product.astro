@@ -12,7 +12,7 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Chat from '../components/Chat.astro';
-import StatRow from '../components/StatRow.astro';
+import ScopeRow from '../components/ScopeRow.astro';
 import Tiles from '../components/Tiles.astro';
 import ChipDrift from '../components/ChipDrift.astro';
 import { PRODUCT as p } from '../data/product.js';
@@ -41,7 +41,8 @@ const internal = process.env.VERCEL_ENV !== 'production';
 </header>
 
 <!-- the grand intro: the week, then what Paperhint is inside it -->
-<StatRow />
+<!-- what the product covers, before the argument for it -->
+<ScopeRow />
 
 <section class="role-intro">
   <div class="wrap wrap-read">

@@ -28,6 +28,16 @@
   --nav-edge:rgba(16,32,26,.16);
   --radius:14px;
   --radius-lg:18px;
+  /* VERTICAL SCALE — one ladder, so every section is spaced by the same
+     decisions rather than by whatever each component chose. Derived from
+     mercury.com's rhythm at 1440. */
+  --s-section:112px;   /* top of one section to the next */
+  --s-rule:32px;       /* the hairline down to its headline */
+  --s-head:52px;       /* headline block down to the content */
+  --s-sub:18px;        /* headline down to its standfirst */
+  --s-tile-col:26px;   /* between tiles across */
+  --s-tile-row:64px;   /* between tile rows */
+  --s-cap:20px;        /* panel down to its caption */
   --font-display:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --font-body:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --font-serif:"Merriweather",Georgia,serif;
@@ -1204,7 +1214,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
    scale of a section heading, then the resolving paragraph set at reading
    size beside it. The measure is deliberately different for the two, so the
    eye lands on the statement first and then drops into the answer. */
-.role-intro{padding:132px 0 8px}
+.role-intro{padding:var(--s-section) 0 8px}
 .intro-statement{max-width:20ch;font-family:var(--font-display);
   font-size:clamp(30px,4.6vw,56px);line-height:1.06;letter-spacing:-.045em;
   font-weight:500;color:var(--ink);margin:0}
@@ -1249,32 +1259,35 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
    a card.
    =============================================================== */
 
-/* --- the stat row: four figures, divided by hairlines ---------- */
-.statrow{padding:96px 0 0}
-.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  margin:0;border-top:1px solid var(--line);padding-top:38px}
-.stat{padding:0 26px;border-left:1px solid var(--line)}
-.stat:first-child{border-left:0;padding-left:0}
-.stat dt{font-family:var(--font-display);font-size:clamp(40px,5.4vw,68px);
-  line-height:.98;letter-spacing:-.05em;font-weight:500;color:var(--ink)}
-.stat dd{margin:12px 0 0;font-size:15px;line-height:1.42;color:var(--muted);
-  max-width:16ch}
+/* --- the scope row: four cells, divided by hairlines ----------- */
+.scoperow{padding:var(--s-section) 0 0}
+.scope-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  margin:0;border-top:1px solid var(--line);padding-top:var(--s-rule)}
+.scope{padding:0 24px;border-left:1px solid var(--line)}
+.scope:first-child{border-left:0;padding-left:0}
+.scope dt{font-family:var(--font-display);font-size:clamp(17px,1.9vw,22px);
+  line-height:1.2;letter-spacing:-.02em;font-weight:500;color:var(--ink)}
+.scope dd{margin:10px 0 0;font-size:14.5px;line-height:1.55;color:var(--muted)}
 
 /* --- the section head: a rule, then the headline -------------- */
-.sechead{border-top:1px solid var(--line);padding-top:34px;margin-bottom:52px}
-.sechead-h{font-family:var(--font-display);font-size:clamp(28px,3.8vw,48px);
-  line-height:1.06;letter-spacing:-.045em;font-weight:500;margin:0;
-  max-width:26ch;color:var(--ink)}
+.sechead{border-top:1px solid var(--line);padding-top:var(--s-rule);
+  margin-bottom:var(--s-head)}
+/* Measured off mercury.com at 1440: 36px, 41.4px line-height (1.15), tracking
+   very slightly POSITIVE. Mine was 48px at -4.5% — bigger and much tighter,
+   which is why the sections read as shouting where theirs read as calm. */
+.sechead-h{font-family:var(--font-display);font-size:clamp(27px,2.6vw,36px);
+  line-height:1.15;letter-spacing:-.005em;font-weight:500;margin:0;
+  max-width:30ch;color:var(--ink)}
 /* the couplet's hinge: same face, emerald, on its own line */
 .sechead-turn{display:block;color:var(--emerald)}
-.sechead-sub{margin:18px 0 0;max-width:52ch;
+.sechead-sub{margin:var(--s-sub) 0 0;max-width:52ch;
   font-size:clamp(16px,1.7vw,19px);line-height:1.55;color:var(--ink-soft)}
 
 /* --- image-led tiles: the panel IS the tile ------------------- */
-.tiles-sec{padding:118px 0 0}
+.tiles-sec{padding:var(--s-section) 0 0}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  column-gap:26px;row-gap:66px}
-.tile{display:flex;flex-direction:column;gap:22px}
+  column-gap:var(--s-tile-col);row-gap:var(--s-tile-row)}
+.tile{display:flex;flex-direction:column;gap:var(--s-cap)}
 .tile-wide{grid-column:1 / -1;display:grid;
   grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:44px;align-items:center}
 /* no border, no fill, no shadow on the tile itself — the caption sits on the
@@ -1357,13 +1370,103 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .v-year .arrow{color:var(--tint,var(--emerald));font-size:22px}
 .v-year-note{flex-basis:100%;text-align:center;font-size:12px;color:var(--p-mut)}
 
+/* --- the panels come to life when they arrive -------------------
+   Each composition animates once, on reveal, and only then: the observer
+   adds .in, which starts it. The point is to show the work HAPPENING —
+   answers being scored, a paper drafting itself, the copilot answering,
+   parents being notified — because a still panel of rows is a screenshot
+   of a table. Everything is transform and opacity so it stays cheap, each
+   item is staggered off its own index, and it all stops dead under
+   prefers-reduced-motion. */
+.tile-panel > * > *{--i:0}
+.tile-panel .v-rows span:nth-child(1),.tile-panel .v-chat span:nth-child(1),
+.tile-panel .v-notify span:nth-child(1),.tile-panel .v-lib figure:nth-child(1),
+.tile-panel .v-paper-tags em:nth-child(1){--i:1}
+.tile-panel .v-rows span:nth-child(2),.tile-panel .v-chat span:nth-child(2),
+.tile-panel .v-notify span:nth-child(2),.tile-panel .v-lib figure:nth-child(2),
+.tile-panel .v-paper-tags em:nth-child(2){--i:2}
+.tile-panel .v-rows span:nth-child(3),.tile-panel .v-chat span:nth-child(3),
+.tile-panel .v-notify span:nth-child(3),.tile-panel .v-lib figure:nth-child(3),
+.tile-panel .v-paper-tags em:nth-child(3){--i:3}
+.tile-panel .v-rows span:nth-child(4),.tile-panel .v-chat span:nth-child(4),
+.tile-panel .v-notify span:nth-child(4),.tile-panel .v-lib figure:nth-child(4){--i:4}
+.tile-panel .v-rows span:nth-child(5),.tile-panel .v-lib figure:nth-child(5){--i:5}
+.tile-panel .v-lib figure:nth-child(6){--i:6}
+
+/* the resting state: held back, waiting for .in */
+.tile .v-rows span,.tile .v-chat span,.tile .v-notify span,
+.tile .v-lib figure,.tile .v-paper-tags em,
+.tile .v-year .from,.tile .v-year .to,.tile .v-year .arrow,
+.tile .v-paper-lines s,.tile .v-reg .tt-grid s{
+  opacity:0;will-change:transform,opacity}
+
+/* rows and chips rise into place, one after another */
+.tile.in .v-rows span,.tile.in .v-notify span,.tile.in .v-lib figure{
+  animation:panel-rise .5s var(--ease,cubic-bezier(.22,1,.36,1)) both;
+  animation-delay:calc(.18s + var(--i) * .09s)}
+/* the tally row lands last and a beat later, so it reads as a result */
+.tile.in .v-rows .sum{animation-delay:calc(.62s + var(--i) * .04s)}
+/* the copilot exchange alternates side, like a conversation */
+.tile.in .v-chat .ask{animation:panel-ask .46s var(--ease,cubic-bezier(.22,1,.36,1)) both;
+  animation-delay:calc(.2s + var(--i) * .34s)}
+.tile.in .v-chat .ans{animation:panel-ans .46s var(--ease,cubic-bezier(.22,1,.36,1)) both;
+  animation-delay:calc(.38s + var(--i) * .34s)}
+/* the paper writes its own lines, then tags itself */
+.tile.in .v-paper-lines s{animation:panel-line .5s var(--ease,cubic-bezier(.22,1,.36,1)) both;
+  transform-origin:left center}
+.tile.in .v-paper-lines s:nth-child(1){animation-delay:.16s}
+.tile.in .v-paper-lines s:nth-child(2){animation-delay:.24s}
+.tile.in .v-paper-lines s:nth-child(3){animation-delay:.32s}
+.tile.in .v-paper-lines s:nth-child(4){animation-delay:.40s}
+.tile.in .v-paper-lines s:nth-child(5){animation-delay:.48s}
+.tile.in .v-paper-lines s:nth-child(6){animation-delay:.56s}
+.tile.in .v-paper-tags em{animation:panel-pop .42s var(--ease,cubic-bezier(.34,1.4,.5,1)) both;
+  animation-delay:calc(.72s + var(--i) * .1s)}
+/* the register fills cell by cell, the way a week does */
+.tile.in .v-reg .tt-grid s{animation:panel-pop .38s var(--ease,cubic-bezier(.34,1.3,.5,1)) both}
+.tile.in .v-reg .tt-grid s:nth-child(-n+5){animation-delay:calc(.14s + (var(--c,0)) * .05s)}
+.tile.in .v-reg .tt-grid s:nth-child(n+6){animation-delay:.42s}
+.tile.in .v-reg .tt-grid s:nth-child(6){animation-delay:.42s}
+.tile.in .v-reg .tt-grid s:nth-child(7){animation-delay:.50s}
+.tile.in .v-reg .tt-grid s:nth-child(8){animation-delay:.58s}
+.tile.in .v-reg .tt-grid s:nth-child(9){animation-delay:.66s}
+.tile.in .v-reg .tt-grid s:nth-child(10){animation-delay:.74s}
+/* the year moves: the old class slides out, the arrow draws, the new lands */
+.tile.in .v-year .from{animation:panel-rise .5s var(--ease,cubic-bezier(.22,1,.36,1)) both;
+  animation-delay:.18s}
+.tile.in .v-year .arrow{animation:panel-arrow .5s var(--ease,cubic-bezier(.22,1,.36,1)) both;
+  animation-delay:.42s}
+.tile.in .v-year .to{animation:panel-pop .5s var(--ease,cubic-bezier(.34,1.4,.5,1)) both;
+  animation-delay:.6s}
+
+@keyframes panel-rise{from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:none}}
+@keyframes panel-pop{from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:none}}
+@keyframes panel-line{from{opacity:0;transform:scaleX(.1)}
+  to{opacity:1;transform:none}}
+@keyframes panel-ask{from{opacity:0;transform:translate(12px,8px)}
+  to{opacity:1;transform:none}}
+@keyframes panel-ans{from{opacity:0;transform:translate(-12px,8px)}
+  to{opacity:1;transform:none}}
+@keyframes panel-arrow{from{opacity:0;transform:translateX(-10px)}
+  to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  .tile .v-rows span,.tile .v-chat span,.tile .v-notify span,
+  .tile .v-lib figure,.tile .v-paper-tags em,
+  .tile .v-year .from,.tile .v-year .to,.tile .v-year .arrow,
+  .tile .v-paper-lines s,.tile .v-reg .tt-grid s{
+    opacity:1 !important;animation:none !important;transform:none !important}
+}
+
 /* --- the drifting chip field: the scatter, shown not asserted -- */
-.drift{padding:118px 0 0;overflow:hidden}
-.drift-head{border-top:1px solid var(--line);padding-top:34px;text-align:center;
-  margin-bottom:44px}
-.drift-head h2{font-family:var(--font-display);font-size:clamp(28px,3.8vw,48px);
-  line-height:1.06;letter-spacing:-.045em;font-weight:500;margin:0 auto;max-width:24ch}
-.drift-head p{margin:16px auto 0;max-width:46ch;font-size:clamp(16px,1.7vw,19px);
+.drift{padding:var(--s-section) 0 0;overflow:hidden}
+.drift-head{border-top:1px solid var(--line);padding-top:var(--s-rule);
+  text-align:center;margin-bottom:var(--s-head)}
+.drift-head h2{font-family:var(--font-display);font-size:clamp(27px,2.6vw,36px);
+  line-height:1.15;letter-spacing:-.005em;font-weight:500;margin:0 auto;max-width:28ch}
+.drift-head p{margin:var(--s-sub) auto 0;max-width:46ch;font-size:clamp(16px,1.7vw,19px);
   line-height:1.55;color:var(--ink-soft)}
 .drift-rows{display:flex;flex-direction:column;gap:14px;
   /* the rows run past the container and fade, so the field reads as endless */
@@ -1392,23 +1495,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .drift-set:nth-child(2){display:none}
   .drift-row{overflow-x:auto}
 }
-
-/* --- the divided "and more" shelf ----------------------------- */
-.morerow{padding:112px 0 0}
-.morerow-head{position:relative;border-top:1px solid var(--line);padding-top:34px;
-  margin-bottom:38px}
-.morerow-head h2{font-family:var(--font-display);font-size:clamp(22px,2.6vw,31px);
-  line-height:1.1;letter-spacing:-.035em;font-weight:500;margin:0;max-width:24ch}
-.scribble-more{position:absolute;right:2px;top:24px;width:104px;height:40px;
-  fill:none;stroke:var(--emerald);stroke-width:2.1;stroke-linecap:round;
-  transform:rotate(-6deg)}
-.more-grid{list-style:none;margin:0;padding:0;display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr))}
-.more{padding:0 24px;border-left:1px solid var(--line)}
-.more:first-child{border-left:0;padding-left:0}
-.more-mark{display:block;font-size:19px;color:var(--emerald);margin-bottom:12px}
-.more b{display:block;font-size:16.5px;font-weight:500;margin-bottom:8px;color:var(--ink)}
-.more p{margin:0;font-size:14.5px;line-height:1.55;color:var(--muted)}
 
 /* what has not shipped yet, said once, at the end of the features */
 .role-next{padding:88px 0 0}
@@ -1497,19 +1583,13 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .role-scene{padding-top:64px}
   .role-intro{padding:72px 0 0}
   .ess{padding-top:72px}
-  .statrow{padding-top:60px}
-  .stat-grid{grid-template-columns:repeat(2,1fr);gap:28px 0;padding-top:28px}
-  .stat{padding:0 0 0 18px}
-  .stat:nth-child(odd){border-left:0;padding-left:0}
-  .sechead{padding-top:26px;margin-bottom:34px}
-  .tiles-sec,.drift,.morerow{padding-top:72px}
+  :root{--s-section:72px;--s-rule:24px;--s-head:34px;--s-sub:14px;
+    --s-tile-row:44px;--s-cap:18px}
+  .scope-grid{grid-template-columns:1fr;gap:24px 0}
+  .scope{padding:0;border-left:0}
   .tiles{grid-template-columns:1fr;row-gap:44px}
   .tile-wide{grid-column:auto;grid-template-columns:1fr;gap:22px}
   .tile-panel,.tile-wide .tile-panel{aspect-ratio:5/4;padding:18px}
-  .more-grid{grid-template-columns:1fr 1fr;gap:26px 0}
-  .more{padding:0 0 0 18px}
-  .more:nth-child(odd){border-left:0;padding-left:0}
-  .scribble-more{width:74px;top:20px}
   .drift-chip{padding:11px 15px}
   .drift-chip b{font-size:13.5px}
   .drift-chip em{font-size:12px}

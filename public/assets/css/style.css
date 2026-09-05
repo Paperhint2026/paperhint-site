@@ -1589,6 +1589,21 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .v-allot-row.is-open .v-slot{color:var(--p-ink);font-size:0}
 .v-allot-row.is-open .v-slot::after{font-size:13.5px}
 
+/* --- THE REGISTER: scanned, the roll fills, the absence goes home --- */
+.v-reg{display:flex;flex-direction:column;gap:14px;width:100%;max-width:380px}
+.v-reg .tt-grid s{height:36px;font-size:11.5px}
+.v-reg .tt-grid s:nth-child(n+6){opacity:0}
+.tile.in .v-reg .tt-grid s:nth-child(n+6){
+  animation:cell-in 8s cubic-bezier(.34,1.3,.5,1) infinite both;
+  animation-delay:calc(.3s + var(--d) * .14s)}
+.v-reg-sent{display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 14px;border-radius:9px;font-size:12.5px;color:var(--p-soft);
+  border:1px dashed var(--p-line);opacity:0}
+.v-reg-sent i{font-style:normal;color:var(--tint,var(--emerald))}
+.tile.in .v-reg-sent{animation:reg-sent 8s cubic-bezier(.22,1,.36,1) infinite both}
+@keyframes reg-sent{0%,16%{opacity:0;transform:translateY(6px)}
+  22%,84%{opacity:1;transform:none}92%,100%{opacity:0}}
+
 /* --- THE TIMETABLE -> EVERY TEACHER'S CALENDAR --------------------
    Four stages on one 13s clock, because the point is the sequence, not
    the grid: the class and section are chosen, the week configures itself,
@@ -1868,6 +1883,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .tile .v-scan,.tile .v-mig-track{animation:none !important}
   .tile .v-mig-class,.tile .v-mig-class i{animation:none !important;color:var(--p-ink) !important;transform:none !important}
   .tile .v-mig-class .to{display:none}
+  .tile .v-reg .tt-grid s,.tile .v-reg-sent{animation:none !important;opacity:1 !important;transform:none !important}
   .tile .v-scan{display:none}
 }
 

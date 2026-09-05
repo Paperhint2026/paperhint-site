@@ -91,10 +91,15 @@ and shared libraries · teaching notes (through chat) · homework and assignment
 oversight · classes and sections · subjects and books · students · teachers ·
 allotments · school setup.
 
-**Not started (BUILD):** My Schedule · Period Exchange · **Period Log** ·
-Syllabus Tracker · Teacher KPI · Recap Card · School Calendar · **Timetable** ·
-Leave & Substitution · **Notifications & Circulars** · Exam Manager · **Report
-Cards** · **Reports & KPI Dashboard** · batch migration flow.
+**Ships by first onboarding (BUILD):** My Schedule · Period Exchange ·
+**Period Log** · Syllabus Tracker · Teacher KPI · Recap Card · School Calendar
+· **Timetable** · Leave & Substitution · **Notifications & Circulars** · Exam
+Manager · **Report Cards** · **Reports & KPI Dashboard** · batch migration
+flow. *Founder, 2026-09-05: everything in this column is live by the time the
+first school is onboarded, so the site may show it as the product.*
+
+**Phase 2 — after the core day loop, NOT shown on the site:** P2-1 Classwork /
+Quick Quiz · P2-2 PTM One-pager · P2-3 Remedial Follow-up.
 
 Two observations:
 

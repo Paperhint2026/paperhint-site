@@ -206,6 +206,19 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                     </div>
                   </div>
                 )}
+                {kind === 'register' && (
+                  /* the paper register, scanned: the week's roll fills in
+                     cell by cell, then the one absence goes home */
+                  <div class="v-reg">
+                    <div class="tt-grid">
+                      <s>Mon</s><s>Tue</s><s>Wed</s><s>Thu</s><s>Fri</s>
+                      {['44/44','44/44','43/44','44/44','44/44'].map((v, d) => (
+                        <s class={v === '43/44' ? 'c3' : 'c1'} style={`--d:${d}`}>{v}</s>
+                      ))}
+                    </div>
+                    <span class="v-reg-sent"><i aria-hidden="true">&#10003;</i>Wednesday &middot; 1 absence &middot; parent told</span>
+                  </div>
+                )}
                 {kind === 'year' && (
                   /* the whole school moves up: classes run right to left
                      through a lit centre, edges faded */

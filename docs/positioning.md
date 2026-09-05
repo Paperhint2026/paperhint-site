@@ -122,6 +122,14 @@ personal and shared libraries · teaching notes · homework · question papers �
 grading · results · attendance and its oversight · classes and sections ·
 subjects and books · students · teachers · allotments.
 
+
+**What "ships" means, as of 5 September 2026 (founder):** every module in the
+module map's BUILD column is live by the time the first school is onboarded,
+so the site may show it as the product — the timetable included. The line is
+**Phase 2** (Classwork / Quick Quiz, PTM One-pager, Remedial Follow-up): those
+stay off the site until they exist. Check any new claim against
+`docs/modules.md` before it goes on a page.
+
 ## The rules that do not move
 
 1. **Never promise what has not shipped.** The committee role and the student

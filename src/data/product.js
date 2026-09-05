@@ -173,6 +173,7 @@ export const TILE_VISUAL = {
   'Every section staffed, and covered': 'allot',
   'Configure the timetable, and every teacher has a calendar': 'timetable',
   'A new academic year in one move': 'year',
+  'The register you already keep, recorded': 'register',
   'The school\u2019s voice to every home': 'notify',
 };
 
@@ -262,7 +263,7 @@ export const ESSENTIALS = [
   {
     who: 'schools',
     title: 'What a school wants',
-    lead: 'Five things the office does by hand, every year and every day.',
+    lead: 'Six things the office does by hand, every year and every day.',
     items: [
       {
         tag: 'Office copilot', tint: 'orange',
@@ -293,6 +294,15 @@ export const ESSENTIALS = [
         label: 'The school’s voice to every home',
         today: 'Today: a teacher types it into a group, or it goes on a noticeboard at the school.',
         text: 'Homework, marks and absences sent by the school itself, to the address you already have — no app, no group message.',
+      },
+      {
+        /* displaced by the timetable on 2026-09-05 and restored once the
+           founder confirmed the timetable ships; attendance is live today */
+        tag: 'Attendance', tint: 'orange',
+        label: 'The register you already keep, recorded',
+        today: 'Today: paper registers marked in class and retyped by somebody later, if at all.',
+        badge: 'Live today',
+        text: 'Mark the same paper register you always have, scan it in, and an absence reaches home the day it is read.',
       },
     ],
   },

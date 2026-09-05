@@ -1200,9 +1200,11 @@ html.consent-open ask-paperhint{bottom:104px}
 h1.role-h1{max-width:15ch;margin:14px auto 0 0}
 /* the house letter on the role and product pages: the h, italic, GREEN —
    founder's spec. The home h1 keeps its own em treatment. */
-/* Same size, seamless: no bump, no lift. Merriweather italic runs taller
-   than Geist at equal size, so it is set a touch under 1em to sit level. */
-h1.role-h1 em{color:var(--emerald);font-size:.93em;top:0;line-height:0}
+/* Same size, seamless: no bump, no lift. Measured, not eyeballed — at .93em
+   the italic h's ascender still stood 2.7px above the Geist letters beside it
+   (42.5 vs 39.8 at 56px), because Merriweather's ascender is proportionally
+   far taller. .87em is where the two ascenders meet. */
+h1.role-h1 em{color:var(--emerald);font-size:.87em;top:0;line-height:0}
 /* the word around the house letter wraps as a whole or not at all */
 .nb{white-space:nowrap}
 .role-sub{max-width:44ch;margin:20px 0 0;font-size:clamp(17px,1.7vw,20px);

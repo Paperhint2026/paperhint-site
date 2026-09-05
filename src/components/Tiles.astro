@@ -33,7 +33,18 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
           return (
             <article class={`tile reveal ${i === 0 ? 'tile-wide' : ''}`}
                      style={`--tint:var(--${it.tint || 'emerald'})`}>
-              <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'} v-${kind}`}>
+              <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'} v-${kind}`}
+                   data-loop={kind === 'chat' || kind === 'notify' ? '' : undefined}>
+                {(kind === 'chat' || kind === 'notify') && (
+                  <button class="panel-pause" type="button"
+                          aria-label="Pause this animation" aria-pressed="false">
+                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                      <rect class="p-bar" x="6.5" y="5" width="2.6" height="10" rx="1"/>
+                      <rect class="p-bar" x="11" y="5" width="2.6" height="10" rx="1"/>
+                      <path class="p-play" d="M7 4.6 L15.5 10 L7 15.4 Z"/>
+                    </svg>
+                  </button>
+                )}
                 {kind === 'sheets' && (
                   <div class="v-rows">
                     <span><b>Q1</b> Laws of reflection<i>5/5</i></span>
@@ -113,7 +124,6 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
 
               <div class="tile-cap">
                 <h3>{it.label}{it.badge && <span class="beat-badge">{it.badge}</span>}</h3>
-                {it.today && <p class="tile-today">{it.today}</p>}
                 <p set:html={it.text} />
               </div>
             </article>

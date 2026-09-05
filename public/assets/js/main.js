@@ -1511,6 +1511,27 @@
     });
   }
 
+
+  /* ---------------- looping tile panels ----------------
+     Two panels per set run a continuous loop, the way two of Mercury's four
+     tiles do, and each carries a pause control. The animation itself is CSS;
+     this only flips one class and keeps the button's aria-pressed honest. */
+  function initPanelPause() {
+    var buttons = document.querySelectorAll('.panel-pause');
+    for (var i = 0; i < buttons.length; i++) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          var panel = btn.closest('.tile-panel');
+          if (!panel) return;
+          var paused = panel.classList.toggle('is-paused');
+          btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+          btn.setAttribute('aria-label', paused ? 'Play this animation'
+                                                : 'Pause this animation');
+        });
+      })(buttons[i]);
+    }
+  }
+
   function boot() {
     initCtaBanner();
     initTextFloat();   /* before the band engine and reveal */
@@ -1527,6 +1548,7 @@
     initCardTilt();
     initReasonChips();
     initRoleFolder();
+    initPanelPause();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)
        will be slotted in here later; nothing decorative owns the viewport floor. */

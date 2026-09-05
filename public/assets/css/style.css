@@ -1304,14 +1304,17 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   var(--bg-soft);
   --p-ink:var(--ink); --p-soft:var(--ink-soft); --p-mut:var(--muted);
   --p-line:var(--line); --p-card:var(--surface)}
-.tile-cap h3{font-family:var(--font-display);font-size:clamp(19px,2vw,24px);
-  line-height:1.18;letter-spacing:-.03em;font-weight:500;margin:0 0 10px}
-.tile-wide .tile-cap h3{font-size:clamp(24px,2.7vw,33px);max-width:20ch}
-.tile-today{margin:0 0 10px;font-size:13.5px;line-height:1.45;color:var(--muted);
-  padding-left:12px;
-  border-left:2px solid color-mix(in srgb,var(--tint,var(--emerald)) 50%, transparent)}
-.tile-cap p:last-child{margin:0;font-size:16px;line-height:1.6;color:var(--ink-soft)}
-.tile-wide .tile-cap p:last-child{font-size:17px}
+/* Mercury's caption is a label and ONE sentence, and the sentence is set
+   LARGER than body copy — around 19-20px over two or three lines. Mine was a
+   heading, a contrast line and a paragraph in small grey text, which is why
+   the tiles read as dense. The contrast line still exists in the data; it is
+   simply not what a caption is for. */
+.tile-cap h3{font-family:var(--font-display);font-size:clamp(18px,1.7vw,20px);
+  line-height:1.2;letter-spacing:-.015em;font-weight:500;margin:0 0 8px}
+.tile-wide .tile-cap h3{font-size:clamp(21px,2.2vw,26px);max-width:22ch}
+.tile-cap p{margin:0;font-size:clamp(16.5px,1.5vw,19px);line-height:1.42;
+  color:var(--ink-soft);max-width:38ch;text-wrap:pretty}
+.tile-wide .tile-cap p{font-size:clamp(17px,1.6vw,20px);max-width:42ch}
 
 /* the compositions inside a panel — the site's own mini-UI, scaled to lead */
 .tile-panel > *{width:100%}
@@ -1458,6 +1461,53 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .tile .v-year .from,.tile .v-year .to,.tile .v-year .arrow,
   .tile .v-paper-lines s,.tile .v-reg .tt-grid s{
     opacity:1 !important;animation:none !important;transform:none !important}
+}
+
+/* --- the panels that keep going ---------------------------------
+   Two of Mercury's four tiles run a continuous loop and carry a pause
+   control in the corner; the other two are stills. Ours loop where a loop
+   says something true: a conversation continues, and notifications keep
+   arriving. The rest animate once and settle. */
+.tile-panel[data-loop]{position:relative}
+.tile.in .tile-panel[data-loop] .v-chat span{
+  animation:chat-cycle 9s cubic-bezier(.22,1,.36,1) infinite both}
+.tile.in .v-chat span:nth-child(1){animation-delay:0s}
+.tile.in .v-chat span:nth-child(2){animation-delay:.9s}
+.tile.in .v-chat span:nth-child(3){animation-delay:2.4s}
+.tile.in .v-chat span:nth-child(4){animation-delay:3.3s}
+.tile.in .tile-panel[data-loop] .v-notify span{
+  animation:notify-cycle 7.5s cubic-bezier(.22,1,.36,1) infinite both}
+.tile.in .v-notify span:nth-child(1){animation-delay:0s}
+.tile.in .v-notify span:nth-child(2){animation-delay:.7s}
+.tile.in .v-notify span:nth-child(3){animation-delay:1.4s}
+.tile.in .v-notify span:nth-child(4){animation-delay:2.1s}
+/* one class, set by the button, stops everything inside */
+.tile-panel.is-paused *{animation-play-state:paused !important}
+
+@keyframes chat-cycle{
+  0%{opacity:0;transform:translateY(10px)}
+  7%,52%{opacity:1;transform:none}
+  62%,100%{opacity:0;transform:translateY(-8px)}}
+@keyframes notify-cycle{
+  0%{opacity:0;transform:translateY(10px) scale(.96)}
+  9%,58%{opacity:1;transform:none}
+  70%,100%{opacity:0;transform:translateY(-8px) scale(.98)}}
+
+.panel-pause{position:absolute;left:16px;bottom:16px;width:34px;height:34px;
+  border-radius:99px;display:grid;place-items:center;cursor:pointer;
+  background:var(--p-card);border:1px solid var(--p-line);color:var(--p-ink);
+  backdrop-filter:blur(6px);transition:transform .2s,background .2s}
+.panel-pause:hover{transform:scale(1.08)}
+.panel-pause svg{width:17px;height:17px;fill:currentColor}
+.panel-pause .p-play{display:none}
+.panel-pause[aria-pressed="true"] .p-bar{display:none}
+.panel-pause[aria-pressed="true"] .p-play{display:block}
+
+@media (prefers-reduced-motion:reduce){
+  .tile.in .tile-panel[data-loop] .v-chat span,
+  .tile.in .tile-panel[data-loop] .v-notify span{animation:none !important;
+    opacity:1 !important;transform:none !important}
+  .panel-pause{display:none}
 }
 
 /* --- the drifting chip field: the scatter, shown not asserted -- */

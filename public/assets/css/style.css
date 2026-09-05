@@ -1200,7 +1200,11 @@ html.consent-open ask-paperhint{bottom:104px}
 h1.role-h1{max-width:15ch;margin:14px auto 0 0}
 /* the house letter on the role and product pages: the h, italic, GREEN —
    founder's spec. The home h1 keeps its own em treatment. */
-h1.role-h1 em{color:var(--emerald)}
+/* Same size, seamless: no bump, no lift. Merriweather italic runs taller
+   than Geist at equal size, so it is set a touch under 1em to sit level. */
+h1.role-h1 em{color:var(--emerald);font-size:.93em;top:0;line-height:0}
+/* the word around the house letter wraps as a whole or not at all */
+.nb{white-space:nowrap}
 .role-sub{max-width:44ch;margin:20px 0 0;font-size:clamp(17px,1.7vw,20px);
   line-height:1.5;color:var(--ink-soft)}
 .role-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}

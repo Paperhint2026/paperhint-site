@@ -8,6 +8,7 @@
  *
  * Content is src/data/product.js, lifted from docs/feature-list.md.
  */
+import HouseLetter from '../components/HouseLetter.astro';
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -26,7 +27,7 @@ const internal = process.env.VERCEL_ENV !== 'production';
 <header class="role-hero">
   <div class="wrap wrap-read">
     <span class="tagline"><span class="tag">{p.kicker}</span> Paperhint <i>·</i></span>
-    <h1 class="display role-h1">{p.h1[0]}<em>{p.h1[1]}</em>{p.h1[2]}</h1>
+    <HouseLetter class="display role-h1" parts={p.h1} />
     <p class="role-sub">{p.sub}</p>
     <div class="role-cta">
       <a class="btn btn-primary btn-lg" href="/contact?type=demo">Book a demo</a>

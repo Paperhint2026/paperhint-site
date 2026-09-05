@@ -12,6 +12,7 @@
  * Content comes from src/data/roles.js and src/data/product.js. Nothing is
  * authored here.
  */
+import HouseLetter from '../components/HouseLetter.astro';
 import Tiles from '../components/Tiles.astro';
 import ChipDrift from '../components/ChipDrift.astro';
 import { ROLES } from '../data/roles.js';
@@ -47,7 +48,7 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
 <header class="role-hero">
   <div class="wrap wrap-read">
     <span class="tagline"><span class="tag">{r.kicker}</span> Paperhint <i>·</i></span>
-    <h1 class="display role-h1">{r.h1[0]}<em>{r.h1[1]}</em>{r.h1[2]}</h1>
+    <HouseLetter class="display role-h1" parts={r.h1} />
     <p class="role-sub">{r.sub}</p>
     {r.thin && <p class="role-soon">More on this soon</p>}
     {internal && r.needs && (

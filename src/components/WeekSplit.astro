@@ -10,7 +10,6 @@
  * with the section. It is not a footnote to be quietly dropped.
  */
 import { WEEK as w } from '../data/product.js';
-const other = Math.round((w.total - w.teaching) * 10) / 10;
 const pct = n => (n / w.total) * 100;
 ---
 <section class="week">
@@ -20,15 +19,8 @@ const pct = n => (n / w.total) * 100;
       <h2 class="sechead-h">{w.title}<span class="sechead-turn">{w.turn}</span></h2>
     </div>
 
-    <div class="week-bar reveal" role="img"
-         aria-label={`Of a ${w.total} hour working week, ${w.teaching} hours are teaching and ${other} hours are everything else.`}>
-      <span class="wb-seg wb-teach" style={`--w:${pct(w.teaching)}%`}>
-        <b>{w.teaching}h</b><i>Teaching</i>
-      </span>
-      <span class="wb-seg wb-other" style={`--w:${pct(other)}%`}>
-        <b>{other}h</b><i>Everything else</i>
-      </span>
-    </div>
+    {/* no bar: the headline already carries 22.7, 41 and 18, so drawing them
+        again underneath said the same thing twice */}
 
     <ol class="week-parts">
       {w.parts.map((p, i) => (

@@ -1291,27 +1291,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .week-kicker{display:block;font-size:11.5px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--emerald);margin-bottom:14px}
 /* the week as one bar: teaching, then everything else */
-/* One bar, not two cards side by side: the point is a single week divided,
-   and two rounded panels with a gap between them read as two things. */
-.week-bar{display:flex;height:104px;margin-bottom:44px;border-radius:12px;
-  overflow:hidden;border:1px solid var(--line)}
-/* flex:0 0 --w, not width: as plain flex items these were sized by their
-   content and the bar read 77/23 instead of the true 55/45. */
-.wb-seg{flex:0 0 var(--w);min-width:0;padding:16px 18px;
-  display:flex;flex-direction:column;justify-content:flex-end;gap:2px;
-  overflow:hidden;transform-origin:left center}
-.reveal.in .wb-seg{animation:wb-grow .9s cubic-bezier(.22,1,.36,1) both}
-.reveal.in .wb-seg:nth-child(2){animation-delay:.14s}
-@keyframes wb-grow{from{transform:scaleX(.02)}to{transform:none}}
-.wb-seg b{font-family:var(--font-display);font-size:clamp(22px,2.6vw,32px);
-  font-weight:500;letter-spacing:-.035em;line-height:1}
-.wb-seg i{font-style:normal;font-size:13px}
-.wb-teach{background:var(--bg-soft);color:var(--ink)}
-.wb-teach i{color:var(--muted)}
-.wb-other{background:linear-gradient(155deg,#111A15,#0A0F0C 70%);color:#F2EEE3}
-.wb-other b{color:var(--emerald)}
-.wb-other i{color:#8B968D}
-
 /* the three components of "everything else", and what carries each */
 .week-parts{list-style:none;margin:0;padding:0;display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}
@@ -1324,7 +1303,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .wp-track{display:block;height:3px;border-radius:99px;background:var(--line)}
 .wp-track i{display:block;height:100%;width:var(--w);border-radius:99px;
   background:var(--emerald);transform-origin:left center}
-.reveal.in .wp-track i{animation:wb-grow .8s cubic-bezier(.22,1,.36,1) both;
+@keyframes track-grow{from{transform:scaleX(.02)}to{transform:none}}
+.reveal.in .wp-track i{animation:track-grow .8s cubic-bezier(.22,1,.36,1) both;
   animation-delay:calc(.3s + var(--i) * .1s)}
 .week-part p{margin:0;font-size:14.5px;line-height:1.55;color:var(--muted)}
 
@@ -1336,7 +1316,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .week-source a:hover{color:var(--ink-soft)}
 
 @media (prefers-reduced-motion:reduce){
-  .reveal.in .wb-seg,.reveal.in .wp-track i{animation:none}
+  .reveal.in .wp-track i{animation:none}
 }
 
 /* --- image-led tiles: the panel IS the tile ------------------- */
@@ -1902,10 +1882,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .cta{padding-top:56px}
   .week{padding-top:var(--s-section)}
   /* the bar stays a bar on a phone; only the type shrinks */
-  .week-bar{height:88px;margin-bottom:30px}
-  .wb-seg{padding:12px}
-  .wb-seg b{font-size:20px}
-  .wb-seg i{font-size:11px}
   .week-parts{grid-template-columns:1fr;gap:22px}
   .scope-grid{grid-template-columns:1fr;gap:24px 0}
   .scope{padding:0;border-left:0}

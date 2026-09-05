@@ -1352,20 +1352,25 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .tile-panel{border-radius:16px;overflow:hidden;padding:26px;
   aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
 .tile-wide .tile-panel{aspect-ratio:16/11}
-.panel-dark{background:linear-gradient(155deg,#111A15,#0A0F0C 62%);
-  --p-ink:#F2EEE3; --p-soft:#C4CCC2; --p-mut:#8B968D; --p-line:rgba(242,238,227,.14);
-  --p-card:rgba(242,238,227,.055)}
-.panel-light{background:
-  radial-gradient(120% 100% at 12% 0%,
-    color-mix(in srgb,var(--tint,var(--emerald)) 15%, transparent), transparent 62%),
-  var(--bg-soft);
-  --p-ink:var(--ink); --p-soft:var(--ink-soft); --p-mut:var(--muted);
-  --p-line:var(--line); --p-card:var(--surface)}
-/* Mercury's caption is a label and ONE sentence, and the sentence is set
-   LARGER than body copy — around 19-20px over two or three lines. Mine was a
-   heading, a contrast line and a paragraph in small grey text, which is why
-   the tiles read as dense. The contrast line still exists in the data; it is
-   simply not what a caption is for. */
+/* ONE GROUND FOR EVERY PANEL — the founder's call after seeing the two
+   white ones: all cards light. Variety now comes from each tile's own
+   --tint bleeding into the gradient rather than from alternating dark and
+   light, which also means the compositions inside need only one token set. */
+.tile-panel{
+  background:
+    radial-gradient(105% 82% at 6% 0%,
+      color-mix(in srgb,var(--tint,var(--emerald)) 22%, transparent), transparent 58%),
+    radial-gradient(95% 75% at 96% 96%,
+      color-mix(in srgb,var(--violet) 13%, transparent), transparent 62%),
+    linear-gradient(168deg,#FFFFFF,#F7F5EE 82%);
+  --p-ink:#10201A; --p-soft:#3D4F47; --p-mut:#6B7A72;
+  --p-line:rgba(16,32,26,.12); --p-card:#FFFFFF; --p-shade:#FBFAF6;
+  border:1px solid rgba(16,32,26,.08)}
+/* In the dark theme the cards stay light on purpose: they are product
+   surfaces, and a screenshot of the app would not invert either. Only the
+   frame around them changes. */
+[data-theme="dark"] .tile-panel{border-color:rgba(242,238,227,.1)}
+
 .tile-cap h3{font-family:var(--font-display);font-size:clamp(18px,1.7vw,20px);
   line-height:1.2;letter-spacing:-.015em;font-weight:500;margin:0 0 8px}
 .tile-wide .tile-cap h3{font-size:clamp(21px,2.2vw,26px);max-width:22ch}
@@ -1648,9 +1653,17 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
    its place. Everything outside the centre is dulled by two shades laid
    over the track, so whichever class is centred is the only bright one
    without needing to know which class that is. */
+/* Immersive: the row runs to the CARD's own edges and dissolves there, so
+   the classes arrive out of the gradient rather than out of a window inset
+   inside it. The panel drops its horizontal padding for this one kind and
+   the note puts its own back. A mask does the fading — it fades to the card
+   itself, which two opaque shades could only imitate. */
+.tile-panel.v-year{padding-left:0;padding-right:0}
 .v-migrate{position:relative;width:100%;display:flex;flex-direction:column;
   gap:14px;overflow:hidden}
-.v-mig-window{position:relative;overflow:hidden}
+.v-mig-window{position:relative;overflow:hidden;
+  mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%)}
 .v-mig-track{display:flex;gap:14px;width:max-content}
 .tile.in .v-mig-track{animation:migrate 11s cubic-bezier(.6,0,.2,1) infinite both}
 /* five holds and five moves: the pause is the point */
@@ -1661,60 +1674,70 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   60%,74%{transform:translateX(-30%)}
   80%,94%{transform:translateX(-40%)}
   100%{transform:translateX(-50%)}}
+/* The moving grades sit back: light ink, so the row reads as a queue the
+   eye passes over rather than five competing headlines. The shades either
+   side and the soft centre light do the focusing. */
 .v-mig-class{flex:none;min-width:96px;padding:20px 14px;border-radius:12px;
   text-align:center;font-family:var(--font-display);font-size:24px;font-weight:500;
-  letter-spacing:-.03em;color:var(--p-ink);
+  letter-spacing:-.03em;color:color-mix(in srgb,var(--p-ink) 42%, transparent);
   background:var(--p-card);border:1px solid var(--p-line)}
-/* the two shades that dull everything off-centre */
-.v-mig-shade{position:absolute;top:0;bottom:0;width:34%;pointer-events:none;z-index:2}
-.v-mig-shade.l{left:0;background:linear-gradient(90deg,
-  var(--p-shade) 44%, color-mix(in srgb,var(--p-shade) 0%, transparent))}
-.v-mig-shade.r{right:0;background:linear-gradient(270deg,
-  var(--p-shade) 44%, color-mix(in srgb,var(--p-shade) 0%, transparent))}
-.panel-dark{--p-shade:#0C120E}
-.panel-light{--p-shade:var(--bg-soft)}
-/* the lit frame the class steps into */
-.v-mig-centre{position:absolute;left:50%;top:50%;width:112px;height:70px;
-  transform:translate(-50%,-50%);border-radius:14px;pointer-events:none;z-index:3;
-  border:1.5px solid color-mix(in srgb,var(--tint,var(--emerald)) 75%,transparent);
-  box-shadow:0 0 30px color-mix(in srgb,var(--tint,var(--emerald)) 34%,transparent)}
-.v-mig-note{font-size:11.5px;color:var(--p-mut);text-align:center}
+/* No frame: a drawn box was the obvious, cheaper version of the idea. What
+   focuses the centre is the edge fade plus this soft light behind it. */
+.v-mig-centre{position:absolute;left:50%;top:50%;width:170px;height:120px;
+  transform:translate(-50%,-50%);pointer-events:none;z-index:0;border-radius:50%;
+  background:radial-gradient(closest-side,
+    color-mix(in srgb,var(--tint,var(--emerald)) 26%,transparent), transparent 78%)}
+.v-mig-note{font-size:11.5px;color:var(--p-mut);text-align:center;padding:0 26px}
 
 /* --- THE PARENT'S PHONE, zoomed to the notch --------------------
    Not a whole handset: the top of the screen only, so the notification
    is the subject rather than a detail on a small rectangle. One at a
    time, dropping from under the notch, carrying our own mark. */
-.v-notch{width:100%;max-width:340px;margin:0 auto;border-radius:26px 26px 14px 14px;
-  padding:10px 12px 20px;overflow:hidden;
-  border:6px solid #141916;border-bottom:0;
+/* Docked, not centred: the panel bottom-aligns this one and the handset
+   runs off the bottom edge, so it reads as a phone cropped by the card
+   rather than a small rectangle floating in the middle. It is as wide as
+   the panel allows, which makes the notification the subject. */
+/* Docked by position rather than by flex: align-items could not beat the
+   panel's own centring reliably, and absolute placement is what "cropped by
+   the card" actually means anyway — the handset runs past the bottom edge
+   and the panel's overflow does the cutting. */
+.tile-panel.v-notify{position:relative;align-items:flex-end;padding:0}
+/* A black handset standing on the light card, cropped by the card's own
+   bottom edge. Taller than before so it reads as a phone rather than a
+   strip, and its screen keeps a wallpaper — the notification has to sit on
+   something for the glass to mean anything. */
+.v-notch{position:absolute;left:26px;right:26px;bottom:0;width:auto;margin:0;
+  border-radius:34px 34px 0 0;padding:18px 16px 40px;overflow:hidden;
+  border:9px solid #0D1310;border-bottom:0;
   background:
-    radial-gradient(120% 90% at 20% 0%, rgba(124,92,255,.5), transparent 60%),
-    radial-gradient(110% 80% at 84% 18%, rgba(11,138,92,.55), transparent 62%),
-    linear-gradient(170deg,#22334E,#101A16 76%);
-  box-shadow:0 20px 46px -16px rgba(0,0,0,.62)}
-.v-notch-top{display:flex;align-items:center;gap:10px;padding:0 6px 12px}
-.v-notch-time{font-size:12.5px;font-weight:500;color:#fff;min-width:34px}
-.v-notch-pill{flex:1;max-width:86px;height:19px;border-radius:99px;
-  background:#0A0D0B;margin:0 auto}
+    radial-gradient(130% 95% at 16% 0%, rgba(124,92,255,.5), transparent 62%),
+    radial-gradient(120% 85% at 88% 14%, rgba(11,138,92,.55), transparent 64%),
+    linear-gradient(172deg,#22334E,#0D1611 78%);
+  box-shadow:0 24px 52px -18px rgba(16,32,26,.5)}
+.v-notch-top{display:flex;align-items:center;gap:12px;padding:2px 8px 24px}
+.v-notch-time{font-size:16px;font-weight:500;color:#fff;min-width:44px}
+.v-notch-pill{flex:1;max-width:110px;height:26px;border-radius:99px;
+  background:#080B09;margin:0 auto}
 .v-notch-status{display:flex;align-items:center;gap:4px;min-width:34px;
   justify-content:flex-end}
-.v-notch-status i{width:5px;height:5px;border-radius:99px;background:rgba(255,255,255,.75)}
-.v-notch-status i.batt{width:16px;height:8px;border-radius:2px;
+.v-notch-status i{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.75)}
+.v-notch-status i.batt{width:19px;height:10px;border-radius:3px;
   border:1px solid rgba(255,255,255,.6);background:transparent}
 /* one slot, three messages taking turns in it */
-.v-notch-stack{position:relative;height:74px}
-.v-note{position:absolute;inset:0;display:flex;gap:9px;padding:11px 12px;
-  border-radius:15px;background:rgba(255,255,255,.17);
-  backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);
+.v-notch-stack{position:relative;height:104px}
+.v-note{position:absolute;inset:0;display:flex;gap:12px;padding:15px 16px;
+  border-radius:20px;background:rgba(255,255,255,.19);
+  backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.24);
   opacity:0}
-.v-note-app{width:26px;height:26px;border-radius:8px;flex:none;display:grid;
-  place-items:center;background:var(--emerald);color:#06120C}
-.v-note-app svg{width:15px;height:15px}
+/* the rosette rides white on the emerald tile, not dark */
+.v-note-app{width:34px;height:34px;border-radius:10px;flex:none;display:grid;
+  place-items:center;background:var(--emerald);color:#fff}
+.v-note-app svg{width:20px;height:20px}
 .v-note-body{min-width:0}
 .v-note-head{display:flex;align-items:baseline;gap:7px;margin-bottom:2px}
-.v-note-head b{font-size:10.5px;font-weight:500;color:#fff}
-.v-note-head em{font-style:normal;font-size:9.5px;color:rgba(255,255,255,.6)}
-.v-note-line{display:block;font-size:11px;line-height:1.4;color:rgba(255,255,255,.9)}
+.v-note-head b{font-size:13px;font-weight:500;color:#fff}
+.v-note-head em{font-style:normal;font-size:11.5px;color:rgba(255,255,255,.62)}
+.v-note-line{display:block;font-size:13.5px;line-height:1.42;color:rgba(255,255,255,.9)}
 .tile.in .v-note{animation:note-drop 10.5s cubic-bezier(.22,1,.36,1) infinite both;
   animation-delay:calc(var(--n) * 3.5s)}
 @keyframes note-drop{
@@ -1883,7 +1906,9 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
   /* the parent's phone was taller than the panel on a 390 viewport */
-  .v-notch{max-width:290px;border-width:5px}
+  .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 30px}
+  .v-notch-stack{height:84px}
+  .v-note-line{font-size:12.5px}
   .ess-card{padding:22px 20px 24px}
   .role-intro::after{margin-top:44px}
   .role-next{padding-top:56px}

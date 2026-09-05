@@ -33,7 +33,7 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
           return (
             <article class={`tile reveal ${i === 0 ? 'tile-wide' : ''}`}
                      style={`--tint:var(--${it.tint || 'emerald'})`}>
-              <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'} v-${kind}`}>
+              <div class={`tile-panel v-${kind}`}>
                 {kind === 'sheets' && (
                   /* the sheet is photographed, a scan sweeps it, then each
                      answer is scored in the margin and the total lands */
@@ -166,8 +166,6 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                      through a lit centre, edges faded */
                   <div class="v-migrate">
                     <div class="v-mig-window">
-                      <span class="v-mig-shade l" aria-hidden="true"></span>
-                      <span class="v-mig-shade r" aria-hidden="true"></span>
                       <div class="v-mig-centre" aria-hidden="true"></div>
                       <div class="v-mig-track">
                       {['VI-A','VII-A','VIII-A','IX-A','X-A','VI-A','VII-A','VIII-A','IX-A','X-A'].map(c => (

@@ -86,7 +86,7 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
             {mine.map((f, i) => (
               <article class={`tile reveal ${i === 0 ? 'tile-wide' : ''}`}
                        style={`--tint:var(--${['emerald','violet','orange','yellow'][i % 4]})`}>
-                <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'}`}>
+                <div class="tile-panel">
                   <div class="v-rows">
                     <span><b>&#10003;</b>{tabFor(f)}<i>live</i></span>
                     <span class="sum"><b>&#8721;</b>Recorded to the student<i>&#10003;</i></span>

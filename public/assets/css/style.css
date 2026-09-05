@@ -1607,45 +1607,79 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .v-allot-row.is-open .v-slot{color:var(--p-ink);font-size:0}
 .v-allot-row.is-open .v-slot::after{font-size:13.5px}
 
-/* --- THE TIMETABLE: built once in the office, published to every
-       teacher's day. Subjects fill the grid period by period, then the
-       publish button fires and the confirmation takes its place. ----- */
-.v-tt{display:flex;flex-direction:column;gap:12px;width:100%}
-.v-tt-grid{display:grid;grid-template-columns:24px repeat(5,minmax(0,1fr));gap:4px}
-.v-tt-grid .hd,.v-tt-grid .pd{font-size:10px;letter-spacing:.06em;color:var(--p-mut);
-  display:grid;place-items:center;height:18px}
-.v-tt-grid .cell{height:25px;border-radius:5px;display:grid;place-items:center;
-  font-size:10px;font-weight:500;opacity:0;
-  background:color-mix(in srgb,var(--tint,var(--emerald)) 15%,transparent);
-  color:var(--tint,var(--emerald))}
-/* each subject keeps its own colour, so the week reads as a timetable
-   rather than as a heat map */
+/* --- THE TIMETABLE -> EVERY TEACHER'S CALENDAR --------------------
+   Four stages on one 13s clock, because the point is the sequence, not
+   the grid: the class and section are chosen, the week configures itself,
+   Schedule is pressed ONCE, and then a single teacher's calendar fills
+   with the periods that belong to them. The last stage is the argument. */
+.v-sched{position:relative;display:flex;flex-direction:column;gap:11px;width:100%}
+
+/* stage 1 — the class and section this timetable is for */
+.v-sched-pick{display:flex;gap:7px;flex-wrap:wrap}
+.vs-field{font-size:11.5px;padding:5px 11px;border-radius:99px;
+  background:var(--p-card);border:1px solid var(--p-line);color:var(--p-mut);
+  opacity:0}
+.vs-field b{color:var(--p-ink);font-weight:500;margin-left:4px}
+.vs-term{color:var(--tint,var(--emerald));
+  border-color:color-mix(in srgb,var(--tint,var(--emerald)) 45%,transparent)}
+.tile.in .vs-field{animation:vs-pick 13s cubic-bezier(.34,1.4,.5,1) infinite both}
+.tile.in .vs-field:nth-child(2){animation-delay:.35s}
+.tile.in .vs-field:nth-child(3){animation-delay:.7s}
+@keyframes vs-pick{0%{opacity:0;transform:translateY(6px) scale(.94)}
+  4%,62%{opacity:1;transform:none}70%,100%{opacity:0;transform:scale(.97)}}
+
+/* stage 2 — the week fills in */
+.v-tt-grid{display:grid;grid-template-columns:22px repeat(5,minmax(0,1fr));gap:4px}
+.v-tt-grid .hd,.v-tt-grid .pd{font-size:9.5px;letter-spacing:.06em;color:var(--p-mut);
+  display:grid;place-items:center;height:16px}
+.v-tt-grid .cell{height:23px;border-radius:5px;display:grid;place-items:center;
+  font-size:9.5px;font-weight:500;opacity:0}
 .v-tt-grid .s-phy{background:color-mix(in srgb,var(--emerald) 17%,transparent);color:var(--emerald)}
 .v-tt-grid .s-mat{background:color-mix(in srgb,var(--violet) 20%,transparent);color:var(--violet)}
-.v-tt-grid .s-eng{background:color-mix(in srgb,var(--orange) 20%,transparent);color:var(--orange)}
-.v-tt-grid .s-che{background:color-mix(in srgb,var(--yellow) 22%,transparent);color:var(--yellow)}
-.v-tt-grid .s-bio{background:color-mix(in srgb,var(--p-ink) 12%,transparent);color:var(--p-soft)}
+.v-tt-grid .s-eng{background:color-mix(in srgb,var(--orange) 22%,transparent);color:#B4611E}
+.v-tt-grid .s-che{background:color-mix(in srgb,var(--yellow) 30%,transparent);color:#8A6A0E}
+.v-tt-grid .s-bio{background:color-mix(in srgb,var(--p-ink) 10%,transparent);color:var(--p-soft)}
 .tile.in .v-tt-grid .cell{
-  animation:cell-in 9s cubic-bezier(.34,1.3,.5,1) infinite both;
-  animation-delay:calc((var(--p) * 5 + var(--d)) * .045s)}
+  animation:cell-in 13s cubic-bezier(.34,1.3,.5,1) infinite both;
+  animation-delay:calc(1s + (var(--p) * 5 + var(--d)) * .035s)}
 @keyframes cell-in{0%{opacity:0;transform:scale(.82)}
-  8%,86%{opacity:1;transform:none}94%,100%{opacity:0;transform:scale(.94)}}
+  4%,54%{opacity:1;transform:none}62%,100%{opacity:0;transform:scale(.94)}}
 
-/* the one click, and what it lands on */
-.v-tt-publish{position:relative;height:30px}
-.v-tt-btn,.v-tt-done{position:absolute;inset:0;display:grid;place-items:center;
+/* stage 3 — the one click */
+.v-sched-act{position:relative;height:29px}
+.vs-btn,.vs-done{position:absolute;inset:0;display:grid;place-items:center;
   border-radius:8px;font-size:11.5px}
-.v-tt-btn{background:var(--tint,var(--emerald));color:#08130D;font-weight:500}
-.v-tt-done{border:1px dashed var(--p-line);color:var(--p-soft);opacity:0}
-.tile.in .v-tt-btn{animation:pub-press 9s cubic-bezier(.34,1.4,.5,1) infinite both}
-.tile.in .v-tt-done{animation:pub-done 9s cubic-bezier(.22,1,.36,1) infinite both}
-@keyframes pub-press{0%,42%{opacity:1;transform:none}
-  46%{opacity:1;transform:scale(.95)}
-  52%,88%{opacity:0;transform:scale(.98)}
-  96%,100%{opacity:1;transform:none}}
-@keyframes pub-done{0%,48%{opacity:0;transform:translateY(5px)}
-  56%,86%{opacity:1;transform:none}
-  92%,100%{opacity:0;transform:translateY(3px)}}
+.vs-btn{background:var(--tint,var(--emerald));color:#08130D;font-weight:500}
+.vs-done{border:1px dashed var(--p-line);color:var(--p-soft);opacity:0}
+.tile.in .vs-btn{animation:vs-press 13s cubic-bezier(.34,1.4,.5,1) infinite both}
+.tile.in .vs-done{animation:vs-ok 13s cubic-bezier(.22,1,.36,1) infinite both}
+@keyframes vs-press{0%,40%{opacity:1;transform:none}
+  44%{opacity:1;transform:scale(.94)}
+  49%,92%{opacity:0;transform:scale(.98)}98%,100%{opacity:1;transform:none}}
+@keyframes vs-ok{0%,46%{opacity:0;transform:translateY(5px)}
+  53%,90%{opacity:1;transform:none}95%,100%{opacity:0}}
+
+/* stage 4 — one teacher's own calendar, over the top */
+.v-cal{position:absolute;inset:auto 0 0 0;display:flex;flex-direction:column;gap:5px;
+  padding:13px;border-radius:13px;background:var(--p-card);
+  border:1px solid color-mix(in srgb,var(--tint,var(--emerald)) 38%,transparent);
+  box-shadow:0 18px 36px -14px rgba(16,32,26,.3);opacity:0}
+.tile.in .v-cal{animation:cal-in 13s cubic-bezier(.22,1,.36,1) infinite both}
+@keyframes cal-in{0%,56%{opacity:0;transform:translateY(16px)}
+  62%,90%{opacity:1;transform:none}95%,100%{opacity:0;transform:translateY(8px)}}
+.v-cal-head{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.v-cal-head b{font-size:12.5px;font-weight:500;color:var(--p-ink)}
+.v-cal-head em{font-style:normal;font-size:11px;color:var(--p-mut)}
+.v-cal-slot{display:flex;align-items:center;gap:9px;font-size:11.5px;
+  padding:6px 9px;border-radius:7px;color:var(--p-soft);
+  background:color-mix(in srgb,var(--tint,var(--emerald)) 11%,transparent)}
+.v-cal-slot i{font-style:normal;font-size:9.5px;color:var(--p-mut);min-width:16px}
+.v-cal-slot.free{background:transparent;border:1px dashed var(--p-line);
+  color:var(--p-mut)}
+.tile.in .v-cal-slot{animation:slot-in 13s cubic-bezier(.34,1.3,.5,1) infinite both;
+  animation-delay:calc(var(--s) * .09s)}
+@keyframes slot-in{0%,58%{opacity:0;transform:translateX(-8px)}
+  64%,90%{opacity:1;transform:none}95%,100%{opacity:0}}
 
 /* --- THE YEAR: the school moves up, one class at a time ----------
    Stepped, not continuous: a class arrives at the centre, holds long

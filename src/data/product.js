@@ -167,7 +167,7 @@ export const TILE_VISUAL = {
   'Homework set, and home already told': 'notify',
   'An office that runs on asking': 'portal',
   'Every section staffed, and covered': 'allot',
-  'One timetable, on every teacher\u2019s day': 'timetable',
+  'Configure the timetable, and every teacher has a calendar': 'timetable',
   'A new academic year in one move': 'year',
   'The school\u2019s voice to every home': 'notify',
 };
@@ -274,9 +274,9 @@ export const ESSENTIALS = [
       },
       {
         tag: 'Timetable', tint: 'yellow',
-        label: 'One timetable, on every teacher’s day',
+        label: 'Configure the timetable, and every teacher has a calendar',
         today: 'Today: a wall chart in the office, and forty teachers copying their own row into a diary.',
-        text: 'The office builds the week once and publishes it. Every teacher opens their own day already laid out, and a change in the office is a change on their screen.',
+        text: 'Pick the class and section, set the week, and schedule it once. Every teacher’s calendar fills with the periods that are theirs — and a change in the office is a change on their day.',
       },
       {
         tag: 'The academic year', tint: 'violet',

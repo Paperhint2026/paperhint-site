@@ -132,9 +132,17 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                   </div>
                 )}
                 {kind === 'timetable' && (
-                  /* the timetable module: the office builds the grid, hits
-                     publish once, and it lands on every teacher's day */
-                  <div class="v-tt">
+                  /* four stages on one clock: the class and section are
+                     chosen, the week is configured, Schedule is pressed
+                     once, and a teacher's own calendar fills with the
+                     periods that belong to them */
+                  <div class="v-sched">
+                    <div class="v-sched-pick">
+                      <span class="vs-field">Class <b>IX</b></span>
+                      <span class="vs-field">Section <b>A</b></span>
+                      <span class="vs-field vs-term">Term 2</span>
+                    </div>
+
                     <div class="v-tt-grid">
                       <span class="hd"></span>
                       <span class="hd">Mon</span><span class="hd">Tue</span><span class="hd">Wed</span>
@@ -144,7 +152,6 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                         ['Mat', 'Eng', 'Phy', 'Che', 'Mat'],
                         ['Eng', 'Bio', 'Mat', 'Eng', 'Phy'],
                         ['Che', 'Phy', 'Bio', 'Mat', 'Eng'],
-                        ['Bio', 'Che', 'Che', 'Bio', 'Che'],
                       ].map((row, p) => (
                         <>
                           <span class="pd">P{p + 1}</span>
@@ -155,9 +162,19 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                         </>
                       ))}
                     </div>
-                    <div class="v-tt-publish">
-                      <span class="v-tt-btn">Publish</span>
-                      <span class="v-tt-done">Every teacher’s day updated &middot; 32 teachers</span>
+
+                    <div class="v-sched-act">
+                      <span class="vs-btn">Schedule to teachers</span>
+                      <span class="vs-done">Scheduled &middot; 32 calendars updated</span>
+                    </div>
+
+                    {/* what one teacher opens afterwards */}
+                    <div class="v-cal">
+                      <span class="v-cal-head"><b>R. Nair</b><em>Thursday</em></span>
+                      <span class="v-cal-slot" style="--s:0"><i>P1</i>IX&#8209;A &middot; Physics</span>
+                      <span class="v-cal-slot" style="--s:1"><i>P2</i>VIII&#8209;B &middot; Physics</span>
+                      <span class="v-cal-slot free" style="--s:2"><i>P3</i>Free</span>
+                      <span class="v-cal-slot" style="--s:3"><i>P4</i>IX&#8209;A &middot; Physics</span>
                     </div>
                   </div>
                 )}

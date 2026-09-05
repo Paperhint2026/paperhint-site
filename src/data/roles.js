@@ -26,6 +26,14 @@ function beats(bullets) {
 const PAGES = {
   teachers: {
     story: 'teacher',
+    /* The grand intro: the whole case for this role in two moves — what a
+       week actually contains, then what Paperhint is inside it. It replaces
+       the old scene + Monday-to-Friday beats, which read as a diary. */
+    intro: {
+      statement: 'A teaching week has about six hours of teaching in it, and a great deal else.',
+      turn: 'Now the else is already done when you get there.',
+      answer: 'Notes for the next chapter. A paper to set. Forty answer sheets in a bag. A register to record, homework to follow up, parents to tell. Paperhint is an assistant at your desk that carries all of it alongside you — so the hours in front of a class are the ones you spend preparing for.',
+    },
     needs: ['Headline and standfirst', 'Closing line', 'A product screenshot per beat',
             'A quote from a real teacher, for this page'],
     cta: { heading: 'Let’s give your teachers their week back',
@@ -57,6 +65,11 @@ const PAGES = {
 
   schools: {
     story: 'admin',
+    intro: {
+      statement: 'A school year is assembled by hand every June, and held together by memory for the ten months after it.',
+      turn: 'Now the year runs, and the office plans it.',
+      answer: 'Last year\u2019s lists become this year\u2019s. Every section needs a teacher. Books have to reach the right departments, registers have to be kept, and every message home is typed by somebody. Paperhint runs the structure, the staffing and the follow-through from one place \u2014 so the office plans the year instead of assembling it.',
+    },
     needs: ['Headline and standfirst', 'Closing line',
             'A screenshot of the allotment board and the admin portal',
             'A quote from a real school office or principal, for this page'],
@@ -96,6 +109,11 @@ const PAGES = {
 
   parents: {
     story: 'parent',
+    intro: {
+      statement: 'You usually hear about school late \u2014 the test after it happened, the homework once it is already overdue.',
+      turn: 'Now you hear on the day it happens.',
+      answer: 'The noticeboard is at the school. The group message arrives when a teacher finds a moment to write it. Paperhint sends it from the school itself, on the day: homework the moment it is set, an absence the day the register is read, marks when the teacher has checked and shared them.',
+    },
     needs: ['Headline and standfirst', 'Closing line',
             'An example of what a parent actually receives',
             'A quote from a real parent, for this page'],
@@ -124,6 +142,11 @@ const PAGES = {
 
   students: {
     story: null,                               /* no approved narrative yet */
+    intro: {
+      statement: 'A paper comes back with a number in red at the top, and the number is all it tells you.',
+      turn: 'Now the paper tells you what actually happened.',
+      answer: 'Not which questions cost you the marks, not whether the person beside you was read the same way, not whether the thing you got wrong is the thing you got wrong last term. Paperhint scores every answer against the same rubric for the whole class, a teacher approves it, and the result joins a record that builds exam over exam.',
+    },
     nav: 'Students',
     kicker: 'FOR STUDENTS',
     h1: ['Your work, ', 'r', 'ecorded properly'],               /* DRAFT */

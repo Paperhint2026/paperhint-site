@@ -1192,11 +1192,122 @@ h1.role-h1{max-width:15ch;margin:14px auto 0 0}
 h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   line-height:1.1;letter-spacing:-.04em;font-weight:500;max-width:22ch;margin:0 0 34px}
 
-/* the scene: the one paragraph everybody reads, set as a statement */
+/* the scene: the one paragraph everybody reads, set as a statement.
+   Still used by the pages that are not a role or the product. */
 .role-scene{padding:110px 0 0}
 .scene-text{max-width:26ch;font-family:var(--font-display);
   font-size:clamp(24px,3.2vw,40px);line-height:1.16;letter-spacing:-.04em;
   font-weight:500;color:var(--ink);margin:0}
+
+/* THE GRAND INTRO — the whole second movement of a role or product page.
+   Two paragraphs and a lot of air: the statement in display type at the
+   scale of a section heading, then the resolving paragraph set at reading
+   size beside it. The measure is deliberately different for the two, so the
+   eye lands on the statement first and then drops into the answer. */
+.role-intro{padding:132px 0 8px}
+.intro-statement{max-width:20ch;font-family:var(--font-display);
+  font-size:clamp(30px,4.6vw,56px);line-height:1.06;letter-spacing:-.045em;
+  font-weight:500;color:var(--ink);margin:0}
+/* the turn — Mercury's couplet: the old world, then one line that flips it.
+   Same display face as the statement, emerald, so the eye reads the pair as
+   one sentence with a hinge in the middle. */
+.intro-turn{max-width:20ch;margin:18px 0 0;font-family:var(--font-display);
+  font-size:clamp(30px,4.6vw,56px);line-height:1.06;letter-spacing:-.045em;
+  font-weight:500;color:var(--emerald)}
+.intro-answer{max-width:52ch;margin:34px 0 0;
+  font-size:clamp(17px,1.8vw,21px);line-height:1.62;color:var(--ink-soft)}
+/* a hairline between the intro and the first feature group, so the page
+   reads as two movements rather than one long scroll */
+.role-intro::after{content:"";display:block;width:64px;height:1px;
+  margin:64px 0 0;background:var(--emerald);opacity:.5}
+
+/* A BAND — a section that changes the ground under the reader.
+   Ramp and Mercury both shift the page's colour when the subject changes;
+   here the dark band carries the old world (the scatter) so arriving back on
+   ivory for the essentials reads as the turn. The tokens are redefined
+   locally rather than the theme being switched, so everything inside — cards,
+   rules, the emerald — comes right without a single component knowing. */
+.band{background:var(--bg);color:var(--ink);margin-top:120px;padding:112px 0}
+.band-dark{
+  --bg:#0A0F0C; --bg-soft:#0E1511; --surface:#121A15; --surface-2:#0F1712;
+  --ink:#F2EEE3; --ink-soft:#C4CCC2; --muted:#8B968D;
+  --emerald:#31D492; --emerald-strong:#3BE3A0; --emerald-tint:rgba(49,212,146,.12);
+  --line:rgba(242,238,227,.14); --line-soft:rgba(242,238,227,.08);
+}
+/* in the dark theme the same band lifts instead of dropping, so the shift
+   still happens rather than the section vanishing into the page */
+[data-theme="dark"] .band-dark{
+  --bg:#16211B; --surface:#1C2A22; --line:rgba(242,238,227,.16);
+}
+
+/* THE SCATTER — six places the work lives today.
+   Deliberately NOT a card grid: these are the things Paperhint replaces, so
+   they are set as loose slips of paper on the dark ground — each one tilted a
+   degree or two, hairline-ruled like a register, numbered in the margin. They
+   should look like the stack on the desk, not like product features. */
+.scatter-lead{margin:-18px 0 46px;max-width:46ch;
+  font-size:clamp(16px,1.7vw,19px);line-height:1.55;color:var(--ink-soft)}
+.scatter-grid{list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 22px}
+.scatter-tile{position:relative;padding:18px 18px 20px 44px;
+  background:
+    repeating-linear-gradient(180deg,transparent 0 25px,
+      color-mix(in srgb,var(--ink) 7%,transparent) 25px 26px),
+    color-mix(in srgb,var(--ink) 4%, transparent);
+  border:1px solid var(--line);border-radius:3px;
+  transform:rotate(var(--tilt,0deg));transition:transform .3s var(--ease,ease)}
+/* the register's red margin rule, and the numbers written in it */
+.scatter-tile::before{content:"";position:absolute;left:30px;top:0;bottom:0;
+  width:1px;background:color-mix(in srgb,var(--orange) 42%, transparent)}
+.scatter-tile:nth-child(6n+1){--tilt:-.7deg}
+.scatter-tile:nth-child(6n+2){--tilt:.5deg}
+.scatter-tile:nth-child(6n+3){--tilt:-.4deg}
+.scatter-tile:nth-child(6n+4){--tilt:.8deg}
+.scatter-tile:nth-child(6n+5){--tilt:-.5deg}
+.scatter-tile:nth-child(6n+6){--tilt:.6deg}
+.scatter-tile:hover{transform:rotate(0deg)}
+.scatter-n{position:absolute;left:0;top:18px;width:30px;text-align:center;
+  font-variant-numeric:tabular-nums;font-size:11px;letter-spacing:.1em;
+  color:var(--muted)}
+.scatter-tile b{display:block;font-size:16.5px;line-height:1.45;font-weight:500;
+  color:var(--ink)}
+.scatter-gap{display:block;margin-top:6px;font-size:14px;line-height:1.5;
+  color:var(--muted)}
+/* the line that closes the old world, with the site's own scribble weight */
+.scatter-close{margin:44px 0 0;max-width:50ch;font-family:var(--font-display);
+  font-size:clamp(19px,2.2vw,26px);line-height:1.28;letter-spacing:-.03em;
+  font-weight:500;color:var(--ink)}
+
+/* THE ESSENTIALS — a set of five read in one screen, not scrolled through.
+   Two columns with the flagship spanning both, so the set has a clear first
+   card and then four of equal weight. Each card argues by contrast: the
+   `today` line is the old world, small and muted above the claim. */
+.ess{padding:120px 0 0}
+.ess-lead{margin:-18px 0 44px;font-size:clamp(16px,1.6vw,18px);color:var(--muted);
+  max-width:52ch}
+/* The essentials borrow the house folder-card wholesale — tab, tint dot,
+   tilt, glint — and change only the bento spans and the one line the cards
+   on the home page do not have: what this replaced. Nothing new is invented
+   here, so a set of essentials reads as the same paper as section 2. */
+.ess-grid{row-gap:64px}
+.ess-grid .fcard,.ess-grid .fcard:nth-child(1),.ess-grid .fcard:nth-child(2){
+  grid-column:span 2}
+.ess-grid .fcard:nth-child(1){grid-column:span 6;flex-direction:row;
+  align-items:flex-start;gap:40px;padding:30px 32px 28px}
+.ess-grid .fcard:nth-child(1) h3{font-size:clamp(24px,2.6vw,31px);max-width:15ch;flex:0 0 34%}
+.ess-grid .fcard:nth-child(1) .ess-body{flex:1}
+.ess-grid .fcard:nth-child(2),.ess-grid .fcard:nth-child(3){grid-column:span 3}
+
+/* the contrast line: the old world, in the card, before the claim */
+.ess-today{margin:10px 0 12px;font-size:13.5px;line-height:1.45;
+  color:var(--muted);padding-left:12px;
+  border-left:2px solid color-mix(in srgb,var(--tint,var(--emerald)) 45%, transparent)}
+
+/* what has not shipped yet, said once, at the end of the features */
+.role-next{padding:88px 0 0}
+.next-note{margin:0;max-width:60ch;font-size:16px;line-height:1.6;
+  color:var(--muted)}
+.next-note b{color:var(--ink-soft);font-weight:500}
 
 /* the week, as rows: copy one side, the screenshot the other */
 .role-beats{padding:120px 0 0}
@@ -1277,6 +1388,20 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 @media (max-width:720px){
   .role-hero{padding:124px 0 0}
   .role-scene{padding-top:64px}
+  .role-intro{padding:72px 0 0}
+  .ess{padding-top:72px}
+  .ess-grid{grid-template-columns:1fr;gap:16px}
+  .ess-grid .fcard,.ess-grid .fcard:nth-child(1),.ess-grid .fcard:nth-child(2),
+  .ess-grid .fcard:nth-child(3){grid-column:1/-1}
+  .ess-grid .fcard:nth-child(1){flex-direction:column;gap:0;padding:26px 22px 24px}
+  .ess-grid .fcard:nth-child(1) h3{flex:none;max-width:none}
+  .band{margin-top:72px;padding:72px 0}
+  .scatter-grid{grid-template-columns:1fr}
+  .scatter-tile{min-height:0}
+  .intro-turn{margin-top:14px}
+  .ess-card{padding:22px 20px 24px}
+  .role-intro::after{margin-top:44px}
+  .role-next{padding-top:56px}
   .role-beats{padding-top:72px}
   .role-stops,.role-second,.role-keeps{padding-top:80px}
   .role-others{padding:80px 0 60px}

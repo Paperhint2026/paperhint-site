@@ -1,52 +1,48 @@
 ---
-/* One role, told as a story and built as a page.
+/* One role, one page, three moves.
  *
- * The spine, top to bottom: the scene they recognise, the turn, the week as
- * numbered beats, what leaves their desk, what stays theirs, and who else is
- * in the building. Narrative order, so it can be read straight through, with
- * every section standing on its own for someone scanning.
+ * Banner, then a grand intro that says what this person's problem actually is
+ * and what Paperhint is inside it, then the product — only the part of it
+ * this person touches. Nothing after that but the ask.
  *
- * Content comes from src/data/roles.js. Nothing is authored here.
+ * This replaced a nine-section page whose middle was a Monday-to-Friday
+ * diary. The weekday framing still lives in api/chat-content.js, where it
+ * belongs: it reads as an answer in conversation, not as a page.
+ *
+ * Content comes from src/data/roles.js and src/data/product.js. Nothing is
+ * authored here.
  */
-import { ROLES, ORDER } from '../data/roles.js';
-import { featuresFor } from '../data/product.js';
+import Essentials from '../components/Essentials.astro';
+import Scatter from '../components/Scatter.astro';
+import { ROLES } from '../data/roles.js';
+import { featuresFor, tabFor, ESSENTIALS } from '../data/product.js';
 
 const { role } = Astro.props;
 const r = ROLES[role];
-const others = ORDER.filter(k => k !== role).map(k => ({ key: k, ...ROLES[k] }));
 
-/* Two different notes, on purpose.
- *
- * Public: a page still waiting on its narrative says "More on this soon",
- * which is true and reads like any other marketing line. A visiting school
- * should never be told it is looking at a draft.
- *
- * Internal: on preview deploys and locally, each page also lists exactly what
- * content it is waiting for, so the gaps are visible while working rather
- * than tracked in someone's head. docs/content-todo.md is the full list. */
+/* A page still waiting on its narrative says "More on this soon" in public;
+   on preview and locally it also lists exactly what it is waiting for, so the
+   gaps are visible while working. A visiting school never sees a draft note. */
 const internal = process.env.VERCEL_ENV !== 'production';
 
-/* The product told through this person's eyes rather than one shared
-   catalogue: only the features the feature list says reach them, in the
-   order the product page tells them. */
+/* Teachers and schools have a curated five — what is scattered today and
+   needed now. Students and parents touch too little of the product to rank,
+   so they keep the filtered list of what actually reaches them. */
+const curated = ESSENTIALS.some(e => e.who === role);
+
+/* The product through this person's eyes: only the features the feature list
+   says reach them, in the order the product page tells them. */
+/* Deliberately NOT grouped by where the work happens. Those groups are the
+   product page's shelves — "In the school office" is a strange heading on a
+   parent's page. Here it is one run of features under this person's own
+   heading, in the order the product page tells them. */
 const mine = featuresFor(role);
 
-/* The teacher's story runs Monday to Friday. Where a beat's label is a day,
-   the day itself becomes the marker instead of a counter — 01..05 beside
-   "Monday." was saying the same thing twice — and the label keeps whatever
-   follows it. */
-const DAY = /^(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day\.?\s*/i;
-const beats = r.beats.map((b, i) => {
-  const label = b.label || '';
-  const day = label.match(DAY);
-  return {
-    ...b,
-    day: day ? day[0].replace(/[.\s]+$/, '') : null,
-    label: day ? label.replace(DAY, '') : label,
-    n: String(i + 1).padStart(2, '0'),
-  };
-});
-const isWeek = beats.every(b => b.day);
+/* Anything the role data marks as still being built is held back from the
+   feature rows and stated once, plainly, at the end. Never promise what has
+   not shipped. */
+const NEXT = /^Being built next:\s*/i;
+const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, ''));
 ---
 <header class="role-hero">
   <div class="wrap wrap-read">
@@ -62,132 +58,52 @@ const isWeek = beats.every(b => b.day);
     )}
     <div class="role-cta">
       <a class="btn btn-primary btn-lg" href={`/contact?type=demo&role=${role}`}>Book a demo</a>
-      <a class="btn btn-ghost btn-lg" href="/#capabilities">See the whole product</a>
+      <a class="btn btn-ghost btn-lg" href="/product">See the whole product</a>
     </div>
   </div>
 </header>
 
-<!-- the scene: the evening they already know -->
-<section class="role-scene">
+<!-- the grand intro: the problem, then what Paperhint is inside it -->
+<section class="role-intro">
   <div class="wrap wrap-read">
-    <p class="scene-text reveal" set:html={r.scene} />
+    <p class="intro-statement reveal" set:html={(r.intro && r.intro.statement) || r.scene} />
+    {r.intro && r.intro.turn && <p class="intro-turn reveal">{r.intro.turn}</p>}
+    <p class="intro-answer reveal" set:html={(r.intro && r.intro.answer) || r.turn} />
   </div>
 </section>
 
-<!-- the turn, then the beats -->
-<section class="role-beats">
-  <div class="wrap wrap-read">
-    <p class="beats-turn reveal" set:html={r.turn} />
-    <ol class={`beat-list ${isWeek ? 'is-week' : ''}`}>
-      {beats.map((b, i) => (
-        <li class={`beat reveal ${i % 2 ? 'flip' : ''}`}>
-          <div class="beat-copy">
-            {b.day
-              ? <span class="beat-day">{b.day}</span>
-              : <span class="beat-n" aria-hidden="true">{b.n}</span>}
-            {b.label && <h2 class="beat-label" set:html={b.label} />}
-            <p set:html={b.text} />
-          </div>
-          {/* the screenshot goes here; until then a tinted panel holds the
-              shape so the rhythm is right when the real thing lands */}
-          <div class="beat-visual" aria-hidden="true">
-            <div class={`beat-tint tint-${i % 4}`}></div>
-          </div>
-        </li>
-      ))}
-    </ol>
-    {r.storyClose && <p class="beats-close reveal" set:html={r.storyClose} />}
-  </div>
-</section>
+<!-- the old world, on a ground that changes under the reader -->
+<Scatter who={role} />
 
-<!-- what leaves the desk -->
-<section class="role-stops">
-  <div class="wrap wrap-read">
-    <h2 class="sec-h2 reveal">{r.stopsTitle}</h2>
-    <div class="stop-grid">
-      {r.stops.map(([label, text]) => (
-        <div class="stop reveal">
-          <h3 set:html={label} />
-          <p set:html={text} />
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-
-<!-- the product, but only the part of it this person touches -->
-{mine.length > 0 && (
-  <section class="role-uses">
+<!-- the product, grouped by where the work happens -->
+{curated ? <Essentials only={role} /> : mine.length > 0 && (
+  <section class="ess" id="features">
     <div class="wrap wrap-read">
-      <h2 class="sec-h2 reveal">What you’d actually use</h2>
-      <p class="beats-turn reveal">
-        {mine.length} of the {15} things Paperhint does. The rest belongs to
-        someone else in the building.
-      </p>
-      {[...new Set(mine.map(f => f.group))].map(g => (
-        <div class="use-block">
-          <h3 class="use-block-t">{mine.find(f => f.group === g).groupTitle}</h3>
-          <div class="use-grid">
-            {mine.filter(f => f.group === g).map(f => (
-              <a class="use reveal" href={`/product#${f.group}`}>
-                <h4>{f.label}{f.badge && <span class="use-badge">{f.badge}</span>}</h4>
-                <p set:html={f.text} />
-              </a>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-)}
-
-<!-- the second movement, where a role has one (the school's case) -->
-{r.second && (
-  <section class="role-second">
-    <div class="wrap wrap-read">
-      <h2 class="sec-h2 reveal">{r.secondTitle}</h2>
-      {r.secondNote && <p class="second-note reveal" set:html={r.secondNote} />}
-      <p class="scene-text reveal" set:html={r.second.intro} />
-      <p class="beats-turn reveal" set:html={r.second.lead} />
-      <ul class="second-list">
-        {r.second.beats.map(b => (
-          <li class="reveal">
-            {b.label && <b set:html={b.label} />}
-            <span set:html={b.text} />
-          </li>
+      <h2 class="sec-h2 reveal">{r.stopsTitle}</h2>
+      <div class="feature-grid ess-grid">
+        {mine.map((f, i) => (
+          <article class="fcard ess-card reveal"
+                   style={`--tint:var(--${['emerald','violet','orange','yellow'][i % 4]})`}>
+            <span class="fcard-kicker">{tabFor(f)}</span>
+            <h3>
+              {f.label}
+              {f.badge && <span class="beat-badge">{f.badge}</span>}
+            </h3>
+            <div class="ess-body"><p set:html={f.text} /></div>
+          </article>
         ))}
-      </ul>
-      {r.second.close && <p class="beats-close reveal" set:html={r.second.close} />}
+      </div>
     </div>
   </section>
 )}
 
-<!-- what stays theirs -->
-<section class="role-keeps">
-  <div class="wrap wrap-read">
-    <h2 class="sec-h2 reveal">{r.keepsTitle}</h2>
-    <ul class="keep-list">
-      {r.keeps.map(k => <li class="reveal" set:html={k} />)}
-    </ul>
-    <p class="role-close reveal" set:html={r.close} />
-  </div>
-</section>
-
-<!-- everyone else in the building -->
-<section class="role-others">
-  <div class="wrap wrap-read">
-    <h2 class="sec-h2 reveal">The same school, from where they sit</h2>
-    <div class="other-grid">
-      {others.map(o => (
-        <a class="other reveal" href={`/${o.key}`}>
-          <span class="other-kicker">{o.nav}{o.thin && <em class="other-soon">more soon</em>}</span>
-          <p set:html={o.sub} />
-          <span class="other-go" aria-hidden="true">→</span>
-        </a>
-      ))}
+{next.length > 0 && (
+  <section class="role-next">
+    <div class="wrap wrap-read">
+      <p class="next-note reveal"><b>Being built next.</b> {next.join(' ')}</p>
     </div>
-  </div>
-</section>
+  </section>
+)}
 
 <!-- the close: the site's own CTA band, in this role's words -->
 <section class="cta role-cta-band">

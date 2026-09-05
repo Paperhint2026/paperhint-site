@@ -1,0 +1,33 @@
+---
+/* "Systems that never spoke", for a school.
+ *
+ * The argument the founder asked for — this is scattered today — made by
+ * counting rather than asserting. Six tiles, each a real place the work
+ * currently lives, each with what falls through the gap to the next one.
+ * It sits on the dark band so the page changes ground under the reader at
+ * exactly the moment the subject changes from the old world to ours.
+ *
+ * Content is SCATTER in src/data/product.js.
+ */
+import { SCATTER } from '../data/product.js';
+const { who } = Astro.props;
+const d = SCATTER[who];
+---
+{d && (
+  <section class="band band-dark scatter">
+    <div class="wrap wrap-read">
+      <h2 class="sec-h2 reveal">{d.title}</h2>
+      <p class="scatter-lead reveal">{d.lead}</p>
+      <ul class="scatter-grid">
+        {d.tiles.map((t, i) => (
+          <li class="scatter-tile reveal">
+            <span class="scatter-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <b>{t.name}</b>
+            <span class="scatter-gap">{t.gap}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="scatter-close reveal">{d.close}</p>
+    </div>
+  </section>
+)}

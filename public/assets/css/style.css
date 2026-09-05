@@ -1240,68 +1240,175 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   --bg:#16211B; --surface:#1C2A22; --line:rgba(242,238,227,.16);
 }
 
-/* THE SCATTER — six places the work lives today.
-   Deliberately NOT a card grid: these are the things Paperhint replaces, so
-   they are set as loose slips of paper on the dark ground — each one tilted a
-   degree or two, hairline-ruled like a register, numbered in the margin. They
-   should look like the stack on the desk, not like product features. */
-.scatter-lead{margin:-18px 0 46px;max-width:46ch;
+/* ===============================================================
+   THE SECTION KIT
+   Built from the founder's references: Mercury's stat row, hairline
+   section heads and image-led tiles; Amplemarket's drifting chip field
+   and its divided "and more" shelf. Every one of them is a SECTION the
+   role and product pages are composed from, rather than a variation on
+   a card.
+   =============================================================== */
+
+/* --- the stat row: four figures, divided by hairlines ---------- */
+.statrow{padding:96px 0 0}
+.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  margin:0;border-top:1px solid var(--line);padding-top:38px}
+.stat{padding:0 26px;border-left:1px solid var(--line)}
+.stat:first-child{border-left:0;padding-left:0}
+.stat dt{font-family:var(--font-display);font-size:clamp(40px,5.4vw,68px);
+  line-height:.98;letter-spacing:-.05em;font-weight:500;color:var(--ink)}
+.stat dd{margin:12px 0 0;font-size:15px;line-height:1.42;color:var(--muted);
+  max-width:16ch}
+
+/* --- the section head: a rule, then the headline -------------- */
+.sechead{border-top:1px solid var(--line);padding-top:34px;margin-bottom:52px}
+.sechead-h{font-family:var(--font-display);font-size:clamp(28px,3.8vw,48px);
+  line-height:1.06;letter-spacing:-.045em;font-weight:500;margin:0;
+  max-width:26ch;color:var(--ink)}
+/* the couplet's hinge: same face, emerald, on its own line */
+.sechead-turn{display:block;color:var(--emerald)}
+.sechead-sub{margin:18px 0 0;max-width:52ch;
   font-size:clamp(16px,1.7vw,19px);line-height:1.55;color:var(--ink-soft)}
-.scatter-grid{list-style:none;margin:0;padding:0;display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 22px}
-.scatter-tile{position:relative;padding:18px 18px 20px 44px;
-  background:
-    repeating-linear-gradient(180deg,transparent 0 25px,
-      color-mix(in srgb,var(--ink) 7%,transparent) 25px 26px),
-    color-mix(in srgb,var(--ink) 4%, transparent);
-  border:1px solid var(--line);border-radius:3px;
-  transform:rotate(var(--tilt,0deg));transition:transform .3s var(--ease,ease)}
-/* the register's red margin rule, and the numbers written in it */
-.scatter-tile::before{content:"";position:absolute;left:30px;top:0;bottom:0;
-  width:1px;background:color-mix(in srgb,var(--orange) 42%, transparent)}
-.scatter-tile:nth-child(6n+1){--tilt:-.7deg}
-.scatter-tile:nth-child(6n+2){--tilt:.5deg}
-.scatter-tile:nth-child(6n+3){--tilt:-.4deg}
-.scatter-tile:nth-child(6n+4){--tilt:.8deg}
-.scatter-tile:nth-child(6n+5){--tilt:-.5deg}
-.scatter-tile:nth-child(6n+6){--tilt:.6deg}
-.scatter-tile:hover{transform:rotate(0deg)}
-.scatter-n{position:absolute;left:0;top:18px;width:30px;text-align:center;
-  font-variant-numeric:tabular-nums;font-size:11px;letter-spacing:.1em;
-  color:var(--muted)}
-.scatter-tile b{display:block;font-size:16.5px;line-height:1.45;font-weight:500;
-  color:var(--ink)}
-.scatter-gap{display:block;margin-top:6px;font-size:14px;line-height:1.5;
-  color:var(--muted)}
-/* the line that closes the old world, with the site's own scribble weight */
-.scatter-close{margin:44px 0 0;max-width:50ch;font-family:var(--font-display);
-  font-size:clamp(19px,2.2vw,26px);line-height:1.28;letter-spacing:-.03em;
-  font-weight:500;color:var(--ink)}
 
-/* THE ESSENTIALS — a set of five read in one screen, not scrolled through.
-   Two columns with the flagship spanning both, so the set has a clear first
-   card and then four of equal weight. Each card argues by contrast: the
-   `today` line is the old world, small and muted above the claim. */
-.ess{padding:120px 0 0}
-.ess-lead{margin:-18px 0 44px;font-size:clamp(16px,1.6vw,18px);color:var(--muted);
-  max-width:52ch}
-/* The essentials borrow the house folder-card wholesale — tab, tint dot,
-   tilt, glint — and change only the bento spans and the one line the cards
-   on the home page do not have: what this replaced. Nothing new is invented
-   here, so a set of essentials reads as the same paper as section 2. */
-.ess-grid{row-gap:64px}
-.ess-grid .fcard,.ess-grid .fcard:nth-child(1),.ess-grid .fcard:nth-child(2){
-  grid-column:span 2}
-.ess-grid .fcard:nth-child(1){grid-column:span 6;flex-direction:row;
-  align-items:flex-start;gap:40px;padding:30px 32px 28px}
-.ess-grid .fcard:nth-child(1) h3{font-size:clamp(24px,2.6vw,31px);max-width:15ch;flex:0 0 34%}
-.ess-grid .fcard:nth-child(1) .ess-body{flex:1}
-.ess-grid .fcard:nth-child(2),.ess-grid .fcard:nth-child(3){grid-column:span 3}
+/* --- image-led tiles: the panel IS the tile ------------------- */
+.tiles-sec{padding:118px 0 0}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:26px;row-gap:66px}
+.tile{display:flex;flex-direction:column;gap:22px}
+.tile-wide{grid-column:1 / -1;display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:44px;align-items:center}
+/* no border, no fill, no shadow on the tile itself — the caption sits on the
+   page. This is the whole difference from a card. */
+.tile-panel{border-radius:16px;overflow:hidden;padding:26px;
+  aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
+.tile-wide .tile-panel{aspect-ratio:16/11}
+.panel-dark{background:linear-gradient(155deg,#111A15,#0A0F0C 62%);
+  --p-ink:#F2EEE3; --p-soft:#C4CCC2; --p-mut:#8B968D; --p-line:rgba(242,238,227,.14);
+  --p-card:rgba(242,238,227,.055)}
+.panel-light{background:
+  radial-gradient(120% 100% at 12% 0%,
+    color-mix(in srgb,var(--tint,var(--emerald)) 15%, transparent), transparent 62%),
+  var(--bg-soft);
+  --p-ink:var(--ink); --p-soft:var(--ink-soft); --p-mut:var(--muted);
+  --p-line:var(--line); --p-card:var(--surface)}
+.tile-cap h3{font-family:var(--font-display);font-size:clamp(19px,2vw,24px);
+  line-height:1.18;letter-spacing:-.03em;font-weight:500;margin:0 0 10px}
+.tile-wide .tile-cap h3{font-size:clamp(24px,2.7vw,33px);max-width:20ch}
+.tile-today{margin:0 0 10px;font-size:13.5px;line-height:1.45;color:var(--muted);
+  padding-left:12px;
+  border-left:2px solid color-mix(in srgb,var(--tint,var(--emerald)) 50%, transparent)}
+.tile-cap p:last-child{margin:0;font-size:16px;line-height:1.6;color:var(--ink-soft)}
+.tile-wide .tile-cap p:last-child{font-size:17px}
 
-/* the contrast line: the old world, in the card, before the claim */
-.ess-today{margin:10px 0 12px;font-size:13.5px;line-height:1.45;
-  color:var(--muted);padding-left:12px;
-  border-left:2px solid color-mix(in srgb,var(--tint,var(--emerald)) 45%, transparent)}
+/* the compositions inside a panel — the site's own mini-UI, scaled to lead */
+.tile-panel > *{width:100%}
+.v-rows{display:flex;flex-direction:column;gap:7px}
+.v-rows span{display:flex;align-items:center;gap:10px;padding:11px 13px;
+  border-radius:9px;background:var(--p-card);border:1px solid var(--p-line);
+  font-size:13.5px;color:var(--p-soft)}
+.v-rows b{color:var(--tint,var(--emerald));font-weight:500;flex:none;min-width:34px}
+.v-rows i{margin-left:auto;font-style:normal;color:var(--p-ink);font-variant-numeric:tabular-nums}
+.v-rows .miss b{color:#E23D2E}
+.v-rows .sum{background:transparent;border-style:dashed}
+
+.v-paper{display:flex;flex-direction:column;gap:12px;padding:16px 18px;
+  border-radius:10px;background:var(--p-card);border:1px solid var(--p-line)}
+.v-paper-head b{display:block;font-size:14px;color:var(--p-ink);font-weight:500}
+.v-paper-head span{font-size:12px;color:var(--p-mut)}
+.v-paper-lines{display:flex;flex-direction:column;gap:9px}
+.v-paper-lines s{text-decoration:none;height:6px;border-radius:99px;
+  background:var(--p-line)}
+.v-paper-lines s.short{width:62%}
+.v-paper-tags{display:flex;gap:7px;flex-wrap:wrap}
+.v-paper-tags em{font-style:normal;font-size:11.5px;padding:4px 9px;border-radius:99px;
+  color:var(--tint,var(--emerald));
+  background:color-mix(in srgb,var(--tint,var(--emerald)) 15%, transparent)}
+
+.v-chat{display:flex;flex-direction:column;gap:9px}
+.v-chat span{max-width:86%;padding:11px 14px;border-radius:13px;font-size:13.5px;
+  line-height:1.4}
+.v-chat .ask{align-self:flex-end;background:var(--tint,var(--emerald));color:#08130D;
+  border-bottom-right-radius:4px}
+.v-chat .ans{align-self:flex-start;background:var(--p-card);color:var(--p-soft);
+  border:1px solid var(--p-line);border-bottom-left-radius:4px}
+
+.v-lib{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%}
+.v-lib figure{margin:0;border:1px solid var(--p-line);border-radius:9px;
+  overflow:hidden;background:var(--p-card)}
+.v-lib .np{height:56px}
+.v-lib figcaption{font-size:10.5px;padding:6px 8px;color:var(--p-mut)}
+
+.v-notify{display:flex;flex-direction:column;align-items:center;gap:10px}
+.v-notify .sent{font-size:13.5px;padding:11px 16px;border-radius:99px;
+  background:var(--tint,var(--emerald));color:#08130D}
+.v-notify .chip{font-size:12.5px;padding:8px 13px;border-radius:99px;
+  background:var(--p-card);border:1px solid var(--p-line);color:var(--p-soft)}
+
+.v-reg{display:flex;flex-direction:column;gap:12px;align-items:center}
+.v-reg .tt-grid{width:100%}
+.v-reg-note{font-size:12px;color:var(--p-mut)}
+
+.v-year{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px}
+.v-year .from,.v-year .to{font-family:var(--font-display);font-size:clamp(24px,3vw,38px);
+  font-weight:500;letter-spacing:-.03em;padding:10px 18px;border-radius:12px;
+  background:var(--p-card);border:1px solid var(--p-line);color:var(--p-ink)}
+.v-year .to{color:var(--tint,var(--emerald));
+  border-color:color-mix(in srgb,var(--tint,var(--emerald)) 40%, transparent)}
+.v-year .arrow{color:var(--tint,var(--emerald));font-size:22px}
+.v-year-note{flex-basis:100%;text-align:center;font-size:12px;color:var(--p-mut)}
+
+/* --- the drifting chip field: the scatter, shown not asserted -- */
+.drift{padding:118px 0 0;overflow:hidden}
+.drift-head{border-top:1px solid var(--line);padding-top:34px;text-align:center;
+  margin-bottom:44px}
+.drift-head h2{font-family:var(--font-display);font-size:clamp(28px,3.8vw,48px);
+  line-height:1.06;letter-spacing:-.045em;font-weight:500;margin:0 auto;max-width:24ch}
+.drift-head p{margin:16px auto 0;max-width:46ch;font-size:clamp(16px,1.7vw,19px);
+  line-height:1.55;color:var(--ink-soft)}
+.drift-rows{display:flex;flex-direction:column;gap:14px;
+  /* the rows run past the container and fade, so the field reads as endless */
+  mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.drift-row{overflow:hidden}
+.drift-track{display:flex;width:max-content;animation:drift 44s linear infinite}
+.drift-row.rev .drift-track{animation-direction:reverse}
+.drift-row:nth-child(2) .drift-track{animation-duration:56s}
+.drift-row:nth-child(3) .drift-track{animation-duration:38s}
+.drift-rows:hover .drift-track{animation-play-state:paused}
+.drift-set{display:flex;gap:14px;padding-right:14px}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.drift-chip{display:inline-flex;align-items:baseline;gap:9px;flex:none;
+  padding:13px 20px;border-radius:99px;background:var(--surface);
+  border:1px solid var(--line);box-shadow:var(--shadow);white-space:nowrap}
+.drift-chip i{width:9px;height:9px;border-radius:99px;flex:none;
+  background:var(--tint,var(--emerald));align-self:center}
+.drift-chip b{font-size:15px;font-weight:500;color:var(--ink)}
+.drift-chip em{font-style:normal;font-size:13.5px;color:var(--muted)}
+.drift-close{margin:46px auto 0;max-width:46ch;text-align:center;
+  font-family:var(--font-display);font-size:clamp(20px,2.4vw,29px);line-height:1.24;
+  letter-spacing:-.035em;font-weight:500;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){
+  .drift-track{animation:none}
+  .drift-set:nth-child(2){display:none}
+  .drift-row{overflow-x:auto}
+}
+
+/* --- the divided "and more" shelf ----------------------------- */
+.morerow{padding:112px 0 0}
+.morerow-head{position:relative;border-top:1px solid var(--line);padding-top:34px;
+  margin-bottom:38px}
+.morerow-head h2{font-family:var(--font-display);font-size:clamp(22px,2.6vw,31px);
+  line-height:1.1;letter-spacing:-.035em;font-weight:500;margin:0;max-width:24ch}
+.scribble-more{position:absolute;right:2px;top:24px;width:104px;height:40px;
+  fill:none;stroke:var(--emerald);stroke-width:2.1;stroke-linecap:round;
+  transform:rotate(-6deg)}
+.more-grid{list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr))}
+.more{padding:0 24px;border-left:1px solid var(--line)}
+.more:first-child{border-left:0;padding-left:0}
+.more-mark{display:block;font-size:19px;color:var(--emerald);margin-bottom:12px}
+.more b{display:block;font-size:16.5px;font-weight:500;margin-bottom:8px;color:var(--ink)}
+.more p{margin:0;font-size:14.5px;line-height:1.55;color:var(--muted)}
 
 /* what has not shipped yet, said once, at the end of the features */
 .role-next{padding:88px 0 0}
@@ -1390,6 +1497,22 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .role-scene{padding-top:64px}
   .role-intro{padding:72px 0 0}
   .ess{padding-top:72px}
+  .statrow{padding-top:60px}
+  .stat-grid{grid-template-columns:repeat(2,1fr);gap:28px 0;padding-top:28px}
+  .stat{padding:0 0 0 18px}
+  .stat:nth-child(odd){border-left:0;padding-left:0}
+  .sechead{padding-top:26px;margin-bottom:34px}
+  .tiles-sec,.drift,.morerow{padding-top:72px}
+  .tiles{grid-template-columns:1fr;row-gap:44px}
+  .tile-wide{grid-column:auto;grid-template-columns:1fr;gap:22px}
+  .tile-panel,.tile-wide .tile-panel{aspect-ratio:5/4;padding:18px}
+  .more-grid{grid-template-columns:1fr 1fr;gap:26px 0}
+  .more{padding:0 0 0 18px}
+  .more:nth-child(odd){border-left:0;padding-left:0}
+  .scribble-more{width:74px;top:20px}
+  .drift-chip{padding:11px 15px}
+  .drift-chip b{font-size:13.5px}
+  .drift-chip em{font-size:12px}
   .ess-grid{grid-template-columns:1fr;gap:16px}
   .ess-grid .fcard,.ess-grid .fcard:nth-child(1),.ess-grid .fcard:nth-child(2),
   .ess-grid .fcard:nth-child(3){grid-column:1/-1}

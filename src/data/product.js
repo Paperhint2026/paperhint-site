@@ -110,6 +110,35 @@ export const FEATURES = PRODUCT.groups.flatMap(g =>
 );
 
 /* ---------------------------------------------------------------------------
+   THE STAT ROW — Mercury's opening move: four figures, huge, divided by
+   hairlines. Ours are STRUCTURAL, not traction: a pre-launch product must not
+   borrow the form of "300K+ entrepreneurs" and fill it with invented numbers.
+   Every figure here is a fact about what ships, countable from FEATURES.
+   --------------------------------------------------------------------------- */
+export const STATS = [
+  { n: '15', label: 'things it already does' },
+  { n: '4', label: 'roles, one portal' },
+  { n: '2', label: 'copilots \u2014 the desk and the office' },
+  { n: '0', label: 'new hardware to buy' },
+];
+
+/* Which mini-visual leads each essential tile. The tile is visual-first —
+   the panel is the tile and the words sit under it — so every essential
+   names the composition that carries it. Renderers live in Tiles.astro. */
+export const TILE_VISUAL = {
+  'Answer sheets, marked while you sleep': 'sheets',
+  'Next week\u2019s paper, already drafted': 'paper',
+  'A copilot at your desk that prepares the class': 'chat',
+  'Your school\u2019s shelf, not your own folder': 'library',
+  'Homework set, and home already told': 'notify',
+  'An office that runs on asking': 'portal',
+  'Every section staffed, and covered': 'allot',
+  'The register you already keep, recorded': 'register',
+  'A new academic year in one move': 'year',
+  'The school\u2019s voice to every home': 'notify',
+};
+
+/* ---------------------------------------------------------------------------
    THE SCATTER — what the work looks like today, before the argument for the
    product is made. Ramp's "systems that never spoke" move: name the number of
    disconnected places one ordinary task currently touches, and let the reader

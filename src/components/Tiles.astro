@@ -1,0 +1,125 @@
+---
+/* IMAGE-LED TILES — Mercury's feature grid.
+ *
+ * The important difference from a card: there is no card. The tile IS a large
+ * visual panel, and the label and sentence sit UNDERNEATH it, on the page,
+ * with no border and no fill. Weighting the visual first is what stops a
+ * features section reading as a table of text boxes.
+ *
+ * The panels alternate dark and light ground tile by tile — the contrast
+ * shift the founder asked for, at tile scale rather than section scale.
+ *
+ * Until real product screens exist, each panel is composed from the site's
+ * own mini-UI vocabulary (the same rows, chips and paper textures section 2
+ * of the home page uses), scaled up to lead. Swapping in a screenshot later
+ * means replacing one <Visual> branch, nothing else.
+ */
+import { ESSENTIALS, TILE_VISUAL } from '../data/product.js';
+
+const { only } = Astro.props;
+const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
+---
+{sets.map(set => (
+  <section class="tiles-sec" id={`for-${set.who}`}>
+    <div class="wrap wrap-read">
+      <div class="sechead reveal">
+        <h2 class="sechead-h">{set.title}</h2>
+        <p class="sechead-sub">{set.lead}</p>
+      </div>
+
+      <div class="tiles">
+        {set.items.map((it, i) => {
+          const kind = TILE_VISUAL[it.label] || 'chat';
+          return (
+            <article class={`tile reveal ${i === 0 ? 'tile-wide' : ''}`}
+                     style={`--tint:var(--${it.tint || 'emerald'})`}>
+              <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'} v-${kind}`}>
+                {kind === 'sheets' && (
+                  <div class="v-rows">
+                    <span><b>Q1</b> Laws of reflection<i>5/5</i></span>
+                    <span><b>Q2</b> Diagram labelled<i>4/4</i></span>
+                    <span class="miss"><b>Q3</b> Numerical — step missed<i>3/5</i></span>
+                    <span><b>Q4</b> Definition<i>3/3</i></span>
+                    <span class="sum"><b>&#8721;</b> Scored on your rubric<i>15/17</i></span>
+                  </div>
+                )}
+                {kind === 'paper' && (
+                  <div class="v-paper">
+                    <div class="v-paper-head"><b>Unit test &middot; Class VIII</b><span>Ch 4&ndash;5 &middot; 40 marks</span></div>
+                    <div class="v-paper-lines"><s></s><s></s><s class="short"></s><s></s><s class="short"></s><s></s></div>
+                    <div class="v-paper-tags"><em>Blueprint</em><em>Answer key</em><em>Rubric</em></div>
+                  </div>
+                )}
+                {kind === 'chat' && (
+                  <div class="v-chat">
+                    <span class="ask">Notes for Ch 4, class VIII</span>
+                    <span class="ans">Draft ready &mdash; 6 sections, 2 diagrams</span>
+                    <span class="ask">Simpler, for the second section</span>
+                    <span class="ans">Rewritten at VII&#8209;B level</span>
+                  </div>
+                )}
+                {kind === 'library' && (
+                  <div class="v-lib">
+                    <figure><div class="np np-ruled"></div><figcaption>Ch 4 &middot; Light</figcaption></figure>
+                    <figure><div class="np np-diagram"></div><figcaption>Ray map</figcaption></figure>
+                    <figure><div class="np np-grid"></div><figcaption>Ch 5 &middot; Cells</figcaption></figure>
+                    <figure><div class="np np-dots"></div><figcaption>Algebra</figcaption></figure>
+                    <figure><div class="np np-ruled np-alt"></div><figcaption>Grammar</figcaption></figure>
+                    <figure><div class="np np-grid np-alt"></div><figcaption>Shared</figcaption></figure>
+                  </div>
+                )}
+                {kind === 'notify' && (
+                  <div class="v-notify">
+                    <span class="sent">Homework assigned &middot; VII&#8209;B</span>
+                    <span class="chip">44 parents notified</span>
+                    <span class="chip">Absence &middot; same day</span>
+                    <span class="chip">Marks shared &middot; approved</span>
+                  </div>
+                )}
+                {kind === 'portal' && (
+                  <div class="v-rows">
+                    <span><b>&#8594;</b> &ldquo;Create section VI&#8209;C&rdquo;<i>done</i></span>
+                    <span><b>&#8594;</b> &ldquo;Move Ramya to VII&#8209;B&rdquo;<i>done</i></span>
+                    <span><b>&#8594;</b> &ldquo;Add Physics to class IX&rdquo;<i>done</i></span>
+                    <span class="sum"><b>&#8721;</b> No form opened<i>3 asks</i></span>
+                  </div>
+                )}
+                {kind === 'allot' && (
+                  <div class="v-rows">
+                    <span><b>IX&#8209;A</b> Physics<i>R. Nair</i></span>
+                    <span><b>VII&#8209;C</b> English<i>V. Iyer</i></span>
+                    <span><b>VI&#8209;B</b> Maths<i>K. Rao</i></span>
+                    <span class="sum"><b>&#8721;</b> Every section staffed<i>32/32</i></span>
+                  </div>
+                )}
+                {kind === 'register' && (
+                  <div class="v-reg">
+                    <div class="tt-grid">
+                      <s>Mon</s><s>Tue</s><s>Wed</s><s>Thu</s><s>Fri</s>
+                      <s class="c1">42/44</s><s class="c1">44/44</s><s class="c2">41/44</s><s class="c1">43/44</s><s class="c1">44/44</s>
+                    </div>
+                    <span class="v-reg-note">Scanned from the paper register</span>
+                  </div>
+                )}
+                {kind === 'year' && (
+                  <div class="v-year">
+                    <span class="from">VIII&#8209;A</span>
+                    <span class="arrow" aria-hidden="true">&#8594;</span>
+                    <span class="to">IX&#8209;A</span>
+                    <span class="v-year-note">44 students &middot; library and banks carried forward</span>
+                  </div>
+                )}
+              </div>
+
+              <div class="tile-cap">
+                <h3>{it.label}{it.badge && <span class="beat-badge">{it.badge}</span>}</h3>
+                {it.today && <p class="tile-today">{it.today}</p>}
+                <p set:html={it.text} />
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+))}

@@ -1,0 +1,32 @@
+---
+/* Amplemarket's "and more" shelf: four items across, divided by hairline
+ * rules, each an icon, a label and one sentence — with the handwritten
+ * scribble in the corner, which the site already draws elsewhere.
+ *
+ * Here it carries the roadmap. Direction only: the heading says it is being
+ * built, there are no dates, and it must never read as available.
+ */
+const { items, title } = Astro.props;
+const MARKS = ['◷', '⇄', '✎', '◈'];
+---
+{items && items.length > 0 && (
+  <section class="morerow">
+    <div class="wrap wrap-read">
+      <div class="morerow-head reveal">
+        <h2>{title}</h2>
+        <svg class="scribble-more" viewBox="0 0 120 46" aria-hidden="true">
+          <path style="--len:210" d="M6 34 C 14 18, 26 10, 40 14 C 52 18, 48 32, 36 33 C 26 34, 22 24, 30 16 M52 30 C 58 16, 66 10, 76 14 M84 30 L92 12 L100 30 M86 24 L98 24"/>
+        </svg>
+      </div>
+      <ul class="more-grid">
+        {items.map(([label, text], i) => (
+          <li class="more reveal">
+            <span class="more-mark" aria-hidden="true">{MARKS[i % 4]}</span>
+            <b>{label}</b>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

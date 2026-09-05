@@ -1,0 +1,18 @@
+---
+/* Mercury's opening move: four figures, large, divided by hairlines.
+ * Ours are structural facts, never traction — see STATS in product.js.
+ */
+import { STATS } from '../data/product.js';
+---
+<section class="statrow">
+  <div class="wrap wrap-read">
+    <dl class="stat-grid">
+      {STATS.map(s => (
+        <div class="stat reveal">
+          <dt>{s.n}</dt>
+          <dd>{s.label}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+---
+/* A hairline across the container, then the headline under it. Mercury opens
+ * every section this way and it is most of why their page has rhythm: the
+ * rule says "new subject" before a word is read.
+ *
+ * `turn` renders the second half of a before/after couplet in emerald, so the
+ * pair reads as one sentence with a hinge — "Banking's been a headache. Now,
+ * it's a head start."
+ */
+const { title, turn, sub } = Astro.props;
+---
+<div class="sechead reveal">
+  <h2 class="sechead-h">
+    {title}{turn && <span class="sechead-turn">{turn}</span>}
+  </h2>
+  {sub && <p class="sechead-sub">{sub}</p>}
+</div>

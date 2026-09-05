@@ -1,0 +1,53 @@
+---
+/* THE SCATTER, as Amplemarket draws it — rows of chips drifting sideways,
+ * overlapping the container edges so the rows read as endless.
+ *
+ * This is the right form for the argument: the point is that the work is
+ * strewn across a dozen unconnected places, and a drifting, overflowing field
+ * of chips SHOWS that, where six tidy boxes in a grid contradicted it.
+ *
+ * Centred headline and sub above, the way they do it. Rows alternate
+ * direction. Duplicated once in the DOM so the loop has no seam;
+ * aria-hidden on the copy so a screen reader hears each chip once.
+ */
+import { SCATTER } from '../data/product.js';
+const { who } = Astro.props;
+const d = SCATTER[who];
+/* three rows, split so no row is much longer than another */
+const rows = d ? [d.tiles.slice(0, 2), d.tiles.slice(2, 4), d.tiles.slice(4)] : [];
+const TINTS = ['orange', 'violet', 'yellow', 'emerald'];
+---
+{d && (
+  <section class="drift">
+    <div class="wrap wrap-read">
+      <div class="drift-head reveal">
+        <h2>{d.title}</h2>
+        <p>{d.lead}</p>
+      </div>
+    </div>
+
+    <div class="drift-rows" aria-label={d.title}>
+      {rows.map((row, ri) => (
+        <div class={`drift-row ${ri % 2 ? 'rev' : ''}`}>
+          <div class="drift-track">
+            {[0, 1].map(copy => (
+              <div class="drift-set" aria-hidden={copy === 1 ? 'true' : undefined}>
+                {row.concat(row).map((t, i) => (
+                  <span class="drift-chip" style={`--tint:var(--${TINTS[(ri + i) % 4]})`}>
+                    <i aria-hidden="true"></i>
+                    <b>{t.name}</b>
+                    <em>{t.gap}</em>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="wrap wrap-read">
+      <p class="drift-close reveal">{d.close}</p>
+    </div>
+  </section>
+)}

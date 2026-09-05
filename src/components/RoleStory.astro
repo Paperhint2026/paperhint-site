@@ -12,8 +12,10 @@
  * Content comes from src/data/roles.js and src/data/product.js. Nothing is
  * authored here.
  */
-import Essentials from '../components/Essentials.astro';
-import Scatter from '../components/Scatter.astro';
+import StatRow from '../components/StatRow.astro';
+import Tiles from '../components/Tiles.astro';
+import ChipDrift from '../components/ChipDrift.astro';
+import MoreRow from '../components/MoreRow.astro';
 import { ROLES } from '../data/roles.js';
 import { featuresFor, tabFor, ESSENTIALS } from '../data/product.js';
 
@@ -63,7 +65,10 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
   </div>
 </header>
 
-<!-- the grand intro: the problem, then what Paperhint is inside it -->
+<!-- the stat row, Mercury's opening move -->
+<StatRow />
+
+<!-- the grand intro: the problem, then the line that flips it -->
 <section class="role-intro">
   <div class="wrap wrap-read">
     <p class="intro-statement reveal" set:html={(r.intro && r.intro.statement) || r.scene} />
@@ -72,38 +77,39 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
   </div>
 </section>
 
-<!-- the old world, on a ground that changes under the reader -->
-<Scatter who={role} />
+<!-- the scatter, shown as a drifting field rather than asserted -->
+<ChipDrift who={role} />
 
-<!-- the product, grouped by where the work happens -->
-{curated ? <Essentials only={role} /> : mine.length > 0 && (
-  <section class="ess" id="features">
-    <div class="wrap wrap-read">
-      <h2 class="sec-h2 reveal">{r.stopsTitle}</h2>
-      <div class="feature-grid ess-grid">
-        {mine.map((f, i) => (
-          <article class="fcard ess-card reveal"
-                   style={`--tint:var(--${['emerald','violet','orange','yellow'][i % 4]})`}>
-            <span class="fcard-kicker">{tabFor(f)}</span>
-            <h3>
-              {f.label}
-              {f.badge && <span class="beat-badge">{f.badge}</span>}
-            </h3>
-            <div class="ess-body"><p set:html={f.text} /></div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-)}
+<!-- the features, image-led: the panel is the tile, the words sit under it -->
+{curated
+  ? <Tiles only={role} />
+  : mine.length > 0 && (
+      <section class="tiles-sec" id="features">
+        <div class="wrap wrap-read">
+          <div class="sechead reveal"><h2 class="sechead-h">{r.stopsTitle}</h2></div>
+          <div class="tiles">
+            {mine.map((f, i) => (
+              <article class={`tile reveal ${i === 0 ? 'tile-wide' : ''}`}
+                       style={`--tint:var(--${['emerald','violet','orange','yellow'][i % 4]})`}>
+                <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'}`}>
+                  <div class="v-rows">
+                    <span><b>&#10003;</b>{tabFor(f)}<i>live</i></span>
+                    <span class="sum"><b>&#8721;</b>Recorded to the student<i>&#10003;</i></span>
+                  </div>
+                </div>
+                <div class="tile-cap">
+                  <h3>{f.label}{f.badge && <span class="beat-badge">{f.badge}</span>}</h3>
+                  <p set:html={f.text} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
 
-{next.length > 0 && (
-  <section class="role-next">
-    <div class="wrap wrap-read">
-      <p class="next-note reveal"><b>Being built next.</b> {next.join(' ')}</p>
-    </div>
-  </section>
-)}
+<!-- the roadmap, on the divided shelf: direction only, never availability -->
+<MoreRow items={r.soon} title="Being built next" />
 
 <!-- the close: the site's own CTA band, in this role's words -->
 <section class="cta role-cta-band">

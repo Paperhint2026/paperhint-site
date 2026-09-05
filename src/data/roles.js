@@ -52,6 +52,14 @@ const PAGES = {
       ['A record that builds itself', 'Every result recorded to the student, exam over exam, so a class’s history is one grid rather than a stack of mark lists.'],
       ['Home already told', 'Homework reaches parents the moment it is set, and an absence the same day it is read from the register.'],
     ],
+    /* the 4-up divided row, Amplemarket's "and more" shelf. Direction only —
+       no dates, and it must never read as available. */
+    soon: [
+      ['Your timetable', 'The day\u2019s periods in front of you, with a nudge before each class.'],
+      ['Cover and swap', 'Borrow a period from another teacher, or cover one, by asking.'],
+      ['The period log', 'Say how the class went; the recap writes itself and the portion is tracked.'],
+      ['The syllabus tracker', 'How much of the portion is actually covered, per class, as you go.'],
+    ],
     keepsTitle: 'What stays yours',
     keeps: [
       'Nothing is final until you approve it. Every mark passes your desk.',
@@ -95,6 +103,12 @@ const PAGES = {
       ['One shelf for the whole school', 'Subjects, books and materials curated once, flowing to every teacher in that department and seeding what they draft from.'],
       ['An office that answers back', 'Ask for the change in plain language — move a student to another section, find who teaches what — instead of working through forms.'],
       ['Home told automatically', 'Homework, marks and same-day absences reach parents off the back of the work itself, not a message typed into a group.'],
+    ],
+    soon: [
+      ['School calendar', 'The year\u2019s terms, holidays and events in one place.'],
+      ['Timetable', 'Build the timetable for every class and section, and change it mid-term.'],
+      ['Period cover', 'Reallot a period when a teacher is away, without rebuilding the grid.'],
+      ['The school dashboard', 'Every class logged and every mark sheet monitored, in one view.'],
     ],
     keepsTitle: 'What we do, not you',
     keeps: [

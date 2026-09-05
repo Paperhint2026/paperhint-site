@@ -1678,95 +1678,42 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 @keyframes slot-in{0%,58%{opacity:0;transform:translateX(-8px)}
   64%,90%{opacity:1;transform:none}95%,100%{opacity:0}}
 
-/* --- THE YEAR: the school moves up, one class at a time ----------
-   Stepped, not continuous: a class arrives at the centre, holds long
-   enough to be read, then the whole row shifts and the next one takes
-   its place. Everything outside the centre is dulled by two shades laid
-   over the track, so whichever class is centred is the only bright one
-   without needing to know which class that is. */
-/* Immersive: the row runs to the CARD's own edges and dissolves there, so
-   the classes arrive out of the gradient rather than out of a window inset
-   inside it. The panel drops its horizontal padding for this one kind and
-   the note puts its own back. A mask does the fading — it fades to the card
-   itself, which two opaque shades could only imitate. */
+/* --- THE YEAR: a machine that clicks to the next class --------------
+   The carousel never quite read: cards of one size, the centre only
+   sometimes dark, side labels half-visible mid-transition. This is the
+   founder's fix — make it a machine. A fixed dark block at the centre,
+   bigger than the blank cards beside it, with a reel inside that steps the
+   class up one at a time like a departure board. One animation. */
 .tile-panel.v-year{padding-left:0;padding-right:0}
-.v-migrate{position:relative;width:100%;display:flex;flex-direction:column;
-  gap:14px;overflow:hidden}
-.v-mig-window{position:relative;overflow:hidden;
-  mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%);
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%)}
-/* Fixed card width and a half-window lead-in, so a card lands EXACTLY on
-   the centre at every step rather than nearly. That is what lets each card
-   know when it is the centred one. */
-/* Steps in PIXELS, not percentages. translateX(-50%) of a track whose width
-   includes the lead-in padding is not five cards, which is why the row came
-   out of the loop scrambled — VII-A, VI-A, X-A, IX-A on screen at once.
-   One card is 112 + 14 = 126px, so five of them is exactly 630. */
-.v-mig-track{display:flex;gap:14px;width:max-content;
-  padding-left:calc(50% - 56px)}
-.tile.in .v-mig-track{animation:migrate 11s cubic-bezier(.6,0,.2,1) infinite both}
-/* five holds and five moves: the pause is the point */
-@keyframes migrate{
-  0%,14%{transform:translateX(0)}
-  20%,34%{transform:translateX(-126px)}
-  40%,54%{transform:translateX(-252px)}
-  60%,74%{transform:translateX(-378px)}
-  80%,94%{transform:translateX(-504px)}
-  100%{transform:translateX(-630px)}}
-/* The moving grades sit back: light ink, so the row reads as a queue the
-   eye passes over rather than five competing headlines. The shades either
-   side and the soft centre light do the focusing. */
-/* Anonymous until centred. Every card is a blank white tile; only the one
-   holding the centre shows its name, in dark ink on a faint gradient. That
-   is what makes it read as ONE class being promoted rather than a row of
-   equal labels sliding past. The stepping is pixel-exact, so a card can
-   trust that its --i step is when it is centred. */
-.v-mig-class{flex:none;width:112px;padding:20px 8px;border-radius:12px;
-  text-align:center;font-family:var(--font-display);font-size:24px;font-weight:500;
-  letter-spacing:-.03em;color:transparent;
-  background:var(--p-card);border:1px solid var(--p-line)}
-.tile.in .v-mig-class{animation:mig-focus 11s cubic-bezier(.22,1,.36,1) infinite both;
-  animation-delay:calc(var(--i) * 2.2s)}
-/* the promotion itself: inside the darkened centre, the old class rises out
-   and the new one rises in — VIII-A becomes IX-A while you watch */
-.v-mig-class{position:relative;overflow:hidden;height:70px;padding:0;
-  display:grid;place-items:center}
-.v-mig-class i{grid-area:1/1;font-style:normal;color:inherit}
-.v-mig-class .to{opacity:0}
-.tile.in .v-mig-class .from{animation:mig-from 11s cubic-bezier(.22,1,.36,1) infinite both;
-  animation-delay:calc(var(--i) * 2.2s)}
-.tile.in .v-mig-class .to{animation:mig-to 11s cubic-bezier(.22,1,.36,1) infinite both;
-  animation-delay:calc(var(--i) * 2.2s)}
-@keyframes mig-from{0%,5%{opacity:1;transform:none}
-  8%,13%{opacity:0;transform:translateY(-18px)}
-  15%,100%{opacity:1;transform:none}}
-@keyframes mig-to{0%,5%{opacity:0;transform:translateY(18px)}
-  8%,13%{opacity:1;transform:none}
-  15%,100%{opacity:0;transform:translateY(18px)}}
-/* Read again: "the center card alone to be darkened, with a subtle
-   gradient". The CARD darkens — forest ground, faint tint gradient across
-   it, white name — while the cards either side stay anonymous ghosts. Dark
-   text on a pale card was the wrong reading, and made all three look alike. */
-@keyframes mig-focus{
-  0%{color:transparent;background:var(--p-card);border-color:var(--p-line);
-    box-shadow:none}
-  2%,12%{color:#FFFFFF;
-    background:linear-gradient(160deg,#182A21,#0A0F0C 58%,
-      color-mix(in srgb,var(--tint,var(--emerald)) 30%, #0A0F0C));
-    border-color:#0A0F0C;
-    box-shadow:0 16px 36px -14px rgba(10,15,12,.55)}
-  15%,100%{color:transparent;background:var(--p-card);border-color:var(--p-line);
-    box-shadow:none}}
-/* the ghosts either side: present, blank, and not competing */
-.v-mig-class{background:color-mix(in srgb,var(--p-card) 55%, transparent)}
-/* No frame: a drawn box was the obvious, cheaper version of the idea. What
-   focuses the centre is the edge fade plus this soft light behind it. */
-.v-mig-centre{position:absolute;left:50%;top:50%;width:170px;height:120px;
-  transform:translate(-50%,-50%);pointer-events:none;z-index:0;border-radius:50%;
-  background:radial-gradient(closest-side,
-    color-mix(in srgb,var(--tint,var(--emerald)) 26%,transparent), transparent 78%)}
+.v-mach{display:flex;align-items:center;justify-content:center;gap:16px;width:100%}
+.v-ghost{flex:none;width:104px;height:66px;border-radius:12px;
+  background:color-mix(in srgb,var(--p-card) 55%, transparent);
+  border:1px solid var(--p-line)}
+.v-machine{flex:none;position:relative;width:160px;height:96px;border-radius:16px;
+  overflow:hidden;
+  background:linear-gradient(160deg,#182A21,#0A0F0C 58%,
+    color-mix(in srgb,var(--tint,var(--emerald)) 30%, #0A0F0C));
+  border:1px solid #0A0F0C;
+  box-shadow:0 18px 40px -16px rgba(10,15,12,.55),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  /* the reel fades at the top and bottom edges of the window */
+  mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent)}
+.v-reel{display:flex;flex-direction:column}
+.v-reel span{height:96px;display:grid;place-items:center;
+  font-family:var(--font-display);font-size:30px;font-weight:500;
+  letter-spacing:-.035em;color:#FFFFFF}
+/* five clicks, each a hold then a quick roll; the sixth label is the first
+   again so the jump back to 0 is invisible */
+.tile.in .v-reel{animation:reel 11s cubic-bezier(.7,0,.2,1) infinite both}
+@keyframes reel{
+  0%,16%{transform:translateY(0)}
+  20%,36%{transform:translateY(-96px)}
+  40%,56%{transform:translateY(-192px)}
+  60%,76%{transform:translateY(-288px)}
+  80%,96%{transform:translateY(-384px)}
+  100%{transform:translateY(-480px)}}
 
-.tile-panel.v-notify{position:relative;align-items:flex-end;padding:0}
 /* --- THE SCHOOL'S VOICE: a parent's phone, alive ------------------
    Back by the founder's call — the objection was never the phone, it was
    that this and the teacher's homework panel were the same picture. Black
@@ -1880,9 +1827,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .tile .v-note:first-child{opacity:1 !important}
   .tile .v-hw-lines s,.tile .v-hw-btn{animation:none !important;opacity:1 !important;transform:none !important}
   .tile .v-hw-done{display:none}
-  .tile .v-scan,.tile .v-mig-track{animation:none !important}
-  .tile .v-mig-class,.tile .v-mig-class i{animation:none !important;color:var(--p-ink) !important;transform:none !important}
-  .tile .v-mig-class .to{display:none}
+  .tile .v-scan{animation:none !important}
+  .tile .v-reel{animation:none !important}
   .tile .v-reg .tt-grid s,.tile .v-reg-sent{animation:none !important;opacity:1 !important;transform:none !important}
   .tile .v-scan{display:none}
 }
@@ -2038,6 +1984,18 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-grid{grid-template-columns:1fr}
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
+  /* the machine row was 400px in a 359px panel */
+  .v-mach{gap:12px}
+  .v-ghost{width:70px;height:56px}
+  .v-machine{width:140px;height:84px}
+  .v-reel span{height:84px;font-size:26px}
+  @keyframes reel{
+    0%,16%{transform:translateY(0)}
+    20%,36%{transform:translateY(-84px)}
+    40%,56%{transform:translateY(-168px)}
+    60%,76%{transform:translateY(-252px)}
+    80%,96%{transform:translateY(-336px)}
+    100%{transform:translateY(-420px)}}
   .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 0;max-height:calc(100% - 18px)}
   .v-notch-clock{padding-top:18px}
   .v-clock-time{font-size:52px}

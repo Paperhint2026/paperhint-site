@@ -220,26 +220,20 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                   </div>
                 )}
                 {kind === 'year' && (
-                  /* the whole school moves up: classes run right to left
-                     through a lit centre, edges faded */
-                  <div class="v-migrate">
-                    <div class="v-mig-window">
-                      <div class="v-mig-centre" aria-hidden="true"></div>
-                      <div class="v-mig-track">
-                      {/* The caption says "promote a whole class in one move",
-                          so the centre block is where the promotion HAPPENS:
-                          a class arrives as VIII-A and leaves as IX-A. The
-                          cards either side are anonymous. --i is the step at
-                          which each card is centred; the stepping is
-                          pixel-exact, so that is dependable. */}
-                      {[['VI-A','VII-A'],['VII-A','VIII-A'],['VIII-A','IX-A'],['IX-A','X-A'],['X-A','XI-A'],
-                        ['VI-A','VII-A'],['VII-A','VIII-A'],['VIII-A','IX-A'],['IX-A','X-A'],['X-A','XI-A']].map(([from, to], n) => (
-                        <span class="v-mig-class" style={`--i:${n % 5}`}>
-                          <i class="from">{from}</i><i class="to">{to}</i>
-                        </span>
-                      ))}
+                  /* A MACHINE, not a carousel. One fixed dark block at the
+                     centre — deliberately bigger than the blank cards either
+                     side, because it is the machine — and inside it a reel
+                     that clicks the class up to the next one, like a
+                     departure board: VIII-A rolls out, IX-A rolls in. One
+                     animation, nothing to keep in sync. */
+                  <div class="v-mach">
+                    <span class="v-ghost" aria-hidden="true"></span>
+                    <div class="v-machine">
+                      <div class="v-reel">
+                        {['VI-A','VII-A','VIII-A','IX-A','X-A','VI-A'].map(c => <span>{c}</span>)}
                       </div>
                     </div>
+                    <span class="v-ghost" aria-hidden="true"></span>
                   </div>
                 )}
               </div>

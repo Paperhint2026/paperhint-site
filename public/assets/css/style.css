@@ -1679,63 +1679,51 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 @keyframes slot-in{0%,58%{opacity:0;transform:translateX(-8px)}
   64%,90%{opacity:1;transform:none}95%,100%{opacity:0}}
 
-/* --- THE YEAR: the school climbs ------------------------------------
-   Promotion is a movement upward, so show the movement. Grades are rungs
-   with the highest at the top; each section is a chip resting on its rung.
-   One press and every chip lifts to the rung above at once, a beat apart,
-   and the year rolls over. Then it settles, and the loop begins again. */
-.v-climb{display:flex;flex-direction:column;gap:12px;width:100%;max-width:380px}
-.v-climb-years{display:flex;align-items:center;gap:8px;justify-content:center}
-/* years as plain type, not pills — the panel was all boxes */
-.yr{font-size:12px;letter-spacing:.02em;color:var(--p-mut)}
-.yr.from{color:var(--p-ink)}
-.yr.to{color:var(--tint,var(--emerald));opacity:.35}
-.v-climb-years::before{content:"";order:1;width:22px;height:1px;background:var(--p-line)}
-.v-climb-years .yr.to{order:2}
-.tile.in .yr.to{animation:yr-on 9s cubic-bezier(.22,1,.36,1) infinite both}
-.tile.in .yr.from{animation:yr-off 9s cubic-bezier(.22,1,.36,1) infinite both}
-@keyframes yr-on{0%,44%{opacity:.35}52%,90%{opacity:1}96%,100%{opacity:.35}}
-@keyframes yr-off{0%,44%{opacity:1}52%,90%{opacity:.35}96%,100%{opacity:1}}
+/* --- THE YEAR: the classes move up, one beat at a time ---------------
+   The founder's spec, verbatim. A continuous row moves right to left in a
+   stop-and-move motion, one card per beat, to the centre. No special
+   highlights: every card is the same plain tile; the ones either side have
+   dull text and the one at the centre is bright. ALWAYS FIVE VISIBLE — an
+   odd count, so the centre is obvious.
 
-/* the ladder: 5 rungs of 36px, chips positioned from the bottom */
-.v-ladder{--rung:36px;position:relative;display:flex;flex-direction:column;
-  height:calc(var(--rung) * 5);padding-right:6px}
-.rung{height:var(--rung);display:flex;align-items:center;gap:12px}
-.rung-g{width:34px;text-align:right;font-family:var(--font-display);font-size:13px;
-  font-weight:500;letter-spacing:-.01em;color:var(--p-mut)}
-.rung-line{flex:1;height:1px;background:var(--p-line)}
-/* a section is a marker on its rung and a label — no pill, no shadow */
-/* The label RESTS on its rung rather than sitting across it — centred on
-   the line it read as struck through. Its baseline sits just above the
-   hairline, and the dot is the marker on the line itself. */
-.chip{position:absolute;left:52px;
-  bottom:calc(var(--r) * var(--rung) + var(--rung) / 2 + 2px);
-  padding:0 0 0 16px;line-height:1;
-  font-size:12px;font-weight:500;color:var(--p-ink)}
-.chip::before{content:"";position:absolute;left:0;bottom:-6px;width:9px;height:9px;
-  border-radius:99px;background:var(--tint,var(--emerald))}
-/* the lift: up one rung, a touch of overshoot, then settle; each chip a
-   beat after the one below it */
-.tile.in .chip{animation:chip-lift 9s cubic-bezier(.34,1.35,.5,1) infinite both;
-  animation-delay:calc(var(--k) * .1s)}
-@keyframes chip-lift{
-  0%,44%{transform:none;color:var(--p-ink)}
-  49%{transform:translateY(calc(var(--rung) * -1 - 6px))}
-  53%,90%{transform:translateY(calc(var(--rung) * -1));color:var(--tint,var(--emerald))}
-  96%,100%{transform:none;color:var(--p-ink)}}
-
-.v-climb-act{position:relative;height:34px}
-.vp-btn,.vp-done{position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;gap:8px;border-radius:9px;font-size:12.5px}
-.vp-btn{background:var(--tint,var(--emerald));color:#08130D;font-weight:500}
-.vp-done{border:1px dashed var(--p-line);color:var(--p-soft);opacity:0}
-.vp-done i{font-style:normal;color:var(--tint,var(--emerald))}
-.tile.in .vp-btn{animation:vp-press 9s cubic-bezier(.34,1.4,.5,1) infinite both}
-.tile.in .vp-done{animation:vp-ok 9s cubic-bezier(.22,1,.36,1) infinite both}
-@keyframes vp-press{0%,40%{opacity:1;transform:none}44%{opacity:1;transform:scale(.95)}
-  48%,92%{opacity:0;transform:scale(.98)}98%,100%{opacity:1;transform:none}}
-@keyframes vp-ok{0%,50%{opacity:0;transform:translateY(5px)}
-  56%,90%{opacity:1;transform:none}96%,100%{opacity:0}}
+   Geometry, so it is dependable: five cards and four gaps fill the panel
+   exactly (5×98 + 4×12 = 538 in a 539 panel), one step is card + gap, the
+   lead-in is half the window minus half a card so card k sits dead centre at
+   step k, and the loop runs from step 2 to step 8 — pre-rolled, so the two
+   slots left of the centre are never empty, and step 8 is the same scene as
+   step 2 so the jump back is invisible. Six classes, V-A leading in. */
+.tile-panel.v-year{padding-left:0;padding-right:0}
+.v-row{--card:98px;--gap:12px;--step:calc(var(--card) + var(--gap));
+  position:relative;width:100%;overflow:hidden;
+  /* only the very edges soften; the outer two cards must stay readable */
+  mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%)}
+.v-row-track{display:flex;gap:var(--gap);width:max-content;
+  padding-left:calc(50% - var(--card) / 2);
+  transform:translateX(calc(var(--step) * -2))}
+/* six classes, V-A to X-A, so six beats of 2.2s; steps 2 to 8, and step 8
+   is the same scene as step 2 */
+.tile.in .v-row-track{animation:row-step 13.2s cubic-bezier(.65,0,.15,1) infinite both}
+@keyframes row-step{
+  0%,12%{transform:translateX(calc(var(--step) * -2))}
+  16.67%,28.67%{transform:translateX(calc(var(--step) * -3))}
+  33.33%,45.33%{transform:translateX(calc(var(--step) * -4))}
+  50%,62%{transform:translateX(calc(var(--step) * -5))}
+  66.67%,78.67%{transform:translateX(calc(var(--step) * -6))}
+  83.33%,95.33%{transform:translateX(calc(var(--step) * -7))}
+  100%{transform:translateX(calc(var(--step) * -8))}}
+.v-row-card{flex:none;width:var(--card);height:64px;border-radius:12px;display:grid;
+  place-items:center;font-family:var(--font-display);font-size:21px;font-weight:500;
+  letter-spacing:-.03em;background:var(--p-card);border:1px solid var(--p-line);
+  color:color-mix(in srgb,var(--p-ink) 30%, transparent)}
+/* only the text changes: bright for the fifth of the loop the card holds
+   the centre, dull the rest of the time */
+.tile.in .v-row-card{animation:row-bright 13.2s cubic-bezier(.22,1,.36,1) infinite both;
+  animation-delay:calc(var(--i) * 2.2s)}
+@keyframes row-bright{
+  0%,1%{color:color-mix(in srgb,var(--p-ink) 30%, transparent)}
+  2.5%,12.5%{color:var(--p-ink)}
+  15%,100%{color:color-mix(in srgb,var(--p-ink) 30%, transparent)}}
 
 /* --- THE SCHOOL'S VOICE: a parent's phone, alive ------------------
    Back by the founder's call — the objection was never the phone, it was
@@ -1851,8 +1839,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .tile .v-hw-lines s,.tile .v-hw-btn{animation:none !important;opacity:1 !important;transform:none !important}
   .tile .v-hw-done{display:none}
   .tile .v-scan{animation:none !important}
-  .tile .v-climb *{animation:none !important;opacity:1 !important;transform:none !important}
-  .tile .vp-done{display:none}
+  .tile .v-row-track,.tile .v-row-card{animation:none !important}
+  .tile .v-row-card{color:var(--p-ink) !important}
   .tile .v-reg .tt-grid s,.tile .v-reg-sent{animation:none !important;opacity:1 !important;transform:none !important}
   .tile .v-scan{display:none}
 }
@@ -2008,12 +1996,9 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-grid{grid-template-columns:1fr}
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
-  /* the ladder overran the shorter phone panel */
-  .v-climb{gap:8px}
-  .v-ladder{--rung:28px}
-  .rung-g{font-size:11.5px}
-  .chip{font-size:11px}
-  .v-climb-act{height:30px}
+  /* five still fit: 5×63 + 4×10 = 355 in a 359 panel */
+  .v-row{--card:63px;--gap:10px}
+  .v-row-card{height:48px;font-size:14.5px;border-radius:9px}
 
   .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 0;max-height:calc(100% - 18px)}
   .v-notch-clock{padding-top:18px}

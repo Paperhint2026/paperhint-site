@@ -9,21 +9,14 @@
  */
 
 export const MENUS = [
+  /* Product is a plain link, not a menu: the page is now one page — banner,
+     intro, then the features — so a dropdown offering four ways into it was
+     offering choices that no longer exist. Its old anchors (#copilot, #desk,
+     #office, #classroom) died with the group sections and were pointing at
+     nothing. A menu with no `sections` renders as a link. */
   {
     label: 'Product',
     href: '/product',
-    sections: [
-      {
-        title: 'Where the work happens',
-        items: [
-          ['The copilot', '/product#copilot', 'Ask for the work in plain language'],
-          ['At the teacher’s desk', '/product#desk', 'Marking, question papers, notes, homework'],
-          ['In the school office', '/product#office', 'Allotments, attendance, the year itself'],
-          ['Around the classroom', '/product#classroom', 'Records, results and the people at home'],
-        ],
-      },
-    ],
-    more: ['See the whole product', '/product'],
   },
   {
     label: 'Why Paperhint',

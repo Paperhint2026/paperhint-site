@@ -167,7 +167,7 @@ export const TILE_VISUAL = {
   'Homework set, and home already told': 'notify',
   'An office that runs on asking': 'portal',
   'Every section staffed, and covered': 'allot',
-  'The register you already keep, recorded': 'register',
+  'One timetable, on every teacher\u2019s day': 'timetable',
   'A new academic year in one move': 'year',
   'The school\u2019s voice to every home': 'notify',
 };
@@ -273,11 +273,10 @@ export const ESSENTIALS = [
         text: 'Who teaches which class and section, worked out for you and changed in plain language when the day changes.',
       },
       {
-        tag: 'Attendance', tint: 'yellow',
-        label: 'The register you already keep, recorded',
-        today: 'Today: paper registers marked in class and retyped by somebody later, if at all.',
-        badge: 'Live today',
-        text: 'Mark the same paper register you always have, scan it in, and an absence reaches home the day it is read.',
+        tag: 'Timetable', tint: 'yellow',
+        label: 'One timetable, on every teacher’s day',
+        today: 'Today: a wall chart in the office, and forty teachers copying their own row into a diary.',
+        text: 'The office builds the week once and publishes it. Every teacher opens their own day already laid out, and a change in the office is a change on their screen.',
       },
       {
         tag: 'The academic year', tint: 'violet',

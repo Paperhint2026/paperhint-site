@@ -77,27 +77,33 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                   </div>
                 )}
                 {kind === 'notify' && (
-                  /* a parent's phone: wallpaper, clock, then the school's
-                     message arriving over it */
-                  <div class="v-phone">
-                    <div class="v-phone-screen">
-                      <span class="v-phone-time">3:40</span>
-                      <span class="v-phone-date">Thursday 5 September</span>
-                      <div class="v-push p1">
-                        <i aria-hidden="true"></i>
-                        <div><b>Paperhint &middot; Sunrise Public School</b>
-                          <span>Homework set for VII&#8209;B &mdash; Science Ch 5, Q1&ndash;4, due Thursday.</span></div>
-                      </div>
-                      <div class="v-push p2">
-                        <i aria-hidden="true"></i>
-                        <div><b>Paperhint &middot; Sunrise Public School</b>
-                          <span>Aarav was marked absent in period 2 today.</span></div>
-                      </div>
-                      <div class="v-push p3">
-                        <i aria-hidden="true"></i>
-                        <div><b>Paperhint &middot; Sunrise Public School</b>
-                          <span>Unit test marks are ready &mdash; checked and shared by Ms Nair.</span></div>
-                      </div>
+                  /* zoomed to the top of a parent's phone: the notch, the
+                     status bar, and one notification at a time dropping in
+                     under it with our own mark on it */
+                  <div class="v-notch">
+                    <div class="v-notch-top">
+                      <span class="v-notch-time">3:40</span>
+                      <span class="v-notch-pill" aria-hidden="true"></span>
+                      <span class="v-notch-status" aria-hidden="true">
+                        <i></i><i></i><i class="batt"></i>
+                      </span>
+                    </div>
+                    <div class="v-notch-stack">
+                      {[
+                        ['Homework set for VII‑B — Science Ch 5, Q1–4, due Thursday.', 'now'],
+                        ['Aarav was marked absent in period 2 today.', 'now'],
+                        ['Unit test marks are ready — checked and shared by Ms Nair.', 'now'],
+                      ].map(([line, when], n) => (
+                        <div class="v-note" style={`--n:${n}`}>
+                          <span class="v-note-app" aria-hidden="true">
+                            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.0084 1.3766C13.7737 2.14565 14.2463 3.15379 14.3544 4.22631C15.3798 2.58856 15.6072 1.73351 15.6072 1.73351C16.6106 2.46619 17.2834 3.56947 17.4774 4.80065C17.6467 5.87486 17.4395 6.96965 16.8996 7.90118C18.6871 7.18196 19.3711 6.62453 19.3711 6.62453C19.7544 7.81004 19.6534 9.10001 19.0903 10.2107C18.599 11.1797 17.791 11.943 16.8095 12.3777C18.6762 12.8518 19.5556 12.8049 19.5556 12.8049C19.1723 13.9904 18.3361 14.9743 17.231 15.5402C16.2668 16.034 15.1667 16.1742 14.1183 15.9461C15.3513 17.4323 16.0902 17.9139 16.0902 17.9139C15.0867 18.6465 13.8348 18.9486 12.6097 18.7536C11.5408 18.5835 10.5688 18.0471 9.85413 17.2432C9.98239 19.1739 10.2985 20 10.2985 20C9.0582 20 7.86867 19.5048 6.99163 18.6234C6.2264 17.8544 5.75375 16.8462 5.64567 15.7737C4.62023 17.4115 4.39286 18.2665 4.39286 18.2665C3.38941 17.5338 2.71668 16.4305 2.52265 15.1994C2.35335 14.1252 2.56059 13.0304 3.10043 12.0989C1.31296 12.8181 0.628921 13.3755 0.628921 13.3755C0.245639 12.19 0.346658 10.9 0.909756 9.78937C1.40106 8.82031 2.20902 8.05702 3.19058 7.6223C1.32385 7.14827 0.444435 7.19517 0.444435 7.19517C0.827718 6.00966 1.66391 5.02572 2.76905 4.45982C3.7333 3.96606 4.83338 3.82582 5.88173 4.05395C4.64875 2.56773 3.90986 2.08618 3.90986 2.08618C4.9133 1.3535 6.16527 1.05143 7.39032 1.24643C8.4592 1.41657 9.4312 1.95295 10.1459 2.75678C10.0177 0.826064 9.70151 0 9.70151 0C10.9418 2.42706e-07 12.1314 0.495178 13.0084 1.3766Z"/></svg>
+                          </span>
+                          <div class="v-note-body">
+                            <span class="v-note-head"><b>Paperhint</b><em>{when}</em></span>
+                            <span class="v-note-line">{line}</span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -125,38 +131,50 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                     <div class="v-allot-row"><b>VI&#8209;B</b><span>Maths</span><em>K. Rao</em></div>
                   </div>
                 )}
-                {kind === 'register' && (
-                  /* the full week, period by period, filling as it is scanned */
+                {kind === 'timetable' && (
+                  /* the timetable module: the office builds the grid, hits
+                     publish once, and it lands on every teacher's day */
                   <div class="v-tt">
                     <div class="v-tt-grid">
                       <span class="hd"></span>
                       <span class="hd">Mon</span><span class="hd">Tue</span><span class="hd">Wed</span>
                       <span class="hd">Thu</span><span class="hd">Fri</span>
-                      {[1, 2, 3, 4, 5].map(period => (
+                      {[
+                        ['Phy', 'Mat', 'Eng', 'Phy', 'Bio'],
+                        ['Mat', 'Eng', 'Phy', 'Che', 'Mat'],
+                        ['Eng', 'Bio', 'Mat', 'Eng', 'Phy'],
+                        ['Che', 'Phy', 'Bio', 'Mat', 'Eng'],
+                        ['Bio', 'Che', 'Che', 'Bio', 'Che'],
+                      ].map((row, p) => (
                         <>
-                          <span class="pd">P{period}</span>
-                          {[0, 1, 2, 3, 4].map(day => (
-                            <span class={`cell ${(period + day) % 7 === 3 ? 'part' : 'full'}`}
-                                  style={`--d:${day};--p:${period}`}>
-                              {(period + day) % 7 === 3 ? '41' : '44'}
-                            </span>
+                          <span class="pd">P{p + 1}</span>
+                          {row.map((sub, day) => (
+                            <span class={`cell s-${sub.toLowerCase()}`}
+                                  style={`--d:${day};--p:${p}`}>{sub}</span>
                           ))}
                         </>
                       ))}
                     </div>
-                    <span class="v-tt-note">Every period of the week, read from the register</span>
+                    <div class="v-tt-publish">
+                      <span class="v-tt-btn">Publish</span>
+                      <span class="v-tt-done">Every teacher’s day updated &middot; 32 teachers</span>
+                    </div>
                   </div>
                 )}
                 {kind === 'year' && (
                   /* the whole school moves up: classes run right to left
                      through a lit centre, edges faded */
                   <div class="v-migrate">
-                    <div class="v-mig-track">
+                    <div class="v-mig-window">
+                      <span class="v-mig-shade l" aria-hidden="true"></span>
+                      <span class="v-mig-shade r" aria-hidden="true"></span>
+                      <div class="v-mig-centre" aria-hidden="true"></div>
+                      <div class="v-mig-track">
                       {['VI-A','VII-A','VIII-A','IX-A','X-A','VI-A','VII-A','VIII-A','IX-A','X-A'].map(c => (
                         <span class="v-mig-class">{c}</span>
                       ))}
+                      </div>
                     </div>
-                    <div class="v-mig-centre" aria-hidden="true"></div>
                     <span class="v-mig-note">Every class promoted &middot; library and banks carried forward</span>
                   </div>
                 )}

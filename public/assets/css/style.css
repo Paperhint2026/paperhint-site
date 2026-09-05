@@ -1602,77 +1602,131 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .v-allot-row.is-open .v-slot{color:var(--p-ink);font-size:0}
 .v-allot-row.is-open .v-slot::after{font-size:13.5px}
 
-/* --- THE WEEK: every period, filling as it is read ---------------- */
-.v-tt{display:flex;flex-direction:column;gap:11px;width:100%}
-.v-tt-grid{display:grid;grid-template-columns:26px repeat(5,minmax(0,1fr));gap:4px}
+/* --- THE TIMETABLE: built once in the office, published to every
+       teacher's day. Subjects fill the grid period by period, then the
+       publish button fires and the confirmation takes its place. ----- */
+.v-tt{display:flex;flex-direction:column;gap:12px;width:100%}
+.v-tt-grid{display:grid;grid-template-columns:24px repeat(5,minmax(0,1fr));gap:4px}
 .v-tt-grid .hd,.v-tt-grid .pd{font-size:10px;letter-spacing:.06em;color:var(--p-mut);
-  display:grid;place-items:center;height:20px}
-.v-tt-grid .pd{justify-content:start}
-.v-tt-grid .cell{height:26px;border-radius:5px;display:grid;place-items:center;
-  font-size:10.5px;font-variant-numeric:tabular-nums;
+  display:grid;place-items:center;height:18px}
+.v-tt-grid .cell{height:25px;border-radius:5px;display:grid;place-items:center;
+  font-size:10px;font-weight:500;opacity:0;
   background:color-mix(in srgb,var(--tint,var(--emerald)) 15%,transparent);
-  color:var(--tint,var(--emerald));opacity:0}
-.v-tt-grid .cell.part{background:color-mix(in srgb,#E8823B 18%,transparent);color:#E8823B}
+  color:var(--tint,var(--emerald))}
+/* each subject keeps its own colour, so the week reads as a timetable
+   rather than as a heat map */
+.v-tt-grid .s-phy{background:color-mix(in srgb,var(--emerald) 17%,transparent);color:var(--emerald)}
+.v-tt-grid .s-mat{background:color-mix(in srgb,var(--violet) 20%,transparent);color:var(--violet)}
+.v-tt-grid .s-eng{background:color-mix(in srgb,var(--orange) 20%,transparent);color:var(--orange)}
+.v-tt-grid .s-che{background:color-mix(in srgb,var(--yellow) 22%,transparent);color:var(--yellow)}
+.v-tt-grid .s-bio{background:color-mix(in srgb,var(--p-ink) 12%,transparent);color:var(--p-soft)}
 .tile.in .v-tt-grid .cell{
-  animation:cell-in 7s cubic-bezier(.34,1.3,.5,1) infinite both;
-  animation-delay:calc((var(--p) * 5 + var(--d)) * .055s)}
+  animation:cell-in 9s cubic-bezier(.34,1.3,.5,1) infinite both;
+  animation-delay:calc((var(--p) * 5 + var(--d)) * .045s)}
 @keyframes cell-in{0%{opacity:0;transform:scale(.82)}
-  9%,74%{opacity:1;transform:none}84%,100%{opacity:0;transform:scale(.94)}}
-.v-tt-note{font-size:11.5px;color:var(--p-mut);text-align:center}
+  8%,86%{opacity:1;transform:none}94%,100%{opacity:0;transform:scale(.94)}}
 
-/* --- THE YEAR: the school moves up, right to left through a lit
-       centre with both edges faded out --------------------------- */
-.v-migrate{position:relative;width:100%;display:flex;flex-direction:column;gap:14px}
-.v-mig-track{display:flex;gap:14px;width:max-content;
-  mask-image:linear-gradient(90deg,transparent,#000 26%,#000 74%,transparent);
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 26%,#000 74%,transparent)}
-.tile.in .v-mig-track{animation:migrate 12s linear infinite}
-@keyframes migrate{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.v-migrate{overflow:hidden}
+/* the one click, and what it lands on */
+.v-tt-publish{position:relative;height:30px}
+.v-tt-btn,.v-tt-done{position:absolute;inset:0;display:grid;place-items:center;
+  border-radius:8px;font-size:11.5px}
+.v-tt-btn{background:var(--tint,var(--emerald));color:#08130D;font-weight:500}
+.v-tt-done{border:1px dashed var(--p-line);color:var(--p-soft);opacity:0}
+.tile.in .v-tt-btn{animation:pub-press 9s cubic-bezier(.34,1.4,.5,1) infinite both}
+.tile.in .v-tt-done{animation:pub-done 9s cubic-bezier(.22,1,.36,1) infinite both}
+@keyframes pub-press{0%,42%{opacity:1;transform:none}
+  46%{opacity:1;transform:scale(.95)}
+  52%,88%{opacity:0;transform:scale(.98)}
+  96%,100%{opacity:1;transform:none}}
+@keyframes pub-done{0%,48%{opacity:0;transform:translateY(5px)}
+  56%,86%{opacity:1;transform:none}
+  92%,100%{opacity:0;transform:translateY(3px)}}
+
+/* --- THE YEAR: the school moves up, one class at a time ----------
+   Stepped, not continuous: a class arrives at the centre, holds long
+   enough to be read, then the whole row shifts and the next one takes
+   its place. Everything outside the centre is dulled by two shades laid
+   over the track, so whichever class is centred is the only bright one
+   without needing to know which class that is. */
+.v-migrate{position:relative;width:100%;display:flex;flex-direction:column;
+  gap:14px;overflow:hidden}
+.v-mig-window{position:relative;overflow:hidden}
+.v-mig-track{display:flex;gap:14px;width:max-content}
+.tile.in .v-mig-track{animation:migrate 11s cubic-bezier(.6,0,.2,1) infinite both}
+/* five holds and five moves: the pause is the point */
+@keyframes migrate{
+  0%,14%{transform:translateX(0)}
+  20%,34%{transform:translateX(-10%)}
+  40%,54%{transform:translateX(-20%)}
+  60%,74%{transform:translateX(-30%)}
+  80%,94%{transform:translateX(-40%)}
+  100%{transform:translateX(-50%)}}
 .v-mig-class{flex:none;min-width:96px;padding:20px 14px;border-radius:12px;
   text-align:center;font-family:var(--font-display);font-size:24px;font-weight:500;
   letter-spacing:-.03em;color:var(--p-ink);
   background:var(--p-card);border:1px solid var(--p-line)}
-/* the lit centre the classes pass through */
-.v-mig-centre{position:absolute;left:50%;top:0;width:112px;height:calc(100% - 28px);
-  transform:translateX(-50%);border-radius:14px;pointer-events:none;
-  border:1.5px solid color-mix(in srgb,var(--tint,var(--emerald)) 70%,transparent);
-  box-shadow:0 0 0 9999px color-mix(in srgb,var(--p-card) 0%,transparent),
-    0 0 34px color-mix(in srgb,var(--tint,var(--emerald)) 40%,transparent)}
+/* the two shades that dull everything off-centre */
+.v-mig-shade{position:absolute;top:0;bottom:0;width:34%;pointer-events:none;z-index:2}
+.v-mig-shade.l{left:0;background:linear-gradient(90deg,
+  var(--p-shade) 44%, color-mix(in srgb,var(--p-shade) 0%, transparent))}
+.v-mig-shade.r{right:0;background:linear-gradient(270deg,
+  var(--p-shade) 44%, color-mix(in srgb,var(--p-shade) 0%, transparent))}
+.panel-dark{--p-shade:#0C120E}
+.panel-light{--p-shade:var(--bg-soft)}
+/* the lit frame the class steps into */
+.v-mig-centre{position:absolute;left:50%;top:50%;width:112px;height:70px;
+  transform:translate(-50%,-50%);border-radius:14px;pointer-events:none;z-index:3;
+  border:1.5px solid color-mix(in srgb,var(--tint,var(--emerald)) 75%,transparent);
+  box-shadow:0 0 30px color-mix(in srgb,var(--tint,var(--emerald)) 34%,transparent)}
 .v-mig-note{font-size:11.5px;color:var(--p-mut);text-align:center}
 
-/* --- THE PARENT'S PHONE ------------------------------------------- */
-.v-phone{display:grid;place-items:center;width:100%}
-.v-phone-screen{position:relative;width:186px;aspect-ratio:9/17;border-radius:24px;
-  padding:20px 11px;overflow:hidden;display:flex;flex-direction:column;gap:8px;
-  border:5px solid #1B211D;
+/* --- THE PARENT'S PHONE, zoomed to the notch --------------------
+   Not a whole handset: the top of the screen only, so the notification
+   is the subject rather than a detail on a small rectangle. One at a
+   time, dropping from under the notch, carrying our own mark. */
+.v-notch{width:100%;max-width:340px;margin:0 auto;border-radius:26px 26px 14px 14px;
+  padding:10px 12px 20px;overflow:hidden;
+  border:6px solid #141916;border-bottom:0;
   background:
-    radial-gradient(120% 80% at 22% 8%, rgba(124,92,255,.5), transparent 58%),
-    radial-gradient(110% 70% at 82% 26%, rgba(11,138,92,.55), transparent 60%),
-    linear-gradient(170deg,#20304A,#101A16 72%);
-  box-shadow:0 18px 44px -14px rgba(0,0,0,.6)}
-.v-phone-time{text-align:center;font-family:var(--font-display);font-size:31px;
-  font-weight:500;letter-spacing:-.03em;color:#fff;line-height:1;margin-top:6px}
-.v-phone-date{text-align:center;font-size:10px;color:rgba(255,255,255,.66);
-  margin-bottom:6px}
-.v-push{display:flex;gap:8px;padding:9px 10px;border-radius:12px;
-  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,.18);opacity:0}
-.v-push i{width:17px;height:17px;border-radius:5px;flex:none;margin-top:1px;
-  background:var(--emerald)}
-.v-push b{display:block;font-size:8.5px;font-weight:500;color:#fff;margin-bottom:2px}
-.v-push span{display:block;font-size:9px;line-height:1.35;color:rgba(255,255,255,.82)}
-.tile.in .v-push{animation:push-in 9s cubic-bezier(.22,1,.36,1) infinite both}
-.tile.in .v-push.p1{animation-delay:.4s}
-.tile.in .v-push.p2{animation-delay:3.4s}
-.tile.in .v-push.p3{animation-delay:6.4s}
-@keyframes push-in{0%{opacity:0;transform:translateY(-14px) scale(.94)}
-  5%,28%{opacity:1;transform:none}
-  34%,100%{opacity:0;transform:translateY(-8px) scale(.97)}}
+    radial-gradient(120% 90% at 20% 0%, rgba(124,92,255,.5), transparent 60%),
+    radial-gradient(110% 80% at 84% 18%, rgba(11,138,92,.55), transparent 62%),
+    linear-gradient(170deg,#22334E,#101A16 76%);
+  box-shadow:0 20px 46px -16px rgba(0,0,0,.62)}
+.v-notch-top{display:flex;align-items:center;gap:10px;padding:0 6px 12px}
+.v-notch-time{font-size:12.5px;font-weight:500;color:#fff;min-width:34px}
+.v-notch-pill{flex:1;max-width:86px;height:19px;border-radius:99px;
+  background:#0A0D0B;margin:0 auto}
+.v-notch-status{display:flex;align-items:center;gap:4px;min-width:34px;
+  justify-content:flex-end}
+.v-notch-status i{width:5px;height:5px;border-radius:99px;background:rgba(255,255,255,.75)}
+.v-notch-status i.batt{width:16px;height:8px;border-radius:2px;
+  border:1px solid rgba(255,255,255,.6);background:transparent}
+/* one slot, three messages taking turns in it */
+.v-notch-stack{position:relative;height:74px}
+.v-note{position:absolute;inset:0;display:flex;gap:9px;padding:11px 12px;
+  border-radius:15px;background:rgba(255,255,255,.17);
+  backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);
+  opacity:0}
+.v-note-app{width:26px;height:26px;border-radius:8px;flex:none;display:grid;
+  place-items:center;background:var(--emerald);color:#06120C}
+.v-note-app svg{width:15px;height:15px}
+.v-note-body{min-width:0}
+.v-note-head{display:flex;align-items:baseline;gap:7px;margin-bottom:2px}
+.v-note-head b{font-size:10.5px;font-weight:500;color:#fff}
+.v-note-head em{font-style:normal;font-size:9.5px;color:rgba(255,255,255,.6)}
+.v-note-line{display:block;font-size:11px;line-height:1.4;color:rgba(255,255,255,.9)}
+.tile.in .v-note{animation:note-drop 10.5s cubic-bezier(.22,1,.36,1) infinite both;
+  animation-delay:calc(var(--n) * 3.5s)}
+@keyframes note-drop{
+  0%{opacity:0;transform:translateY(-26px) scale(.94)}
+  4%,28%{opacity:1;transform:none}
+  33%,100%{opacity:0;transform:translateY(-10px) scale(.97)}}
 
 @media (prefers-reduced-motion:reduce){
-  .tile .v-chat span,.tile .v-push,.tile .v-ans b,.tile .v-tt-grid .cell,
+  .tile .v-chat span,.tile .v-ans b,.tile .v-tt-grid .cell,
   .tile .v-menu{opacity:1 !important;animation:none !important;transform:none !important}
+  .tile .v-note{animation:none !important;transform:none !important}
+  .tile .v-note:first-child{opacity:1 !important}
   .tile .v-scan,.tile .v-mig-track{animation:none !important}
   .tile .v-scan{display:none}
 }
@@ -1829,9 +1883,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
   /* the parent's phone was taller than the panel on a 390 viewport */
-  .v-phone-screen{width:150px;padding:15px 9px;border-width:4px}
-  .v-phone-time{font-size:25px}
-  .v-push{padding:7px 8px;gap:6px}
+  .v-notch{max-width:290px;border-width:5px}
   .ess-card{padding:22px 20px 24px}
   .role-intro::after{margin-top:44px}
   .role-next{padding-top:56px}

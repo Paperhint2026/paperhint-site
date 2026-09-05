@@ -109,7 +109,9 @@ async function ask(system, messages) {
    abruptness the founder heard. Short answers that are not refusals are
    left alone. */
 const FILLER = /\b(feel free to ask|please feel free to|just let me know|let me know if|i'?m here for that|i'?m here to help|i'?m here as your assistant|i'?d be happy to|i can definitely assist|i'?m focused on|i focus on|happy to help|how can i assist)\b/i;
-const OPENERS = /^(great question|certainly|absolutely|sure|that'?s great)[.,!]?\s*/i;
+/* "That's a great question, but ..." slipped past the old pattern, which only
+   knew "that's great". Any opener that praises the question goes. */
+const OPENERS = /^(?:(?:that'?s|what) (?:a |an )?(?:great|good|excellent|interesting) (?:question|one)|great question|good question|certainly|absolutely|sure|that'?s great)[.,!]?\s*(?:but\s+)?/i;
 const WORDS = [
   [/\bstreamlining\b/gi, 'handling'], [/\bstreamlines\b/gi, 'handles'], [/\bstreamlined\b/gi, 'handled'], [/\bstreamline\b/gi, 'handle'],
   [/\bleveraging\b/gi, 'using'], [/\bleverages\b/gi, 'uses'], [/\bleverage\b/gi, 'use'],

@@ -105,6 +105,12 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                         </div>
                       ))}
                     </div>
+                    {/* the lock screen carrying on under the notification,
+                        faded and cropped by the card's bottom edge */}
+                    <div class="v-notch-clock" aria-hidden="true">
+                      <span class="v-clock-day">Thursday, 5 September</span>
+                      <span class="v-clock-time">3:40</span>
+                    </div>
                   </div>
                 )}
                 {kind === 'portal' && (
@@ -185,8 +191,13 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                     <div class="v-mig-window">
                       <div class="v-mig-centre" aria-hidden="true"></div>
                       <div class="v-mig-track">
-                      {['VI-A','VII-A','VIII-A','IX-A','X-A','VI-A','VII-A','VIII-A','IX-A','X-A'].map(c => (
-                        <span class="v-mig-class">{c}</span>
+                      {/* laid out descending and run in reverse, so the
+                          cards travel LEFT TO RIGHT while the class at the
+                          centre climbs VI to X. Leftward motion read as
+                          demotion. --i is the step at which each card is
+                          centred, which is what lights it. */}
+                      {['X-A','IX-A','VIII-A','VII-A','VI-A','X-A','IX-A','VIII-A','VII-A','VI-A'].map((c, n) => (
+                        <span class="v-mig-class" style={`--i:${n % 5}`}>{c}</span>
                       ))}
                       </div>
                     </div>

@@ -1698,8 +1698,13 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .v-mig-window{position:relative;overflow:hidden;
   mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%);
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%)}
-.v-mig-track{display:flex;gap:14px;width:max-content}
-.tile.in .v-mig-track{animation:migrate 11s cubic-bezier(.6,0,.2,1) infinite both}
+/* Fixed card width and a half-window lead-in, so a card lands EXACTLY on
+   the centre at every step rather than nearly. That is what lets each card
+   know when it is the centred one. */
+.v-mig-track{display:flex;gap:14px;width:max-content;
+  padding-left:calc(50% - 56px)}
+.tile.in .v-mig-track{animation:migrate 11s cubic-bezier(.6,0,.2,1) infinite both;
+  animation-direction:reverse}
 /* five holds and five moves: the pause is the point */
 @keyframes migrate{
   0%,14%{transform:translateX(0)}
@@ -1711,10 +1716,20 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 /* The moving grades sit back: light ink, so the row reads as a queue the
    eye passes over rather than five competing headlines. The shades either
    side and the soft centre light do the focusing. */
-.v-mig-class{flex:none;min-width:96px;padding:20px 14px;border-radius:12px;
+.v-mig-class{flex:none;width:112px;padding:20px 8px;border-radius:12px;
   text-align:center;font-family:var(--font-display);font-size:24px;font-weight:500;
   letter-spacing:-.03em;color:color-mix(in srgb,var(--p-ink) 42%, transparent);
   background:var(--p-card);border:1px solid var(--p-line)}
+/* The centred card is the one that is NOT light: it goes to the forest
+   ground while the queue either side stays pale, so the class being
+   promoted is unmistakable now that every panel is a white card. Each card
+   is lit for the fifth of the cycle in which it holds the centre. */
+.tile.in .v-mig-class{animation:mig-focus 11s steps(1,end) infinite both;
+  animation-delay:calc(var(--i) * 2.2s)}
+@keyframes mig-focus{
+  0%,20%{background:#101A15;border-color:#101A15;color:#FFFFFF}
+  20.01%,100%{background:var(--p-card);border-color:var(--p-line);
+    color:color-mix(in srgb,var(--p-ink) 42%, transparent)}}
 /* No frame: a drawn box was the obvious, cheaper version of the idea. What
    focuses the centre is the edge fade plus this soft light behind it. */
 .v-mig-centre{position:absolute;left:50%;top:50%;width:170px;height:120px;
@@ -1741,7 +1756,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
    strip, and its screen keeps a wallpaper — the notification has to sit on
    something for the glass to mean anything. */
 .v-notch{position:absolute;left:26px;right:26px;bottom:0;width:auto;margin:0;
-  border-radius:34px 34px 0 0;padding:18px 16px 40px;overflow:hidden;
+  border-radius:34px 34px 0 0;padding:18px 16px 0;overflow:hidden;
   border:9px solid #0D1310;border-bottom:0;
   background:
     radial-gradient(130% 95% at 16% 0%, rgba(124,92,255,.5), transparent 62%),
@@ -1758,8 +1773,12 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .v-notch-status i.batt{width:19px;height:10px;border-radius:3px;
   border:1px solid rgba(255,255,255,.6);background:transparent}
 /* one slot, three messages taking turns in it */
-.v-notch-stack{position:relative;height:104px}
-.v-note{position:absolute;inset:0;display:flex;gap:12px;padding:15px 16px;
+/* The three notifications share one grid cell instead of being absolutely
+   stretched over a fixed 108px box. Each card is then exactly as tall as its
+   own text, and the slot is as tall as the longest of them — so a short
+   message no longer sits in a tall empty pill. */
+.v-notch-stack{display:grid}
+.v-note{grid-area:1/1;align-self:start;display:flex;gap:12px;padding:15px 16px;
   border-radius:20px;background:rgba(255,255,255,.19);
   backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.24);
   opacity:0}
@@ -1774,6 +1793,15 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .v-note-line{display:block;font-size:13.5px;line-height:1.42;color:rgba(255,255,255,.9)}
 .tile.in .v-note{animation:note-drop 10.5s cubic-bezier(.22,1,.36,1) infinite both;
   animation-delay:calc(var(--n) * 3.5s)}
+/* The lock screen carries on below the notification: a big, faded clock
+   that the card's bottom edge cuts through. It is what makes the panel read
+   as a phone continuing past the frame rather than a cropped strip. */
+.v-notch-clock{display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:26px 0 0;opacity:.34}
+.v-clock-day{font-size:12px;color:rgba(255,255,255,.9);letter-spacing:.01em}
+.v-clock-time{font-family:var(--font-display);font-size:66px;font-weight:500;
+  letter-spacing:-.05em;line-height:.9;color:#fff}
+
 @keyframes note-drop{
   0%{opacity:0;transform:translateY(-26px) scale(.94)}
   4%,28%{opacity:1;transform:none}
@@ -1940,8 +1968,9 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
   /* the parent's phone was taller than the panel on a 390 viewport */
-  .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 30px}
-  .v-notch-stack{height:84px}
+  .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 0}
+  .v-notch-clock{padding-top:18px}
+  .v-clock-time{font-size:52px}
   .v-note-line{font-size:12.5px}
   .ess-card{padding:22px 20px 24px}
   .role-intro::after{margin-top:44px}

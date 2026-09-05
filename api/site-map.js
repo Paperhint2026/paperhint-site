@@ -57,8 +57,6 @@ const TOPICS = [
   [/\bcopilot/i, '/product#copilot'],
   [/\bteach(er|ing)/i, '/teachers'],
   [/\b(school office|admin|allot|principal|office)/i, '/schools'],
-  [/\bstudent/i, '/students'],
-  [/\bparent/i, '/parents'],
   [/\b(pric|cost|licen)/i, '/pricing'],
   [/\b(privacy|gdpr)/i, '/privacy'],
   [/\b(demo|contact)/i, '/contact'],
@@ -70,7 +68,7 @@ const TOPICS = [
 
 const LABELS = {
   '/product#copilot': 'The copilot', '/teachers': "A teacher's week", '/schools': 'In the school office',
-  '/students': 'For students', '/parents': 'For parents', '/pricing': 'How a licence works',
+  '/pricing': 'How a licence works',
   '/privacy': 'What we collect', '/contact': 'Book a demo', '/about': 'Why we built it',
   '/product#desk': "At the teacher's desk", '/product#office': 'In the school office', '/product': 'The whole product',
 };

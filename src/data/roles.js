@@ -230,4 +230,9 @@ export const ROLES = Object.fromEntries(Object.entries(PAGES).map(([key, page]) 
   }];
 }));
 
-export const ORDER = ['teachers', 'schools', 'students', 'parents'];
+/* Students and parents are OUT of the page order for now (founder's call,
+   2026-09-05): neither audience buys and neither searches, and their pages
+   were 400 words repeating /product. Their ROLES entries stay — the home
+   role folder and the chat's role stories both still render them — but no
+   page is built and nothing links to one. */
+export const ORDER = ['teachers', 'schools'];

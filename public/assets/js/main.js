@@ -1218,7 +1218,11 @@
 
     /* the tab keys and the page URLs differ in one place: the office tab is
        called 'admins' here and the page is /schools */
-    var ROLE_PAGE = { teachers: '/teachers', admins: '/schools', students: '/students', parents: '/parents' };
+    /* Students and parents keep their tab — they are real audiences and the
+       panel still describes what they get — but they have no page of their
+       own for now, so no link is rendered for them rather than one that
+       404s. render() already skips the CTA when there is no page. */
+    var ROLE_PAGE = { teachers: '/teachers', admins: '/schools' };
 
     function render(key) {
       var d = ROLES[key];

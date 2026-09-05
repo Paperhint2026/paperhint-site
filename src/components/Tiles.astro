@@ -33,25 +33,22 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
           return (
             <article class={`tile reveal ${i === 0 ? 'tile-wide' : ''}`}
                      style={`--tint:var(--${it.tint || 'emerald'})`}>
-              <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'} v-${kind}`}
-                   data-loop={kind === 'chat' || kind === 'notify' ? '' : undefined}>
-                {(kind === 'chat' || kind === 'notify') && (
-                  <button class="panel-pause" type="button"
-                          aria-label="Pause this animation" aria-pressed="false">
-                    <svg viewBox="0 0 20 20" aria-hidden="true">
-                      <rect class="p-bar" x="6.5" y="5" width="2.6" height="10" rx="1"/>
-                      <rect class="p-bar" x="11" y="5" width="2.6" height="10" rx="1"/>
-                      <path class="p-play" d="M7 4.6 L15.5 10 L7 15.4 Z"/>
-                    </svg>
-                  </button>
-                )}
+              <div class={`tile-panel ${i % 2 ? 'panel-light' : 'panel-dark'} v-${kind}`}>
                 {kind === 'sheets' && (
-                  <div class="v-rows">
-                    <span><b>Q1</b> Laws of reflection<i>5/5</i></span>
-                    <span><b>Q2</b> Diagram labelled<i>4/4</i></span>
-                    <span class="miss"><b>Q3</b> Numerical — step missed<i>3/5</i></span>
-                    <span><b>Q4</b> Definition<i>3/3</i></span>
-                    <span class="sum"><b>&#8721;</b> Scored on your rubric<i>15/17</i></span>
+                  /* the sheet is photographed, a scan sweeps it, then each
+                     answer is scored in the margin and the total lands */
+                  <div class="v-sheet">
+                    <div class="v-sheet-paper">
+                      <span class="v-scan" aria-hidden="true"></span>
+                      {['Q1','Q2','Q3','Q4'].map((q, n) => (
+                        <div class="v-ans" style={`--n:${n}`}>
+                          <em>{q}</em>
+                          <s class="w1"></s><s class="w2"></s><s class="w3"></s>
+                          <b class={n === 2 ? 'part' : ''}>{['5/5','4/4','3/5','3/3'][n]}</b>
+                        </div>
+                      ))}
+                    </div>
+                    <div class="v-sheet-total"><span>Scored on your rubric</span><b>15/17</b></div>
                   </div>
                 )}
                 {kind === 'paper' && (
@@ -80,11 +77,28 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                   </div>
                 )}
                 {kind === 'notify' && (
-                  <div class="v-notify">
-                    <span class="sent">Homework assigned &middot; VII&#8209;B</span>
-                    <span class="chip">44 parents notified</span>
-                    <span class="chip">Absence &middot; same day</span>
-                    <span class="chip">Marks shared &middot; approved</span>
+                  /* a parent's phone: wallpaper, clock, then the school's
+                     message arriving over it */
+                  <div class="v-phone">
+                    <div class="v-phone-screen">
+                      <span class="v-phone-time">3:40</span>
+                      <span class="v-phone-date">Thursday 5 September</span>
+                      <div class="v-push p1">
+                        <i aria-hidden="true"></i>
+                        <div><b>Paperhint &middot; Sunrise Public School</b>
+                          <span>Homework set for VII&#8209;B &mdash; Science Ch 5, Q1&ndash;4, due Thursday.</span></div>
+                      </div>
+                      <div class="v-push p2">
+                        <i aria-hidden="true"></i>
+                        <div><b>Paperhint &middot; Sunrise Public School</b>
+                          <span>Aarav was marked absent in period 2 today.</span></div>
+                      </div>
+                      <div class="v-push p3">
+                        <i aria-hidden="true"></i>
+                        <div><b>Paperhint &middot; Sunrise Public School</b>
+                          <span>Unit test marks are ready &mdash; checked and shared by Ms Nair.</span></div>
+                      </div>
+                    </div>
                   </div>
                 )}
                 {kind === 'portal' && (
@@ -96,28 +110,54 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                   </div>
                 )}
                 {kind === 'allot' && (
-                  <div class="v-rows">
-                    <span><b>IX&#8209;A</b> Physics<i>R. Nair</i></span>
-                    <span><b>VII&#8209;C</b> English<i>V. Iyer</i></span>
-                    <span><b>VI&#8209;B</b> Maths<i>K. Rao</i></span>
-                    <span class="sum"><b>&#8721;</b> Every section staffed<i>32/32</i></span>
+                  /* the empty section is chosen, a list of teachers opens,
+                     one is picked, and the row fills */
+                  <div class="v-allot">
+                    <div class="v-allot-row"><b>IX&#8209;A</b><span>Physics</span><em>R. Nair</em></div>
+                    <div class="v-allot-row is-open">
+                      <b>VII&#8209;C</b><span>English</span><em class="v-slot">Unassigned</em>
+                      <ul class="v-menu">
+                        <li>K. Rao</li>
+                        <li class="pick">V. Iyer</li>
+                        <li>S. Mehta</li>
+                      </ul>
+                    </div>
+                    <div class="v-allot-row"><b>VI&#8209;B</b><span>Maths</span><em>K. Rao</em></div>
                   </div>
                 )}
                 {kind === 'register' && (
-                  <div class="v-reg">
-                    <div class="tt-grid">
-                      <s>Mon</s><s>Tue</s><s>Wed</s><s>Thu</s><s>Fri</s>
-                      <s class="c1">42/44</s><s class="c1">44/44</s><s class="c2">41/44</s><s class="c1">43/44</s><s class="c1">44/44</s>
+                  /* the full week, period by period, filling as it is scanned */
+                  <div class="v-tt">
+                    <div class="v-tt-grid">
+                      <span class="hd"></span>
+                      <span class="hd">Mon</span><span class="hd">Tue</span><span class="hd">Wed</span>
+                      <span class="hd">Thu</span><span class="hd">Fri</span>
+                      {[1, 2, 3, 4, 5].map(period => (
+                        <>
+                          <span class="pd">P{period}</span>
+                          {[0, 1, 2, 3, 4].map(day => (
+                            <span class={`cell ${(period + day) % 7 === 3 ? 'part' : 'full'}`}
+                                  style={`--d:${day};--p:${period}`}>
+                              {(period + day) % 7 === 3 ? '41' : '44'}
+                            </span>
+                          ))}
+                        </>
+                      ))}
                     </div>
-                    <span class="v-reg-note">Scanned from the paper register</span>
+                    <span class="v-tt-note">Every period of the week, read from the register</span>
                   </div>
                 )}
                 {kind === 'year' && (
-                  <div class="v-year">
-                    <span class="from">VIII&#8209;A</span>
-                    <span class="arrow" aria-hidden="true">&#8594;</span>
-                    <span class="to">IX&#8209;A</span>
-                    <span class="v-year-note">44 students &middot; library and banks carried forward</span>
+                  /* the whole school moves up: classes run right to left
+                     through a lit centre, edges faded */
+                  <div class="v-migrate">
+                    <div class="v-mig-track">
+                      {['VI-A','VII-A','VIII-A','IX-A','X-A','VI-A','VII-A','VIII-A','IX-A','X-A'].map(c => (
+                        <span class="v-mig-class">{c}</span>
+                      ))}
+                    </div>
+                    <div class="v-mig-centre" aria-hidden="true"></div>
+                    <span class="v-mig-note">Every class promoted &middot; library and banks carried forward</span>
                   </div>
                 )}
               </div>

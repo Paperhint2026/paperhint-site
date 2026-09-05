@@ -235,6 +235,8 @@ function scrub(text) {
   const kept = parts.filter(p => !FILLER.test(p));
   let out = (kept.length ? kept : parts).join(' ')
     .replace(OPENERS, '')
+    /* eating ", but" can leave the reply starting lowercase */
+    .replace(/^\s*([a-z])/, function (_, c) { return c.toUpperCase(); })
     .replace(/^(plus|also|and|but|so),?\s+/i, '')      /* an orphan left by a drop */
     .replace(/\.\s*\./g, '.').trim();
   out = out.charAt(0).toUpperCase() + out.slice(1);

@@ -220,26 +220,35 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
                   </div>
                 )}
                 {kind === 'year' && (
-                  /* A MACHINE, not a carousel. One fixed dark block at the
-                     centre — deliberately bigger than the blank cards either
-                     side, because it is the machine — and inside it a reel
-                     that clicks the class up to the next one, like a
-                     departure board: VIII-A rolls out, IX-A rolls in. One
-                     animation, nothing to keep in sync. */
-                  <div class="v-mach">
-                    <span class="v-ghost" aria-hidden="true"></span>
-                    <div class="v-machine">
-                      <div class="v-reel">
-                        {['VI-A','VII-A','VIII-A','IX-A','X-A','VI-A'].map(c => <span>{c}</span>)}
-                      </div>
+                  /* THE SCHOOL CLIMBS. Grades are rungs, top is highest;
+                     each section is a chip sitting on its rung. One press
+                     and every chip lifts to the rung above at once, a beat
+                     apart, carrying its count with it — and the year rolls.
+                     Promotion is a movement upward; this is that movement. */
+                  <div class="v-climb">
+                    <div class="v-climb-years">
+                      <span class="yr from">2025&ndash;26</span>
+                      <span class="yr to">2026&ndash;27</span>
                     </div>
-                    <span class="v-ghost" aria-hidden="true"></span>
+                    <div class="v-ladder">
+                      {['X','IX','VIII','VII','VI'].map(g => (
+                        <div class="rung"><span class="rung-g">{g}</span><span class="rung-line" aria-hidden="true"></span></div>
+                      ))}
+                      {/* chips: --r is the rung index from the bottom (VI=0) */}
+                      {[['A · 44',3],['A · 42',2],['A · 44',1],['A · 41',0]].map(([t, r], k) => (
+                        <span class="chip" style={`--r:${r};--k:${k}`}>{t}</span>
+                      ))}
+                    </div>
+                    <div class="v-climb-act">
+                      <span class="vp-btn">Promote the school</span>
+                      <span class="vp-done"><i aria-hidden="true">&#10003;</i>Every class up a grade &middot; library and banks carried</span>
+                    </div>
                   </div>
                 )}
               </div>
 
               <div class="tile-cap">
-                <h3>{it.label}{it.badge && <span class="beat-badge">{it.badge}</span>}</h3>
+                <h3>{it.label}</h3>
                 <p set:html={it.text} />
               </div>
             </article>

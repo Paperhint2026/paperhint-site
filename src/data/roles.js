@@ -40,7 +40,10 @@ const PAGES = {
            sub: 'Tell us how a teaching week runs in your school today, and we’ll show you the same week running in Paperhint.' },
     nav: 'Teachers',
     kicker: 'FOR TEACHERS',
-    h1: ['Walk in ready. Every ', 'c', 'lass.'],                /* DRAFT */
+    /* The house letter is the h (home: "a second pair of hands"), and the old
+       line had none, so this is a new sentence: the week in hand before the
+       bell. Founder's approval pending, like every DRAFT line. */
+    h1: ['Walk in ready, week in ', 'h', 'and.'],              /* DRAFT — the h is the house letter */
     sub: 'An assistant at your desk that prepares the next class, marks to your rubric and follows through with home — so the hours go to teaching.',  /* DRAFT */
     title: 'Paperhint for Teachers — An Assistant at Your Desk',
     description: 'What a teacher gets from Paperhint: attendance recorded, notes and papers prepared for your syllabus, answer sheets marked to your rubric, homework followed through to parents — so the hours go to teaching.',
@@ -91,7 +94,7 @@ const PAGES = {
     secondNote: 'There is no separate principal interface. It is the same portal a teacher and the office use, with permissions that sit between the two.',
     nav: 'Schools',
     kicker: 'FOR SCHOOLS',
-    h1: ['Run the school, not the ', 's', 'preadsheet'],        /* DRAFT */
+    h1: ['Run the sc', 'h', 'ool, not the spreadsheet'],        /* DRAFT — the h is the house letter */
     sub: 'Classes, sections, students, teachers and who teaches what — set up once and run from one place, with an assistant to drive it in plain language.',  /* DRAFT */
     title: 'Paperhint for Schools — Run the Year From One Place',
     description: 'What the school office gets from Paperhint: classes and sections set up once, allotments worked out for you, the year migrated in one move, notifications home configured rather than typed, and every class and mark sheet in one picture.',

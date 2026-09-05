@@ -18,7 +18,7 @@
 
 export const PRODUCT = {
   kicker: 'THE PRODUCT',
-  h1: ['Everything a school ', 'd', 'oes in a week'],            /* DRAFT */
+  h1: ['Everything a sc', 'h', 'ool does in a week'],            /* DRAFT — the h is the house letter */
   sub: 'An assistant at the teacher’s desk and another in the office — preparing, remembering and following through, so the hours go to teaching.',  /* DRAFT */
   title: 'Paperhint — Complete School Software for Teachers and Schools',
   description: 'Everything Paperhint carries: attendance, answer-sheet evaluation, question papers, teaching notes, homework, shared libraries, allotments, the admin portal, student records and parent notifications — so a school runs faster.',
@@ -57,7 +57,7 @@ export const PRODUCT = {
       title: 'In the school office',
       lead: 'The things that do not scale by hand: the lists, the allotments, the year itself.',
       features: [
-        ['Attendance scanning', 'Attendance marked on the paper register the school already uses, scanned in; the day’s roll is recorded and absences reach parents. Manual entry works too.', 'Live today', ['schools', 'parents']],
+        ['Attendance scanning', 'Attendance marked on the paper register the school already uses, scanned in; the day’s roll is recorded and absences reach parents. Manual entry works too.', ['schools', 'parents']],
         ['Resource planning and allotment', 'Automation works out which teacher is allotted to each class and section, kept in one clean interface, with an office copilot handling changes in plain language.', ['schools']],
         ['Admin portal', 'Classes, sections, students, teachers and subjects managed in one place, with create, read, update and delete for each module. The office copilot can drive all of it.', ['schools']],
         ['Batch migration', 'Promote a whole class to the next grade in one move at year end; absorb the fresh batch cleanly.', ['schools']],
@@ -301,7 +301,6 @@ export const ESSENTIALS = [
         tag: 'Attendance', tint: 'orange',
         label: 'The register you already keep, recorded',
         today: 'Today: paper registers marked in class and retyped by somebody later, if at all.',
-        badge: 'Live today',
         text: 'Mark the same paper register you always have, scan it in, and an absence reaches home the day it is read.',
       },
     ],

@@ -93,7 +93,7 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
                   </div>
                 </div>
                 <div class="tile-cap">
-                  <h3>{f.label}{f.badge && <span class="beat-badge">{f.badge}</span>}</h3>
+                  <h3>{f.label}</h3>
                   <p set:html={f.text} />
                 </div>
               </article>

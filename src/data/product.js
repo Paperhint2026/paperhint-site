@@ -137,8 +137,12 @@ export const WEEK = {
     { h: 4.6, label: 'Marking and correcting', ours: 'Answer sheets scored on your rubric, from a photo' },
     { h: 3.0, label: 'Administrative work', ours: 'Attendance, records and the messages home' },
   ],
-  rest: 'The remaining hours go to parents, counselling, teamwork and duties — the parts of the job that should be a person.',
-  source: 'OECD TALIS 2024, Table 3.16 — full-time lower-secondary teachers, OECD average. India does not take part in TALIS, so this is the international picture, not an Indian one.',
+  rest: 'The remaining hours go to parents, counselling, teamwork and duties — the parts of the job that should be a person. That is the international average; an Indian week is its own shape, and we would rather measure yours than guess it.',
+  /* Trimmed to a bare credit at the founder's request. It cannot go to zero:
+     these are the OECD's figures, not ours, and using them unattributed is
+     not a style choice. The India caveat moved into `rest`, where it reads
+     as copy instead of a disclaimer. */
+  source: 'Source: OECD TALIS 2024',
   sourceHref: 'https://www.oecd.org/en/publications/results-from-talis-2024_90df6235-en.html',
 };
 

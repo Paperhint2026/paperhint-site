@@ -1291,10 +1291,13 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .week-kicker{display:block;font-size:11.5px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--emerald);margin-bottom:14px}
 /* the week as one bar: teaching, then everything else */
-.week-bar{display:flex;gap:4px;height:118px;margin-bottom:44px}
+/* One bar, not two cards side by side: the point is a single week divided,
+   and two rounded panels with a gap between them read as two things. */
+.week-bar{display:flex;height:104px;margin-bottom:44px;border-radius:12px;
+  overflow:hidden;border:1px solid var(--line)}
 /* flex:0 0 --w, not width: as plain flex items these were sized by their
    content and the bar read 77/23 instead of the true 55/45. */
-.wb-seg{flex:0 0 var(--w);min-width:0;border-radius:12px;padding:16px 18px;
+.wb-seg{flex:0 0 var(--w);min-width:0;padding:16px 18px;
   display:flex;flex-direction:column;justify-content:flex-end;gap:2px;
   overflow:hidden;transform-origin:left center}
 .reveal.in .wb-seg{animation:wb-grow .9s cubic-bezier(.22,1,.36,1) both}
@@ -1303,7 +1306,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .wb-seg b{font-family:var(--font-display);font-size:clamp(22px,2.6vw,32px);
   font-weight:500;letter-spacing:-.035em;line-height:1}
 .wb-seg i{font-style:normal;font-size:13px}
-.wb-teach{background:var(--bg-soft);border:1px solid var(--line);color:var(--ink)}
+.wb-teach{background:var(--bg-soft);color:var(--ink)}
 .wb-teach i{color:var(--muted)}
 .wb-other{background:linear-gradient(155deg,#111A15,#0A0F0C 70%);color:#F2EEE3}
 .wb-other b{color:var(--emerald)}
@@ -1327,8 +1330,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 
 .week-rest{margin:38px 0 0;max-width:56ch;font-size:16.5px;line-height:1.6;
   color:var(--ink-soft)}
-.week-source{margin:20px 0 0;max-width:70ch;font-size:12.5px;line-height:1.5;
-  color:var(--muted)}
+.week-source{margin:18px 0 0;font-size:11.5px;color:var(--muted);opacity:.75}
 .week-source a{color:inherit;text-decoration:underline;
   text-underline-offset:3px;text-decoration-color:var(--line)}
 .week-source a:hover{color:var(--ink-soft)}
@@ -1344,7 +1346,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .tiles-sec:last-of-type,.drift:last-of-type{padding-bottom:8px}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   column-gap:var(--s-tile-col);row-gap:var(--s-tile-row)}
-.tile{display:flex;flex-direction:column;gap:var(--s-cap)}
+.tile{display:flex;flex-direction:column;gap:var(--s-cap);min-width:0}
 .tile-wide{grid-column:1 / -1;display:grid;
   grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:44px;align-items:center}
 /* no border, no fill, no shadow on the tile itself — the caption sits on the
@@ -1701,18 +1703,21 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 /* Fixed card width and a half-window lead-in, so a card lands EXACTLY on
    the centre at every step rather than nearly. That is what lets each card
    know when it is the centred one. */
+/* Steps in PIXELS, not percentages. translateX(-50%) of a track whose width
+   includes the lead-in padding is not five cards, which is why the row came
+   out of the loop scrambled — VII-A, VI-A, X-A, IX-A on screen at once.
+   One card is 112 + 14 = 126px, so five of them is exactly 630. */
 .v-mig-track{display:flex;gap:14px;width:max-content;
   padding-left:calc(50% - 56px)}
-.tile.in .v-mig-track{animation:migrate 11s cubic-bezier(.6,0,.2,1) infinite both;
-  animation-direction:reverse}
+.tile.in .v-mig-track{animation:migrate 11s cubic-bezier(.6,0,.2,1) infinite both}
 /* five holds and five moves: the pause is the point */
 @keyframes migrate{
   0%,14%{transform:translateX(0)}
-  20%,34%{transform:translateX(-10%)}
-  40%,54%{transform:translateX(-20%)}
-  60%,74%{transform:translateX(-30%)}
-  80%,94%{transform:translateX(-40%)}
-  100%{transform:translateX(-50%)}}
+  20%,34%{transform:translateX(-126px)}
+  40%,54%{transform:translateX(-252px)}
+  60%,74%{transform:translateX(-378px)}
+  80%,94%{transform:translateX(-504px)}
+  100%{transform:translateX(-630px)}}
 /* The moving grades sit back: light ink, so the row reads as a queue the
    eye passes over rather than five competing headlines. The shades either
    side and the soft centre light do the focusing. */
@@ -1720,16 +1725,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   text-align:center;font-family:var(--font-display);font-size:24px;font-weight:500;
   letter-spacing:-.03em;color:color-mix(in srgb,var(--p-ink) 42%, transparent);
   background:var(--p-card);border:1px solid var(--p-line)}
-/* The centred card is the one that is NOT light: it goes to the forest
-   ground while the queue either side stays pale, so the class being
-   promoted is unmistakable now that every panel is a white card. Each card
-   is lit for the fifth of the cycle in which it holds the centre. */
-.tile.in .v-mig-class{animation:mig-focus 11s steps(1,end) infinite both;
-  animation-delay:calc(var(--i) * 2.2s)}
-@keyframes mig-focus{
-  0%,20%{background:#101A15;border-color:#101A15;color:#FFFFFF}
-  20.01%,100%{background:var(--p-card);border-color:var(--p-line);
-    color:color-mix(in srgb,var(--p-ink) 42%, transparent)}}
 /* No frame: a drawn box was the obvious, cheaper version of the idea. What
    focuses the centre is the edge fade plus this soft light behind it. */
 .v-mig-centre{position:absolute;left:50%;top:50%;width:170px;height:120px;
@@ -1738,80 +1733,42 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
     color-mix(in srgb,var(--tint,var(--emerald)) 26%,transparent), transparent 78%)}
 .v-mig-note{font-size:11.5px;color:var(--p-mut);text-align:center;padding:0 26px}
 
-/* --- THE PARENT'S PHONE, zoomed to the notch --------------------
-   Not a whole handset: the top of the screen only, so the notification
-   is the subject rather than a detail on a small rectangle. One at a
-   time, dropping from under the notch, carrying our own mark. */
-/* Docked, not centred: the panel bottom-aligns this one and the handset
-   runs off the bottom edge, so it reads as a phone cropped by the card
-   rather than a small rectangle floating in the middle. It is as wide as
-   the panel allows, which makes the notification the subject. */
-/* Docked by position rather than by flex: align-items could not beat the
-   panel's own centring reliably, and absolute placement is what "cropped by
-   the card" actually means anyway — the handset runs past the bottom edge
-   and the panel's overflow does the cutting. */
-.tile-panel.v-notify{position:relative;align-items:flex-end;padding:0}
-/* A black handset standing on the light card, cropped by the card's own
-   bottom edge. Taller than before so it reads as a phone rather than a
-   strip, and its screen keeps a wallpaper — the notification has to sit on
-   something for the glass to mean anything. */
-.v-notch{position:absolute;left:26px;right:26px;bottom:0;width:auto;margin:0;
-  border-radius:34px 34px 0 0;padding:18px 16px 0;overflow:hidden;
-  border:9px solid #0D1310;border-bottom:0;
-  background:
-    radial-gradient(130% 95% at 16% 0%, rgba(124,92,255,.5), transparent 62%),
-    radial-gradient(120% 85% at 88% 14%, rgba(11,138,92,.55), transparent 64%),
-    linear-gradient(172deg,#22334E,#0D1611 78%);
-  box-shadow:0 24px 52px -18px rgba(16,32,26,.5)}
-.v-notch-top{display:flex;align-items:center;gap:12px;padding:2px 8px 24px}
-.v-notch-time{font-size:16px;font-weight:500;color:#fff;min-width:44px}
-.v-notch-pill{flex:1;max-width:110px;height:26px;border-radius:99px;
-  background:#080B09;margin:0 auto}
-.v-notch-status{display:flex;align-items:center;gap:4px;min-width:34px;
-  justify-content:flex-end}
-.v-notch-status i{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.75)}
-.v-notch-status i.batt{width:19px;height:10px;border-radius:3px;
-  border:1px solid rgba(255,255,255,.6);background:transparent}
-/* one slot, three messages taking turns in it */
-/* The three notifications share one grid cell instead of being absolutely
-   stretched over a fixed 108px box. Each card is then exactly as tall as its
-   own text, and the slot is as tall as the longest of them — so a short
-   message no longer sits in a tall empty pill. */
-.v-notch-stack{display:grid}
-.v-note{grid-area:1/1;align-self:start;display:flex;gap:12px;padding:15px 16px;
-  border-radius:20px;background:rgba(255,255,255,.19);
-  backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.24);
-  opacity:0}
-/* the rosette rides white on the emerald tile, not dark */
-.v-note-app{width:34px;height:34px;border-radius:10px;flex:none;display:grid;
+/* --- A PARENT'S INBOX ---------------------------------------------
+   Not a phone. /pricing already tells schools that parent updates arrive
+   BY EMAIL, so a lock-screen push was the wrong medium and contradicted
+   our own page. Three mails from the school arrive in turn. */
+.v-inbox{width:100%;display:flex;flex-direction:column;gap:9px;
+  padding:14px;border-radius:14px;background:var(--p-card);
+  border:1px solid var(--p-line);box-shadow:0 14px 34px -18px rgba(16,32,26,.3)}
+.v-inbox-head{display:flex;align-items:baseline;justify-content:space-between;
+  gap:10px;padding:0 2px 2px}
+.v-inbox-to{font-size:11.5px;color:var(--p-mut)}
+.v-inbox-count{font-size:10.5px;padding:2px 8px;border-radius:99px;
+  background:color-mix(in srgb,var(--tint,var(--emerald)) 16%,transparent);
+  color:var(--tint,var(--emerald))}
+.v-mails{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.v-mail{display:flex;gap:10px;padding:10px 11px;border-radius:10px;
+  background:color-mix(in srgb,var(--tint,var(--emerald)) 7%,transparent);
+  border:1px solid var(--p-line);opacity:0}
+.v-mail-app{width:26px;height:26px;border-radius:8px;flex:none;display:grid;
   place-items:center;background:var(--emerald);color:#fff}
-.v-note-app svg{width:20px;height:20px}
-.v-note-body{min-width:0}
-.v-note-head{display:flex;align-items:baseline;gap:7px;margin-bottom:2px}
-.v-note-head b{font-size:13px;font-weight:500;color:#fff}
-.v-note-head em{font-style:normal;font-size:11.5px;color:rgba(255,255,255,.62)}
-.v-note-line{display:block;font-size:13.5px;line-height:1.42;color:rgba(255,255,255,.9)}
-.tile.in .v-note{animation:note-drop 10.5s cubic-bezier(.22,1,.36,1) infinite both;
-  animation-delay:calc(var(--n) * 3.5s)}
-/* The lock screen carries on below the notification: a big, faded clock
-   that the card's bottom edge cuts through. It is what makes the panel read
-   as a phone continuing past the frame rather than a cropped strip. */
-.v-notch-clock{display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:26px 0 0;opacity:.34}
-.v-clock-day{font-size:12px;color:rgba(255,255,255,.9);letter-spacing:.01em}
-.v-clock-time{font-family:var(--font-display);font-size:66px;font-weight:500;
-  letter-spacing:-.05em;line-height:.9;color:#fff}
-
-@keyframes note-drop{
-  0%{opacity:0;transform:translateY(-26px) scale(.94)}
-  4%,28%{opacity:1;transform:none}
-  33%,100%{opacity:0;transform:translateY(-10px) scale(.97)}}
+.v-mail-app svg{width:15px;height:15px}
+.v-mail-body{min-width:0;flex:1}
+.v-mail-top{display:flex;align-items:baseline;gap:8px;justify-content:space-between}
+.v-mail-top b{font-size:12px;font-weight:500;color:var(--p-ink)}
+.v-mail-top em{font-style:normal;font-size:10px;color:var(--p-mut);flex:none}
+.v-mail-prev{display:block;margin-top:2px;font-size:11.5px;line-height:1.4;
+  color:var(--p-soft)}
+.v-inbox-foot{font-size:10.5px;color:var(--p-mut);text-align:center;padding-top:2px}
+.tile.in .v-mail{animation:mail-in 9s cubic-bezier(.22,1,.36,1) infinite both;
+  animation-delay:calc(var(--n) * .7s)}
+@keyframes mail-in{0%{opacity:0;transform:translateY(-10px)}
+  6%,84%{opacity:1;transform:none}92%,100%{opacity:0;transform:translateY(-5px)}}
 
 @media (prefers-reduced-motion:reduce){
   .tile .v-chat span,.tile .v-ans b,.tile .v-tt-grid .cell,
   .tile .v-menu{opacity:1 !important;animation:none !important;transform:none !important}
-  .tile .v-note{animation:none !important;transform:none !important}
-  .tile .v-note:first-child{opacity:1 !important}
+  .tile .v-mail{animation:none !important;transform:none !important;opacity:1 !important}
   .tile .v-scan,.tile .v-mig-track{animation:none !important}
   .tile .v-scan{display:none}
 }
@@ -1945,14 +1902,18 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .cta{padding-top:56px}
   .week{padding-top:var(--s-section)}
   /* the bar stays a bar on a phone; only the type shrinks */
-  .week-bar{height:92px;margin-bottom:32px}
+  .week-bar{height:88px;margin-bottom:30px}
   .wb-seg{padding:12px}
   .wb-seg b{font-size:20px}
   .wb-seg i{font-size:11px}
   .week-parts{grid-template-columns:1fr;gap:22px}
   .scope-grid{grid-template-columns:1fr;gap:24px 0}
   .scope{padding:0;border-left:0}
-  .tiles{grid-template-columns:1fr;row-gap:44px}
+  /* minmax(0,1fr), not 1fr: plain 1fr keeps an AUTO minimum, so the
+     migration track's max-content width (10 cards = 1246px) blew the whole
+     column out to 1248px on the school set. The desktop grid never showed it
+     because it already used minmax(0,1fr). */
+  .tiles{grid-template-columns:minmax(0,1fr);row-gap:44px}
   .tile-wide{grid-column:auto;grid-template-columns:1fr;gap:22px}
   .tile-panel,.tile-wide .tile-panel{aspect-ratio:5/4;padding:18px}
   .drift-chip{padding:11px 15px}
@@ -1968,10 +1929,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
   /* the parent's phone was taller than the panel on a 390 viewport */
-  .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 0}
-  .v-notch-clock{padding-top:18px}
-  .v-clock-time{font-size:52px}
-  .v-note-line{font-size:12.5px}
   .ess-card{padding:22px 20px 24px}
   .role-intro::after{margin-top:44px}
   .role-next{padding-top:56px}

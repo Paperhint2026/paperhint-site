@@ -805,7 +805,10 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 }
 
 /* ---------------- CTA banner: yellow, one bright action, the gang ---------------- */
-.cta{padding:48px 0 88px}
+/* 48px left the pricing FAQ almost touching the card (59px of clearance).
+   The kit pages get the full ladder via .role-cta-band; this is the floor for
+   everything else. */
+.cta{padding:72px 0 88px}
 .cta-card{
   position:relative;border-radius:36px;overflow:hidden;
   padding:clamp(48px,6vw,84px) clamp(28px,6vw,84px) 0;
@@ -1285,6 +1288,9 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 
 /* --- image-led tiles: the panel IS the tile ------------------- */
 .tiles-sec{padding:var(--s-section) 0 0}
+/* a section that ends the content run keeps its own bottom space, so the
+   fix does not depend on what happens to come after it */
+.tiles-sec:last-of-type,.drift:last-of-type{padding-bottom:8px}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   column-gap:var(--s-tile-col);row-gap:var(--s-tile-row)}
 .tile{display:flex;flex-direction:column;gap:var(--s-cap)}
@@ -1635,6 +1641,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .ess{padding-top:72px}
   :root{--s-section:72px;--s-rule:24px;--s-head:34px;--s-sub:14px;
     --s-tile-row:44px;--s-cap:18px}
+  /* the pricing FAQ ran to 37px off the card on a phone */
+  .cta{padding-top:56px}
   .scope-grid{grid-template-columns:1fr;gap:24px 0}
   .scope{padding:0;border-left:0}
   .tiles{grid-template-columns:1fr;row-gap:44px}
@@ -1678,7 +1686,12 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .role-needs li{font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
 
 /* the role page's closing band sits tighter to the cross-links above it */
-.role-cta-band{padding-top:0}
+/* The CTA band closes every role and product page, and it was landing 21px
+   under the last tile caption — close enough that the card overlapped the
+   words above it. The kit's sections carry TOP padding only, which spaces
+   them from each other but leaves the last one with nothing beneath it, so
+   the band has to bring its own gap. Same ladder as everything else. */
+.role-cta-band{padding-top:var(--s-section)}
 
 /* /product: the same rows as a role page, grouped by where the work happens */
 .prod-group{padding-top:132px}

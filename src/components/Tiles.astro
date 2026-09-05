@@ -31,7 +31,7 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
         {set.items.map((it, i) => {
           const kind = TILE_VISUAL[it.label] || 'chat';
           return (
-            <article class={`tile reveal ${i === 0 ? 'tile-wide' : ''}`}
+            <article class={`tile reveal ${i === 0 && set.items.length % 2 ? 'tile-wide' : ''}`}
                      style={`--tint:var(--${it.tint || 'emerald'})`}>
               <div class={`tile-panel v-${kind}`}>
                 {kind === 'sheets' && (

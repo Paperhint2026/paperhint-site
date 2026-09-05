@@ -1712,13 +1712,38 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   background:var(--p-card);border:1px solid var(--p-line)}
 .tile.in .v-mig-class{animation:mig-focus 11s cubic-bezier(.22,1,.36,1) infinite both;
   animation-delay:calc(var(--i) * 2.2s)}
+/* the promotion itself: inside the darkened centre, the old class rises out
+   and the new one rises in — VIII-A becomes IX-A while you watch */
+.v-mig-class{position:relative;overflow:hidden;height:70px;padding:0;
+  display:grid;place-items:center}
+.v-mig-class i{grid-area:1/1;font-style:normal;color:inherit}
+.v-mig-class .to{opacity:0}
+.tile.in .v-mig-class .from{animation:mig-from 11s cubic-bezier(.22,1,.36,1) infinite both;
+  animation-delay:calc(var(--i) * 2.2s)}
+.tile.in .v-mig-class .to{animation:mig-to 11s cubic-bezier(.22,1,.36,1) infinite both;
+  animation-delay:calc(var(--i) * 2.2s)}
+@keyframes mig-from{0%,5%{opacity:1;transform:none}
+  8%,13%{opacity:0;transform:translateY(-18px)}
+  15%,100%{opacity:1;transform:none}}
+@keyframes mig-to{0%,5%{opacity:0;transform:translateY(18px)}
+  8%,13%{opacity:1;transform:none}
+  15%,100%{opacity:0;transform:translateY(18px)}}
+/* Read again: "the center card alone to be darkened, with a subtle
+   gradient". The CARD darkens — forest ground, faint tint gradient across
+   it, white name — while the cards either side stay anonymous ghosts. Dark
+   text on a pale card was the wrong reading, and made all three look alike. */
 @keyframes mig-focus{
-  0%{color:transparent;background:var(--p-card);border-color:var(--p-line)}
-  2%,12%{color:var(--p-ink);
-    background:linear-gradient(160deg,#FFFFFF,
-      color-mix(in srgb,var(--tint,var(--emerald)) 14%, #FFFFFF));
-    border-color:color-mix(in srgb,var(--tint,var(--emerald)) 38%, transparent)}
-  15%,100%{color:transparent;background:var(--p-card);border-color:var(--p-line)}}
+  0%{color:transparent;background:var(--p-card);border-color:var(--p-line);
+    box-shadow:none}
+  2%,12%{color:#FFFFFF;
+    background:linear-gradient(160deg,#182A21,#0A0F0C 58%,
+      color-mix(in srgb,var(--tint,var(--emerald)) 30%, #0A0F0C));
+    border-color:#0A0F0C;
+    box-shadow:0 16px 36px -14px rgba(10,15,12,.55)}
+  15%,100%{color:transparent;background:var(--p-card);border-color:var(--p-line);
+    box-shadow:none}}
+/* the ghosts either side: present, blank, and not competing */
+.v-mig-class{background:color-mix(in srgb,var(--p-card) 55%, transparent)}
 /* No frame: a drawn box was the obvious, cheaper version of the idea. What
    focuses the centre is the edge fade plus this soft light behind it. */
 .v-mig-centre{position:absolute;left:50%;top:50%;width:170px;height:120px;
@@ -1744,7 +1769,11 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
    bottom edge. Taller than before so it reads as a phone rather than a
    strip, and its screen keeps a wallpaper — the notification has to sit on
    something for the glass to mean anything. */
+/* Capped below the card's top so the rounded corners and the bezel are
+   always in view: a phone with its top cut off is a dark rectangle with a
+   notch, which is the "random box" the founder saw. Only the BOTTOM crops. */
 .v-notch{position:absolute;left:26px;right:26px;bottom:0;width:auto;margin:0;
+  max-height:calc(100% - 26px);
   border-radius:34px 34px 0 0;padding:18px 16px 0;overflow:hidden;
   border:9px solid #0D1310;border-bottom:0;
   background:
@@ -1776,7 +1805,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   place-items:center;background:var(--emerald);color:#fff}
 .v-note-app svg{width:20px;height:20px}
 .v-note-body{min-width:0}
-.v-note-head{display:flex;align-items:baseline;gap:7px;margin-bottom:2px}
+.v-note-head{display:flex;align-items:baseline;gap:7px;margin-bottom:2px;flex-wrap:wrap}
 .v-note-head b{font-size:13px;font-weight:500;color:#fff}
 .v-note-head em{font-style:normal;font-size:11.5px;color:rgba(255,255,255,.62)}
 .v-note-line{display:block;font-size:13.5px;line-height:1.42;color:rgba(255,255,255,.9)}
@@ -1837,7 +1866,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .tile .v-hw-lines s,.tile .v-hw-btn{animation:none !important;opacity:1 !important;transform:none !important}
   .tile .v-hw-done{display:none}
   .tile .v-scan,.tile .v-mig-track{animation:none !important}
-  .tile .v-mig-class{animation:none !important;color:var(--p-ink) !important}
+  .tile .v-mig-class,.tile .v-mig-class i{animation:none !important;color:var(--p-ink) !important;transform:none !important}
+  .tile .v-mig-class .to{display:none}
   .tile .v-scan{display:none}
 }
 
@@ -1992,7 +2022,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-grid{grid-template-columns:1fr}
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
-  .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 0}
+  .v-notch{left:16px;right:16px;border-width:7px;padding:14px 12px 0;max-height:calc(100% - 18px)}
   .v-notch-clock{padding-top:18px}
   .v-clock-time{font-size:52px}
   /* the parent's phone was taller than the panel on a 390 viewport */

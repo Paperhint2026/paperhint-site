@@ -76,7 +76,7 @@ export const PRODUCT = {
   factsTitle: 'What it runs on',
   facts: [
     ['A phone and a browser', 'The hardware every school already has. No scanners, nothing to install in a room.'],
-    ['The work you already do', 'It starts from the paper your school already produces, so a teacher can begin on Monday without learning a new way to work.'],
+    ['Day one changes nothing', 'A teacher keeps the register, the notes and the way they already work — Paperhint starts there, so Monday needs no new habit.'],
     ['Your school’s own account', 'Data is scoped to your school; teacher libraries stay private until shared, and nothing is visible outside your school’s email.'],
     ['One licence per student', 'It covers admins, teachers, students and parents — everyone in the building.'],
   ],

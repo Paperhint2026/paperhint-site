@@ -28,12 +28,12 @@ const PAGES = {
     story: 'teacher',
     needs: ['Headline and standfirst', 'Closing line', 'A product screenshot per beat',
             'A quote from a real teacher, for this page'],
-    cta: { heading: 'Let’s take the marking off your desk',
-           sub: 'Tell us how correction works in your school today, and we’ll show you the same class running in Paperhint.' },
+    cta: { heading: 'Let’s give your teachers their week back',
+           sub: 'Tell us how a teaching week runs in your school today, and we’ll show you the same week running in Paperhint.' },
     nav: 'Teachers',
     kicker: 'FOR TEACHERS',
-    h1: ['Teach more. Carry ', 'l', 'ess.'],                    /* DRAFT */
-    sub: 'Attendance, notes for the next class, papers set, sheets marked, parents told — an assistant at your desk doing the week alongside you.',  /* DRAFT */
+    h1: ['Walk in ready. Every ', 'c', 'lass.'],                /* DRAFT */
+    sub: 'An assistant at your desk that prepares the next class, marks to your rubric and follows through with home — so the hours go to teaching.',  /* DRAFT */
     title: 'Paperhint for Teachers — An Assistant at Your Desk',
     description: 'What a teacher gets from Paperhint: attendance recorded, notes and papers prepared for your syllabus, answer sheets marked to your rubric, homework followed through to parents — so the hours go to teaching.',
     stopsTitle: 'What is ready when you get there',

@@ -89,6 +89,25 @@ header.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--gr
 h2.sec{margin:30px 0 12px;font-size:15px;font-weight:500;color:var(--muted);
   text-transform:uppercase;letter-spacing:.08em}
 
+/* tabs: one section at a time */
+.tabs{display:flex;gap:6px;margin:26px 0 14px;border-bottom:1px solid var(--line)}
+.tab{font:inherit;font-size:14px;font-weight:500;color:var(--muted);background:none;border:0;
+  padding:10px 12px 12px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab b{font-weight:500;font-size:12px;margin-left:6px;padding:1px 7px;border-radius:999px;
+  background:var(--raise);color:var(--muted)}
+.tab.on{color:var(--ink);border-bottom-color:var(--emerald)}
+.tab.on b{background:var(--emerald-soft);color:var(--emerald)}
+.tab.bad b{background:#F8E5E0;color:#B4321A}
+/* filters over the visits */
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.filters input,.filters select{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:999px;padding:8px 13px}
+.filters input{flex:1 1 240px;min-width:0}
+.filters input:focus,.filters select:focus{outline:none;border-color:var(--emerald)}
+.filters select{appearance:none;-webkit-appearance:none;padding-right:30px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%2368766E' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;background-size:9px 6px}
+.fcount{font-size:12.5px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
 /* sessions */
 table{width:100%;border-collapse:collapse;background:var(--surface);
   border:1px solid var(--line);border-radius:14px;overflow:hidden}
@@ -139,6 +158,8 @@ tbody tr:hover{background:var(--raise)}
 @media (max-width:640px){
   .hide-sm{display:none}
   td,th{padding:10px 11px}
+  .filters input{flex-basis:100%}
+  .fcount{margin-left:0;flex-basis:100%}
 }
 </style>
 </head>
@@ -171,12 +192,37 @@ tbody tr:hover{background:var(--raise)}
   <div class="stats" id="stats"></div>
   <p class="places" id="places"></p>
   <div id="notice"></div>
-  <div id="faultsWrap" hidden>
-    <h2 class="sec">Broken things</h2>
+
+  <nav class="tabs" role="tablist" aria-label="Console sections">
+    <button class="tab on" role="tab" data-tab="visits" aria-selected="true">Visits <b id="nVisits">0</b></button>
+    <button class="tab" role="tab" data-tab="broken" aria-selected="false">Broken things <b id="nFaults">0</b></button>
+  </nav>
+
+  <section id="tab-visits" role="tabpanel">
+    <div class="filters" id="filters">
+      <input id="fq" type="search" placeholder="Search name, email, school, question, place…" aria-label="Search visits">
+      <select id="fkind" aria-label="Kind">
+        <option value="">All visits</option>
+        <option value="callback">Callbacks only</option>
+        <option value="asked">Asked only</option>
+      </select>
+      <select id="fwhen" aria-label="Period">
+        <option value="">Any time</option>
+        <option value="1">Today</option>
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+      </select>
+      <select id="fpage" aria-label="Page"><option value="">Any page</option></select>
+      <select id="fplace" aria-label="Country"><option value="">Anywhere</option></select>
+      <span class="fcount" id="fcount"></span>
+      <button class="btn" id="fclear" type="button" hidden>Clear</button>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <section id="tab-broken" role="tabpanel" hidden>
     <div id="faults"></div>
-  </div>
-  <h2 class="sec">Visits</h2>
-  <div id="list"></div>
+  </section>
   <p class="foot">Newest first, last 500 events. Addresses are stored as a network, never in full. Build {v}</p>
 </main>
 
@@ -305,8 +351,12 @@ tbody tr:hover{background:var(--raise)}
     $('notice').innerHTML = j.notice ? '<p class="notice">' + esc(j.notice) + '</p>' : '';
 
     faults = j.faults || [];
-    $('faultsWrap').hidden = !faults.length;
-    if (faults.length) {
+    $('nFaults').textContent = faults.length;
+    $('nVisits').textContent = sessions.length;
+    document.querySelector('[data-tab="broken"]').classList.toggle('bad', faults.length > 0);
+    if (!faults.length) {
+      $('faults').innerHTML = '<div class="none">Nothing broken has been reported.</div>';
+    } else {
       $('faults').innerHTML = '<table><thead><tr>' +
         '<th>Fault</th><th class="hide-sm">Where</th><th>Seen</th><th>Last</th>' +
         '</tr></thead><tbody>' + faults.map(function (f, i) {
@@ -324,14 +374,73 @@ tbody tr:hover{background:var(--raise)}
       });
     }
 
+    fillOptions();
+    renderList();
+  }
+
+  /* ---- filters over the visits ----
+     Everything is client-side over the rows already loaded (the API returns
+     the latest 500), so a filter is instant and never costs a round trip. */
+  var F = { q: '', kind: '', when: '', page: '', place: '' };
+
+  function fillOptions() {
+    var pages = {}, places = {};
+    sessions.forEach(function (v) {
+      (v.pages || []).forEach(function (p) { pages[p] = (pages[p] || 0) + 1; });
+      if (v.country) places[v.country] = (places[v.country] || 0) + 1;
+    });
+    function opts(el, map, first) {
+      var keep = el.value;
+      el.innerHTML = '<option value="">' + first + '</option>' + Object.keys(map).sort().map(function (k) {
+        return '<option value="' + esc(k) + '">' + esc(k) + ' (' + map[k] + ')</option>';
+      }).join('');
+      el.value = keep;
+    }
+    opts($('fpage'), pages, 'Any page');
+    opts($('fplace'), places, 'Anywhere');
+  }
+
+  function hay(v) {
+    return [v.name, v.email, v.school, v.role, v.enquiry, v.city, v.region, v.country, v.ip,
+      (v.pages || []).join(' ')].concat((v.events || []).map(function (e) { return e.text || ''; }))
+      .filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function filtered() {
+    var since = F.when ? Date.now() - (+F.when) * 86400000 : 0;
+    var q = F.q.trim().toLowerCase();
+    return sessions.filter(function (v) {
+      if (F.kind === 'callback' && !v.callback) return false;
+      if (F.kind === 'asked' && v.callback) return false;
+      if (since && new Date(v.last).getTime() < since) return false;
+      if (F.page && (v.pages || []).indexOf(F.page) < 0) return false;
+      if (F.place && v.country !== F.place) return false;
+      if (q && hay(v).indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+
+  function renderList() {
+    var rows = filtered();
+    var active = !!(F.q || F.kind || F.when || F.page || F.place);
+    $('fclear').hidden = !active;
+    $('fcount').textContent = sessions.length
+      ? (active ? rows.length + ' of ' + sessions.length : sessions.length + ' visits')
+      : '';
+
     if (!sessions.length) {
       $('list').innerHTML = '<div class="none">Nothing yet. Every question asked in the panel and every callback lands here.</div>';
+      return;
+    }
+    if (!rows.length) {
+      $('list').innerHTML = '<div class="none">No visits match those filters.</div>';
       return;
     }
 
     $('list').innerHTML = '<table><thead><tr>' +
       '<th>Who</th><th>Where</th><th class="hide-sm">Asked</th><th>Last seen</th><th class="hide-sm">Network</th>' +
-      '</tr></thead><tbody>' + sessions.map(function (v, i) {
+      '</tr></thead><tbody>' + rows.map(function (v) {
+        var i = sessions.indexOf(v);
         var name = v.name || (v.email ? v.email : (v.callback ? 'Callback' : 'Anonymous visit'));
         var sub = [v.school, v.role, v.enquiry].filter(Boolean).join(' · ');
         return '<tr data-i="' + i + '">' +
@@ -429,6 +538,33 @@ tbody tr:hover{background:var(--raise)}
     return '<div class="turn ' + side + '"><div class="b">' + esc(text) + '</div>' +
            (at ? '<div class="when">' + esc(when(at)) + '</div>' : '') + '</div>';
   }
+
+  /* filters */
+  [['fq', 'q', 'input'], ['fkind', 'kind', 'change'], ['fwhen', 'when', 'change'],
+   ['fpage', 'page', 'change'], ['fplace', 'place', 'change']].forEach(function (w) {
+    $(w[0]).addEventListener(w[2], function () { F[w[1]] = $(w[0]).value; renderList(); });
+  });
+  $('fclear').addEventListener('click', function () {
+    F = { q: '', kind: '', when: '', page: '', place: '' };
+    ['fq', 'fkind', 'fwhen', 'fpage', 'fplace'].forEach(function (id) { $(id).value = ''; });
+    renderList();
+  });
+
+  /* tabs — the hash remembers which one, so a refresh lands where you were */
+  function showTab(name) {
+    if (name !== 'broken') name = 'visits';
+    [].forEach.call(document.querySelectorAll('.tab'), function (t) {
+      var on = t.dataset.tab === name;
+      t.classList.toggle('on', on); t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $('tab-visits').hidden = name !== 'visits';
+    $('tab-broken').hidden = name !== 'broken';
+    if (location.hash !== '#' + name) history.replaceState({}, '', location.pathname + '#' + name);
+  }
+  [].forEach.call(document.querySelectorAll('.tab'), function (t) {
+    t.addEventListener('click', function () { showTab(t.dataset.tab); });
+  });
+  showTab(location.hash.replace('#', ''));
 
   document.addEventListener('click', function (e) {
     if (e.target.closest('[data-close]')) $('sheet').classList.remove('on');

@@ -8,7 +8,6 @@
  *
  * Content is src/data/product.js, lifted from docs/feature-list.md.
  */
-import Curl from '../components/Curl.astro';
 import HouseLetter from '../components/HouseLetter.astro';
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
@@ -52,7 +51,6 @@ const internal = process.env.VERCEL_ENV !== 'production';
     <p class="intro-statement reveal" set:html={p.opening} />
     <p class="intro-turn reveal">{p.introTurn}</p>
     <p class="intro-answer reveal" set:html={p.introAnswer} />
-    <Curl />
   </div>
 </section>
 

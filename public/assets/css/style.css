@@ -1238,12 +1238,13 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   font-weight:500;color:var(--emerald)}
 .intro-answer{max-width:52ch;margin:34px 0 0;
   font-size:clamp(17px,1.8vw,21px);line-height:1.62;color:var(--ink-soft)}
-/* the curly divider between the intro and what follows — the site's own
-   motif, drawn in on reveal. It replaced a flat 64px hairline here that read
-   as a stray line at the left edge of the page. */
-.curl-divider{display:block;width:96px;height:24px;margin:56px 0 0;
-  fill:none;stroke:var(--emerald);stroke-width:2;stroke-linecap:round;
-  stroke-linejoin:round;overflow:visible}
+/* the curly divider — a full-width wave in place of a hairline, drawn in on
+   reveal. Over the teacher-hours section on /product. */
+.curl-divider{display:block;width:100%;height:24px;margin:0 0 calc(var(--s-rule) - 12px);
+  fill:none;stroke:var(--emerald);stroke-width:1.6;stroke-linecap:round;
+  stroke-linejoin:round;overflow:visible;opacity:.85}
+/* a section head that follows the wave drops its own hairline */
+.sechead.sechead-curl{border-top:0;padding-top:0}
 .curl-divider path{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
 .curl-divider.in path{animation:draw .9s .2s cubic-bezier(.4,.7,.3,1) forwards}
 
@@ -2009,7 +2010,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .v-clock-time{font-size:52px}
   /* the parent's phone was taller than the panel on a 390 viewport */
   .ess-card{padding:22px 20px 24px}
-  .curl-divider{margin-top:40px}
+  .curl-divider{height:18px}
   .role-next{padding-top:56px}
   .role-beats{padding-top:72px}
   .role-stops,.role-second,.role-keeps{padding-top:80px}

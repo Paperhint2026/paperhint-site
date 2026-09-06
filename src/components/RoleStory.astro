@@ -12,7 +12,6 @@
  * Content comes from src/data/roles.js and src/data/product.js. Nothing is
  * authored here.
  */
-import Curl from '../components/Curl.astro';
 import HouseLetter from '../components/HouseLetter.astro';
 import Tiles from '../components/Tiles.astro';
 import ChipDrift from '../components/ChipDrift.astro';
@@ -71,7 +70,6 @@ const next = (r.keeps || []).filter(k => NEXT.test(k)).map(k => k.replace(NEXT, 
     <p class="intro-statement reveal" set:html={(r.intro && r.intro.statement) || r.scene} />
     {r.intro && r.intro.turn && <p class="intro-turn reveal">{r.intro.turn}</p>}
     <p class="intro-answer reveal" set:html={(r.intro && r.intro.answer) || r.turn} />
-    <Curl />
   </div>
 </section>
 

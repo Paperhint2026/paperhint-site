@@ -9,12 +9,14 @@
  * The source line, including the fact that India is not in TALIS, renders
  * with the section. It is not a footnote to be quietly dropped.
  */
+import Curl from '../components/Curl.astro';
 import { WEEK as w } from '../data/product.js';
 const pct = n => (n / w.total) * 100;
 ---
 <section class="week">
   <div class="wrap wrap-read">
-    <div class="sechead reveal">
+    <Curl />
+    <div class="sechead sechead-curl reveal">
       <span class="week-kicker">{w.kicker}</span>
       <h2 class="sechead-h">{w.title}<span class="sechead-turn">{w.turn}</span></h2>
     </div>

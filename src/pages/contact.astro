@@ -122,15 +122,19 @@ import Chat from '../components/Chat.astro';
               <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Full name" required>
             </div>
             <div class="field">
-              <label for="f-role">Your role</label>
-              <select id="f-role" name="role">
-                <option>Teacher</option>
-                <option>Principal / Head</option>
-                <option>Administrator</option>
-                <option>Vice Principal</option>
-                <option>Trust / District office</option>
-                <option>Other</option>
-              </select>
+              <label id="f-role-label">Your role</label>
+              <div class="dd field-dd" id="f-role" data-name="role">
+                <input type="hidden" name="role" value="Teacher">
+                <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-role-label"><span>Teacher</span></button>
+                <ul class="dd-menu" role="listbox">
+                  <li role="option" data-value="Teacher" aria-selected="true">Teacher</li>
+                  <li role="option" data-value="Principal / Head">Principal / Head</li>
+                  <li role="option" data-value="Administrator">Administrator</li>
+                  <li role="option" data-value="Vice Principal">Vice Principal</li>
+                  <li role="option" data-value="Trust / District office">Trust / District office</li>
+                  <li role="option" data-value="Other">Other</li>
+                </ul>
+              </div>
             </div>
           </div>
 
@@ -151,14 +155,18 @@ import Chat from '../components/Chat.astro';
               <input id="f-school" name="school" type="text" placeholder="Greenfield Public School" required>
             </div>
             <div class="field">
-              <label for="f-size">Students enrolled</label>
-              <select id="f-size" name="size">
-                <option>Under 500</option>
-                <option>500 – 1,000</option>
-                <option>1,000 – 2,500</option>
-                <option>2,500 +</option>
-                <option>Multiple schools</option>
-              </select>
+              <label id="f-size-label">Students enrolled</label>
+              <div class="dd field-dd" id="f-size" data-name="size">
+                <input type="hidden" name="size" value="Under 500">
+                <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-size-label"><span>Under 500</span></button>
+                <ul class="dd-menu" role="listbox">
+                  <li role="option" data-value="Under 500" aria-selected="true">Under 500</li>
+                  <li role="option" data-value="500 – 1,000">500 – 1,000</li>
+                  <li role="option" data-value="1,000 – 2,500">1,000 – 2,500</li>
+                  <li role="option" data-value="2,500 +">2,500 +</li>
+                  <li role="option" data-value="Multiple schools">Multiple schools</li>
+                </ul>
+              </div>
             </div>
           </div>
 

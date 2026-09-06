@@ -1007,44 +1007,37 @@ footer .wrap{position:relative;z-index:2}
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .field{margin-bottom:16px;display:flex;flex-direction:column;gap:7px}
 .field label{font-size:13px;font-weight:500;color:var(--ink-soft)}
-.field input,.field textarea,.field select{
+.field input,.field textarea,.field .dd-btn{
   font:inherit;font-size:14.5px;color:var(--ink);
   background:var(--surface-2);border:1.5px solid var(--line);border-radius:12px;
   padding:12px 14px;outline:none;transition:.2s;width:100%;
 }
+
+/* THE DROPDOWN — ours, never the system popover (founder's rule, every page).
+   A button that looks like the field it replaces, and a listbox of our own:
+   arrow keys move, Enter chooses, Escape and a click outside close. The
+   hidden input carries the name, so FormData sees exactly what a <select>
+   would have given it. */
+.dd{position:relative}
+.field .dd-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  width:100%;text-align:left;cursor:pointer;font:inherit}
+.field .dd-btn::after{content:"";width:10px;height:7px;flex:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%233D4F47' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition:transform .18s}
+.dd.open .dd-btn{border-color:var(--emerald)}
+.dd.open .dd-btn::after{transform:rotate(180deg)}
+.dd-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:9;max-height:280px;overflow:auto;
+  margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow-lg);display:none}
+.dd.open .dd-menu{display:block;animation:dd-in .16s cubic-bezier(.2,.7,.2,1)}
+@keyframes dd-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.dd-menu li{padding:9px 12px;border-radius:9px;font-size:15px;color:var(--ink-soft);cursor:pointer}
+.dd-menu li:hover,.dd-menu li.focus{background:var(--bg-soft);color:var(--ink)}
+.dd-menu li[aria-selected="true"]{color:var(--emerald);font-weight:500}
 .field textarea{resize:vertical;min-height:110px}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--emerald);box-shadow:0 0 0 4px var(--emerald-tint)}
 /* custom select: our own popover, options stagger in */
-.dd{position:relative}
-.dd-btn{
-  font:inherit;font-size:14.5px;color:var(--ink);width:100%;text-align:left;
-  background:var(--surface-2);border:1.5px solid var(--line);border-radius:12px;
-  padding:12px 38px 12px 14px;cursor:pointer;transition:.2s;position:relative;
 }
-.dd-btn::after{
-  content:"";position:absolute;right:14px;top:50%;width:8px;height:8px;
-  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
-  transform:translateY(-70%) rotate(45deg);transition:transform .25s;
-}
-.dd.open .dd-btn{border-color:var(--emerald);box-shadow:0 0 0 4px var(--emerald-tint)}
-.dd.open .dd-btn::after{transform:translateY(-30%) rotate(-135deg)}
-.dd-list{
-  position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:40;
-  background:var(--surface);border:1px solid var(--line-soft);border-radius:14px;
-  box-shadow:var(--shadow-lg);padding:6px;margin:0;list-style:none;
-  opacity:0;transform:translateY(-6px) scale(.985);pointer-events:none;
-  transition:opacity .22s ease,transform .28s cubic-bezier(.3,.8,.24,1);
-}
-.dd.open .dd-list{opacity:1;transform:none;pointer-events:auto}
-.dd-opt{
-  padding:11px 13px;border-radius:9px;font-size:14.5px;color:var(--ink);cursor:pointer;
-}
-.dd-opt:hover{background:var(--emerald-tint)}
-.dd-opt[aria-selected="true"]{color:var(--emerald);font-weight:500}
-@media (prefers-reduced-motion: no-preference){
-  .dd.open .dd-opt{opacity:0;transform:translateY(-5px);animation:ddIn .3s cubic-bezier(.25,.8,.3,1) forwards;animation-delay:calc(var(--i) * 45ms)}
-}
-@keyframes ddIn{to{opacity:1;transform:none}}
 
 /* tap-to-add reason chips */
 .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 10px}

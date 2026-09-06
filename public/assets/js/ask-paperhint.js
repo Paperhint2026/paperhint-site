@@ -231,7 +231,7 @@ input::placeholder{color:var(--c-muted)}
 <div class="panel" id="panel" role="dialog" aria-label="Ask Paperhint" aria-hidden="true">
   <div class="head">
     ${MARK}<b>Ask Paper<em>h</em>int</b>
-    <button class="fresh" type="button" aria-label="Start a new chat" title="Start a new chat" hidden>
+    <button class="fresh" type="button" aria-label="Start a new chat" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
     </button>
     <button class="close" type="button" aria-label="Close">

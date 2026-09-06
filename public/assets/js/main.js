@@ -745,66 +745,6 @@
 
 
 
-  /* ---------------- custom selects ----------------
-     Progressive enhancement: each .field select is hidden and driven by our
-     own popover — options stagger in; the native select stays in the form
-     so submission and prefill logic never notice the difference. */
-  function initDropdowns() {
-    document.querySelectorAll('.field select').forEach(function (sel) {
-      var dd = document.createElement('div');
-      dd.className = 'dd';
-      sel.parentNode.insertBefore(dd, sel);
-      dd.appendChild(sel);
-      sel.style.display = 'none';
-      sel.setAttribute('aria-hidden', 'true');
-      sel.tabIndex = -1;
-
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'dd-btn';
-      btn.setAttribute('aria-haspopup', 'listbox');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.textContent = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : '';
-      dd.appendChild(btn);
-
-      var list = document.createElement('ul');
-      list.className = 'dd-list';
-      list.setAttribute('role', 'listbox');
-      Array.prototype.forEach.call(sel.options, function (opt, i) {
-        var li = document.createElement('li');
-        li.className = 'dd-opt';
-        li.setAttribute('role', 'option');
-        li.setAttribute('aria-selected', String(i === sel.selectedIndex));
-        li.style.setProperty('--i', i);
-        li.textContent = opt.text;
-        li.addEventListener('click', function () {
-          sel.selectedIndex = i;
-          sel.dispatchEvent(new Event('change', { bubbles: true }));
-          btn.textContent = opt.text;
-          list.querySelectorAll('.dd-opt').forEach(function (o) { o.setAttribute('aria-selected', 'false'); });
-          li.setAttribute('aria-selected', 'true');
-          close();
-        });
-        list.appendChild(li);
-      });
-      dd.appendChild(list);
-
-      function open()  { dd.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
-      function close() { dd.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
-
-      btn.addEventListener('click', function () {
-        dd.classList.contains('open') ? close() : open();
-      });
-      document.addEventListener('click', function (e) {
-        if (dd.classList.contains('open') && !dd.contains(e.target)) close();
-      });
-      btn.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') close();
-      });
-    });
-  }
-
-
   /* ---------------- folder tilt ----------------
      Very subtle: the card leans a few degrees toward the pointer and a soft
      light reflection follows it across the paper. Fine pointers only. */
@@ -1516,6 +1456,55 @@
   }
 
 
+
+  /* ---------------- custom dropdowns ----------------
+     Founder's rule: never the system popover, on any page. A .dd is a button
+     and a listbox; the chosen value is written to the hidden input of the
+     same name, so a form's FormData sees what a <select> would have given. */
+  function initDropdowns() {
+    function close(el) { el.classList.remove('open'); el.querySelector('.dd-btn').setAttribute('aria-expanded', 'false'); }
+    function set(el, li) {
+      var input = el.querySelector('input[type="hidden"]');
+      if (input) input.value = li.dataset.value;
+      el.dataset.value = li.dataset.value;
+      el.querySelector('.dd-btn span').textContent = li.textContent;
+      [].forEach.call(el.querySelectorAll('[role="option"]'), function (o) {
+        o.setAttribute('aria-selected', o === li ? 'true' : 'false');
+      });
+      el.dispatchEvent(new CustomEvent('change'));
+    }
+    [].forEach.call(document.querySelectorAll('.dd'), function (el) {
+      var btn = el.querySelector('.dd-btn'), menu = el.querySelector('.dd-menu');
+      if (!btn || !menu || el.dataset.ddInit) return;
+      el.dataset.ddInit = '1';
+      function items() { return [].slice.call(menu.querySelectorAll('[role="option"]')); }
+      function open() {
+        [].forEach.call(document.querySelectorAll('.dd.open'), close);
+        el.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
+        var cur = menu.querySelector('[aria-selected="true"]') || items()[0];
+        items().forEach(function (li) { li.classList.toggle('focus', li === cur); });
+      }
+      btn.addEventListener('click', function () { el.classList.contains('open') ? close(el) : open(); });
+      menu.addEventListener('click', function (e) {
+        var li = e.target.closest('[role="option"]'); if (li) { set(el, li); close(el); btn.focus(); }
+      });
+      el.addEventListener('keydown', function (e) {
+        var list = items(), i = list.findIndex(function (li) { return li.classList.contains('focus'); });
+        if (e.key === 'Escape') { close(el); btn.focus(); }
+        else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault(); if (!el.classList.contains('open')) open();
+          var n = e.key === 'ArrowDown' ? Math.min(i + 1, list.length - 1) : Math.max(i - 1, 0);
+          list.forEach(function (li, k) { li.classList.toggle('focus', k === n); });
+        } else if ((e.key === 'Enter' || e.key === ' ') && el.classList.contains('open')) {
+          e.preventDefault(); if (list[i]) { set(el, list[i]); close(el); btn.focus(); }
+        }
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.dd')) [].forEach.call(document.querySelectorAll('.dd.open'), close);
+    });
+  }
+
   function boot() {
     initCtaBanner();
     initTextFloat();   /* before the band engine and reveal */
@@ -1528,10 +1517,10 @@
     initNavShrink();
     initNavMenu();
     initParallax();
-    initDropdowns();
     initCardTilt();
     initReasonChips();
     initRoleFolder();
+    initDropdowns();
     bootMarquee();
     /* reserved: initGravity() — Matter.js #gravity-layer (fixed overlay, z-index 60)
        will be slotted in here later; nothing decorative owns the viewport floor. */

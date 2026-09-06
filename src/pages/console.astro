@@ -100,13 +100,26 @@ h2.sec{margin:30px 0 12px;font-size:15px;font-weight:500;color:var(--muted);
 .tab.bad b{background:#F8E5E0;color:#B4321A}
 /* filters over the visits */
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
-.filters input,.filters select{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);
+.filters input,.dd-btn{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);
   border:1px solid var(--line);border-radius:999px;padding:8px 13px}
 .filters input{flex:1 1 240px;min-width:0}
-.filters input:focus,.filters select:focus{outline:none;border-color:var(--emerald)}
-.filters select{appearance:none;-webkit-appearance:none;padding-right:30px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%2368766E' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;background-size:9px 6px}
+.filters input:focus,.dd-btn:focus-visible{outline:none;border-color:var(--emerald)}
+/* the dropdown: ours, not the system's */
+.dd{position:relative}
+.dd-btn{display:inline-flex;align-items:center;gap:9px;cursor:pointer;padding-right:12px;white-space:nowrap}
+.dd-btn::after{content:"";width:9px;height:6px;flex:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%2368766E' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition:transform .18s}
+.dd.open .dd-btn{border-color:var(--emerald)}
+.dd.open .dd-btn::after{transform:rotate(180deg)}
+.dd-menu{position:absolute;left:0;top:calc(100% + 6px);z-index:8;min-width:100%;max-height:280px;overflow:auto;
+  margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;box-shadow:0 16px 40px -18px rgba(10,15,12,.35);display:none}
+.dd.open .dd-menu{display:block;animation:dd-in .16s cubic-bezier(.2,.7,.2,1)}
+@keyframes dd-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.dd-menu li{padding:8px 11px;border-radius:9px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+.dd-menu li:hover,.dd-menu li.focus{background:var(--raise);color:var(--ink)}
+.dd-menu li[aria-selected="true"]{color:var(--emerald);font-weight:500}
 .fcount{font-size:12.5px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
 /* sessions */
 table{width:100%;border-collapse:collapse;background:var(--surface);
@@ -201,19 +214,33 @@ tbody tr:hover{background:var(--raise)}
   <section id="tab-visits" role="tabpanel">
     <div class="filters" id="filters">
       <input id="fq" type="search" placeholder="Search name, email, school, question, place…" aria-label="Search visits">
-      <select id="fkind" aria-label="Kind">
-        <option value="">All visits</option>
-        <option value="callback">Callbacks only</option>
-        <option value="asked">Asked only</option>
-      </select>
-      <select id="fwhen" aria-label="Period">
-        <option value="">Any time</option>
-        <option value="1">Today</option>
-        <option value="7">Last 7 days</option>
-        <option value="30">Last 30 days</option>
-      </select>
-      <select id="fpage" aria-label="Page"><option value="">Any page</option></select>
-      <select id="fplace" aria-label="Country"><option value="">Anywhere</option></select>
+      <!-- custom dropdowns, never the system popover: a button and a listbox,
+           keyboard-driven, closing on Escape and on a click outside -->
+      <div class="dd" id="fkind" data-value="">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Kind"><span>All visits</span></button>
+        <ul class="dd-menu" role="listbox">
+          <li role="option" data-value="" aria-selected="true">All visits</li>
+          <li role="option" data-value="callback">Callbacks only</li>
+          <li role="option" data-value="asked">Asked only</li>
+        </ul>
+      </div>
+      <div class="dd" id="fwhen" data-value="">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Period"><span>Any time</span></button>
+        <ul class="dd-menu" role="listbox">
+          <li role="option" data-value="" aria-selected="true">Any time</li>
+          <li role="option" data-value="1">Today</li>
+          <li role="option" data-value="7">Last 7 days</li>
+          <li role="option" data-value="30">Last 30 days</li>
+        </ul>
+      </div>
+      <div class="dd" id="fpage" data-value="" data-first="Any page">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Page"><span>Any page</span></button>
+        <ul class="dd-menu" role="listbox"><li role="option" data-value="" aria-selected="true">Any page</li></ul>
+      </div>
+      <div class="dd" id="fplace" data-value="" data-first="Anywhere">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Country"><span>Anywhere</span></button>
+        <ul class="dd-menu" role="listbox"><li role="option" data-value="" aria-selected="true">Anywhere</li></ul>
+      </div>
       <span class="fcount" id="fcount"></span>
       <button class="btn" id="fclear" type="button" hidden>Clear</button>
     </div>
@@ -383,21 +410,67 @@ tbody tr:hover{background:var(--raise)}
      the latest 500), so a filter is instant and never costs a round trip. */
   var F = { q: '', kind: '', when: '', page: '', place: '' };
 
+  /* ---- the dropdown: a button and a listbox of our own ----
+     Never the system popover. Arrow keys move, Enter/Space choose, Escape and
+     a click outside close, and the chosen value lives on data-value so the
+     filters read it the same way whatever built the menu. */
+  function ddValue(el) { return el.dataset.value || ''; }
+  function ddSet(el, value, label, silent) {
+    el.dataset.value = value;
+    el.querySelector('.dd-btn span').textContent = label;
+    [].forEach.call(el.querySelectorAll('[role="option"]'), function (li) {
+      li.setAttribute('aria-selected', li.dataset.value === value ? 'true' : 'false');
+    });
+    if (!silent) el.dispatchEvent(new CustomEvent('change'));
+  }
+  function ddClose(el) { el.classList.remove('open'); el.querySelector('.dd-btn').setAttribute('aria-expanded', 'false'); }
+  function initDropdown(el) {
+    var btn = el.querySelector('.dd-btn'), menu = el.querySelector('.dd-menu');
+    function items() { return [].slice.call(menu.querySelectorAll('[role="option"]')); }
+    function open() {
+      [].forEach.call(document.querySelectorAll('.dd.open'), ddClose);
+      el.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
+      var cur = menu.querySelector('[aria-selected="true"]') || items()[0];
+      items().forEach(function (li) { li.classList.toggle('focus', li === cur); });
+    }
+    function choose(li) { ddSet(el, li.dataset.value, li.textContent); ddClose(el); btn.focus(); }
+    btn.addEventListener('click', function () { el.classList.contains('open') ? ddClose(el) : open(); });
+    menu.addEventListener('click', function (e) { var li = e.target.closest('[role="option"]'); if (li) choose(li); });
+    el.addEventListener('keydown', function (e) {
+      var list = items(), i = list.findIndex(function (li) { return li.classList.contains('focus'); });
+      if (e.key === 'Escape') { ddClose(el); btn.focus(); }
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault(); if (!el.classList.contains('open')) open();
+        var n = e.key === 'ArrowDown' ? Math.min(i + 1, list.length - 1) : Math.max(i - 1, 0);
+        list.forEach(function (li, k) { li.classList.toggle('focus', k === n); });
+        list[n].scrollIntoView({ block: 'nearest' });
+      } else if ((e.key === 'Enter' || e.key === ' ') && el.classList.contains('open')) {
+        e.preventDefault(); if (list[i]) choose(list[i]);
+      }
+    });
+  }
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.dd')) [].forEach.call(document.querySelectorAll('.dd.open'), ddClose);
+  });
+  [].forEach.call(document.querySelectorAll('.dd'), initDropdown);
+
   function fillOptions() {
     var pages = {}, places = {};
     sessions.forEach(function (v) {
       (v.pages || []).forEach(function (p) { pages[p] = (pages[p] || 0) + 1; });
       if (v.country) places[v.country] = (places[v.country] || 0) + 1;
     });
-    function opts(el, map, first) {
-      var keep = el.value;
-      el.innerHTML = '<option value="">' + first + '</option>' + Object.keys(map).sort().map(function (k) {
-        return '<option value="' + esc(k) + '">' + esc(k) + ' (' + map[k] + ')</option>';
-      }).join('');
-      el.value = keep;
+    function opts(el, map) {
+      var keep = ddValue(el), first = el.dataset.first;
+      el.querySelector('.dd-menu').innerHTML = '<li role="option" data-value="">' + esc(first) + '</li>' +
+        Object.keys(map).sort().map(function (k) {
+          return '<li role="option" data-value="' + esc(k) + '">' + esc(k) + ' (' + map[k] + ')</li>';
+        }).join('');
+      var li = el.querySelector('[data-value="' + keep.replace(/"/g, '') + '"]') || el.querySelector('[role="option"]');
+      ddSet(el, li.dataset.value, li.textContent, true);
     }
-    opts($('fpage'), pages, 'Any page');
-    opts($('fplace'), places, 'Anywhere');
+    opts($('fpage'), pages);
+    opts($('fplace'), places);
   }
 
   function hay(v) {
@@ -540,13 +613,17 @@ tbody tr:hover{background:var(--raise)}
   }
 
   /* filters */
-  [['fq', 'q', 'input'], ['fkind', 'kind', 'change'], ['fwhen', 'when', 'change'],
-   ['fpage', 'page', 'change'], ['fplace', 'place', 'change']].forEach(function (w) {
-    $(w[0]).addEventListener(w[2], function () { F[w[1]] = $(w[0]).value; renderList(); });
+  $('fq').addEventListener('input', function () { F.q = $('fq').value; renderList(); });
+  [['fkind', 'kind'], ['fwhen', 'when'], ['fpage', 'page'], ['fplace', 'place']].forEach(function (w) {
+    $(w[0]).addEventListener('change', function () { F[w[1]] = ddValue($(w[0])); renderList(); });
   });
   $('fclear').addEventListener('click', function () {
     F = { q: '', kind: '', when: '', page: '', place: '' };
-    ['fq', 'fkind', 'fwhen', 'fpage', 'fplace'].forEach(function (id) { $(id).value = ''; });
+    $('fq').value = '';
+    ['fkind', 'fwhen', 'fpage', 'fplace'].forEach(function (id) {
+      var el = $(id), first = el.querySelector('[role="option"]');
+      ddSet(el, '', first.textContent, true);
+    });
     renderList();
   });
 

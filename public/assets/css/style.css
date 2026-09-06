@@ -801,7 +801,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 }
 @keyframes draw{to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion: reduce){
-  .scribble-under path,.scribble-spark path,.scribble-circle path{stroke-dashoffset:0}
+  .scribble-under path,.scribble-spark path,.scribble-circle path,.curl-divider path{stroke-dashoffset:0}
 }
 
 /* ---------------- CTA banner: yellow, one bright action, the gang ---------------- */
@@ -1238,10 +1238,14 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   font-weight:500;color:var(--emerald)}
 .intro-answer{max-width:52ch;margin:34px 0 0;
   font-size:clamp(17px,1.8vw,21px);line-height:1.62;color:var(--ink-soft)}
-/* a hairline between the intro and the first feature group, so the page
-   reads as two movements rather than one long scroll */
-.role-intro::after{content:"";display:block;width:64px;height:1px;
-  margin:64px 0 0;background:var(--emerald);opacity:.5}
+/* the curly divider between the intro and what follows — the site's own
+   motif, drawn in on reveal. It replaced a flat 64px hairline here that read
+   as a stray line at the left edge of the page. */
+.curl-divider{display:block;width:96px;height:24px;margin:56px 0 0;
+  fill:none;stroke:var(--emerald);stroke-width:2;stroke-linecap:round;
+  stroke-linejoin:round;overflow:visible}
+.curl-divider path{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.curl-divider.in path{animation:draw .9s .2s cubic-bezier(.4,.7,.3,1) forwards}
 
 /* A BAND — a section that changes the ground under the reader.
    Ramp and Mercury both shift the page's colour when the subject changes;
@@ -2005,7 +2009,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .v-clock-time{font-size:52px}
   /* the parent's phone was taller than the panel on a 390 viewport */
   .ess-card{padding:22px 20px 24px}
-  .role-intro::after{margin-top:44px}
+  .curl-divider{margin-top:40px}
   .role-next{padding-top:56px}
   .role-beats{padding-top:72px}
   .role-stops,.role-second,.role-keeps{padding-top:80px}

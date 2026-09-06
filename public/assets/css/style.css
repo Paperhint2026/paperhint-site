@@ -38,6 +38,9 @@
   --s-tile-col:26px;   /* between tiles across */
   --s-tile-row:64px;   /* between tile rows */
   --s-cap:20px;        /* panel down to its caption */
+  /* THE DIVIDER: wherever a section used a straight grey hairline, it is
+     this — a subtle grey curl, tiled across the full width. Not green. */
+  --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 q6 -3 12 0 t12 0' fill='none' stroke='rgba(16,32,26,0.26)' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
   --font-display:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --font-body:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --font-serif:"Merriweather",Georgia,serif;
@@ -801,7 +804,7 @@ h2.title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,44px);line-h
 }
 @keyframes draw{to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion: reduce){
-  .scribble-under path,.scribble-spark path,.scribble-circle path,.curl-divider path{stroke-dashoffset:0}
+  .scribble-under path,.scribble-spark path,.scribble-circle path{stroke-dashoffset:0}
 }
 
 /* ---------------- CTA banner: yellow, one bright action, the gang ---------------- */
@@ -1238,15 +1241,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   font-weight:500;color:var(--emerald)}
 .intro-answer{max-width:52ch;margin:34px 0 0;
   font-size:clamp(17px,1.8vw,21px);line-height:1.62;color:var(--ink-soft)}
-/* the curly divider — a full-width wave in place of a hairline, drawn in on
-   reveal. Over the teacher-hours section on /product. */
-.curl-divider{display:block;width:100%;height:24px;margin:0 0 calc(var(--s-rule) - 12px);
-  fill:none;stroke:var(--emerald);stroke-width:1.6;stroke-linecap:round;
-  stroke-linejoin:round;overflow:visible;opacity:.85}
-/* a section head that follows the wave drops its own hairline */
-.sechead.sechead-curl{border-top:0;padding-top:0}
-.curl-divider path{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
-.curl-divider.in path{animation:draw .9s .2s cubic-bezier(.4,.7,.3,1) forwards}
 
 /* A BAND — a section that changes the ground under the reader.
    Ramp and Mercury both shift the page's colour when the subject changes;
@@ -1263,6 +1257,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 }
 /* in the dark theme the same band lifts instead of dropping, so the shift
    still happens rather than the section vanishing into the page */
+[data-theme="dark"]{--wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 q6 -3 12 0 t12 0' fill='none' stroke='rgba(242,238,227,0.22)' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E")}
 [data-theme="dark"] .band-dark{
   --bg:#16211B; --surface:#1C2A22; --line:rgba(242,238,227,.16);
 }
@@ -1279,7 +1274,7 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 /* --- the scope row: four cells, divided by hairlines ----------- */
 .scoperow{padding:var(--s-section) 0 0}
 .scope-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  margin:0;border-top:1px solid var(--line);padding-top:var(--s-rule)}
+  margin:0;background:var(--wave) left top / 24px 8px repeat-x;padding-top:var(--s-rule)}
 .scope{padding:0 24px;border-left:1px solid var(--line)}
 .scope:first-child{border-left:0;padding-left:0}
 .scope dt{font-family:var(--font-display);font-size:clamp(17px,1.9vw,22px);
@@ -1287,8 +1282,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 .scope dd{margin:10px 0 0;font-size:14.5px;line-height:1.55;color:var(--muted)}
 
 /* --- the section head: a rule, then the headline -------------- */
-.sechead{border-top:1px solid var(--line);padding-top:var(--s-rule);
-  margin-bottom:var(--s-head)}
+.sechead{background:var(--wave) left top / 24px 8px repeat-x;
+  padding-top:var(--s-rule);margin-bottom:var(--s-head)}
 /* Measured off mercury.com at 1440: 36px, 41.4px line-height (1.15), tracking
    very slightly POSITIVE. Mine was 48px at -4.5% — bigger and much tighter,
    which is why the sections read as shouting where theirs read as calm. */
@@ -1852,8 +1847,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
 
 /* --- the drifting chip field: the scatter, shown not asserted -- */
 .drift{padding:var(--s-section) 0 0;overflow:hidden}
-.drift-head{border-top:1px solid var(--line);padding-top:var(--s-rule);
-  text-align:center;margin-bottom:var(--s-head)}
+.drift-head{background:var(--wave) left top / 24px 8px repeat-x;
+  padding-top:var(--s-rule);text-align:center;margin-bottom:var(--s-head)}
 .drift-head h2{font-family:var(--font-display);font-size:clamp(27px,2.6vw,36px);
   line-height:1.15;letter-spacing:-.005em;font-weight:500;margin:0 auto;max-width:28ch}
 .drift-head p{margin:var(--s-sub) auto 0;max-width:46ch;font-size:clamp(16px,1.7vw,19px);
@@ -2010,7 +2005,6 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .v-clock-time{font-size:52px}
   /* the parent's phone was taller than the panel on a 390 viewport */
   .ess-card{padding:22px 20px 24px}
-  .curl-divider{height:18px}
   .role-next{padding-top:56px}
   .role-beats{padding-top:72px}
   .role-stops,.role-second,.role-keeps{padding-top:80px}

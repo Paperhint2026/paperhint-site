@@ -262,7 +262,7 @@ export const TOOLS = [
     h1: ['Run t', 'h', 'e whole year from one place'],
     intro: 'A school year — the same job a school ERP is bought to solve — is assembled by hand every June, lists becoming new lists, every section needing a teacher, held together by memory for ten months.',
     turn: 'The structure, the staffing and the follow-through in one place, with an assistant in the office that drives it by asking.',
-    answer: 'Paperhint is school management software with the copilot in the office. Classes, sections, students, teachers and subjects are managed in one portal; allotments — who teaches which class and section — are worked out and kept on one board; attendance is read from the paper register; parents are notified by the school itself; the timetable is built per class and published to every teacher’s calendar; and at year end a whole class is promoted in one move with the library, question banks and records carried forward. Every module can be driven by asking the office copilot in plain language.',
+    answer: 'Paperhint is school management software with the copilot in the office — a student information system a teacher and an office use every day. Classes, sections, students, teachers and subjects are managed in one portal; allotments — who teaches which class and section — are worked out and kept on one board; attendance is read from the paper register; parents are notified by the school itself; the timetable is built per class and published to every teacher’s calendar; report cards are compiled from the marks already on each student’s record; and at year end a whole class is promoted in one move with the library, question banks and records carried forward. Every module can be driven by asking the office copilot in plain language.',
     stepsTitle: 'What the office runs from here',
     steps: [
       ['Structure', 'Classes, sections, students, teachers, subjects and books — in one place.'],
@@ -277,8 +277,9 @@ export const TOOLS = [
       'Runs on a phone and a browser. No new hardware.',
     ],
     faqs: [
-      ['Is Paperhint a school ERP?', 'It runs the office side of a school — classes, sections, students, teachers, allotments, attendance, the timetable, notifications and the year rollover — with an AI copilot driving the modules. It also carries the teacher’s work: papers, marking, notes and homework.'],
+      ['Is Paperhint a school ERP?', 'It runs the academic side of a school as a student information system and ERP would — classes, sections, students, teachers, allotments, attendance, the timetable, report cards, notifications and the year rollover — with an AI copilot driving every module, and it also carries the teacher’s own work: papers, marking, notes and homework. Talk to us about what your school runs alongside it.'],
       ['Can the office change things by asking?', 'Yes. The office copilot creates a section, moves a student, changes an allotment or covers a period in plain language.'],
+      ['Can it generate report cards?', 'Yes. Report cards are compiled straight from the marks already on each student’s record — the same evaluations from answer-sheet marking and exams, not a separate entry job.'],
       ['How does the new academic year work?', 'A whole class is promoted to the next grade in one move; the library, question banks and records carry forward, and the year that ended stays available as a record.'],
       ['What does it need to run?', 'A phone and a browser. Registers and answer sheets are photographed; there is no scanner and nothing to install in a room.'],
     ],

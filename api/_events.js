@@ -33,7 +33,7 @@ export function toEvent(row) {
     region: row.region || undefined,
     country: row.country || undefined,
     ip_network: row.ip || undefined,
-    $current_url: row.page ? 'https://paperhint.com' + row.page : undefined,
+    $current_url: row.page ? 'https://www.paperhint.com' + row.page : undefined,
     page: row.page || undefined,
     user_agent: row.ua || undefined,
     /* which visit */

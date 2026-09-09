@@ -1,0 +1,41 @@
+---
+/* The hub: every intent page, one card each, so the set is crawlable from
+ * one place and a visitor who lands on one can see the rest. */
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import Chat from '../../components/Chat.astro';
+import { TOOLS } from '../../data/tools.js';
+const title = 'AI Tools for Schools and Teachers — Grading, Question Papers, Timetables, Notes | Paperhint';
+const description = 'Every job Paperhint does for a school, one page each: AI answer sheet grading, question paper generation, timetables published to teacher calendars, teaching notes, homework with parent notification, attendance from the paper register, and the office copilot.';
+---
+<Base title={title} description={description} canonical="https://www.paperhint.com/tools">
+<Nav />
+<header class="role-hero">
+  <div class="wrap wrap-read">
+    <span class="tagline"><span class="tag">AI FOR SCHOOLS</span> Paperhint <i>·</i></span>
+    <h1 class="display role-h1">Every job, one page eac<em>h</em></h1>
+    <p class="role-sub">What Paperhint does for a teacher and a school, explained one job at a time — how it works, what stays yours, and the questions schools ask.</p>
+  </div>
+</header>
+<section class="steps-sec">
+  <div class="wrap wrap-read">
+    <div class="tool-grid tool-grid-hub">
+      {TOOLS.map(t => (
+        <a class="tool-card reveal" href={`/tools/${t.slug}`}>
+          <b>{t.query}</b>
+          <p>{t.description}</p>
+          <span class="tool-go" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+<section class="cta role-cta-band">
+  <div class="wrap wrap-read">
+    <div data-component="cta-banner" data-heading="Bring the job you dread most" data-sub="Book a demo and we will do it on your own papers, your own register, your own week."></div>
+  </div>
+</section>
+<Footer />
+<Chat />
+</Base>

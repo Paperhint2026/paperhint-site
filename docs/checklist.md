@@ -9,6 +9,18 @@ take on your word.*
 
 ## A. Decisions only you can make
 
+- [ ] **FIX THE APEX DOMAIN (this is why /about outranked /).** `https://paperhint.com`
+      does not respond — its A records point away from Vercel — while every
+      canonical, the sitemap and the JSON-LD named it. Site-side I have moved
+      every signal to `www`, which serves. Your side, at the registrar/Vercel:
+      add `paperhint.com` to the Vercel project, point its A record to Vercel
+      (`76.76.21.21`), and set it to **redirect to www**. Until then the apex
+      is a dead door and every link to it fails.
+- [ ] **Google Search Console.** Verify the `https://www.paperhint.com`
+      property, submit `https://www.paperhint.com/sitemap.xml`, and request
+      indexing for `/` and `/tools`. It is the only way to see which URL
+      Google actually chose as canonical — I can't see that from outside.
+
 - [ ] **Parent-update channel.** `/pricing` says *"arrive by email"*, the brief
       says WhatsApp-style template, the site now shows a phone message from the
       school. One is current; tell me which and I align the other two.
@@ -23,9 +35,7 @@ take on your word.*
       "scattered" things are wrong · #8 how the rubric is set · #9 unreadable
       handwriting · #10 what the school supplies on day one · #11 the weakest
       of the ten · #13 data ownership · #14 week one · #15 a nameable pilot.
-- [ ] **Footer "Product" column.** Five links that deep-link into home-page
-      cards, from before `/product` existed. Point them at `/product`, cut to
-      one link, or leave.
+- [x] **Footer "Product" column** — now points at the ten tool pages (9 Sept).
 - [ ] **Security work — go/no-go** on the three cheap fixes in section D.
 - [ ] **Chat model.** `gpt-4o` first in `api/chat-models.js` if the voice
       still slips (cost call). Tamil replies are the known weak case.
@@ -62,11 +72,12 @@ take on your word.*
       pointer, data, support, who else uses it. It's the page that has to
       close and the emptiest relative to that job. *(Needs B's data + week-one
       facts to be true; I can draft the shape now.)*
-- [ ] **Tool pages** — `/tools/answer-sheet-evaluation`,
-      `/tools/question-paper-generator`, `/tools/teaching-notes`,
-      `/tools/homework-generator`, `/tools/rubric-generator`,
-      `/tools/attendance-scanning`. MagicSchool's search engine, our biggest
-      gap, and every one describes something that ships.
+- [x] **Tool pages** — DONE 9 Sept: ten intent pages under `/tools/` (answer
+      sheet grading, question papers, rubric, timetable, teaching notes,
+      homework, attendance, copilot, school management, "best AI tools for
+      schools") + a hub, each with FAQPage + SoftwareApplication schema, linked
+      from the footer and the product tiles, in the sitemap. Rankings are
+      Google's call; indexability and intent-match are ours and are in place.
 - [ ] **Shared FAQ block** on product and role pages (MagicSchool has one on
       every page; ours is only on `/pricing`). Draftable from the brief.
 - [ ] **Email templates** in `api/contact.js` — still on the old

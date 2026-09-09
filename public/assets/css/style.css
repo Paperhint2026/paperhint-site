@@ -1321,6 +1321,41 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .reveal.in .wp-track i{animation:none}
 }
 
+/* --- intent pages (/tools): steps, truths, FAQ, related ---------- */
+.steps-sec,.truths-sec,.faq-sec,.related-sec{padding:var(--s-section) 0 0}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:26px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start}
+.step-n{font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:.14em;
+  color:var(--emerald);padding-top:6px}
+.step h3{font-family:var(--font-display);font-size:clamp(18px,1.8vw,21px);font-weight:500;
+  letter-spacing:-.02em;margin:0 0 6px;color:var(--ink)}
+.step p{margin:0;font-size:16.5px;line-height:1.6;color:var(--ink-soft);max-width:62ch}
+.truths{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:62ch}
+.truths li{position:relative;padding-left:22px;font-size:16.5px;line-height:1.6;color:var(--ink-soft)}
+.truths li::before{content:"";position:absolute;left:0;top:.62em;width:9px;height:9px;
+  border-radius:99px;background:var(--emerald)}
+/* the FAQ is open on the page, not folded behind a disclosure: the answers
+   are the content a search result shows, so they are visible content here */
+.faq{margin:0;display:grid;gap:22px}
+.faq-item{padding:22px 0 0;background:var(--wave) left top / 24px 8px repeat-x}
+.faq-item h3{font-family:var(--font-display);font-size:clamp(18px,1.8vw,21px);font-weight:500;
+  letter-spacing:-.02em;margin:0 0 8px;color:var(--ink)}
+.faq-item dd{margin:0}
+.faq-item p{margin:0;font-size:16.5px;line-height:1.6;color:var(--ink-soft);max-width:66ch}
+.tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.tool-grid-hub{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tool-card{position:relative;display:block;padding:22px 22px 26px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--line);text-decoration:none;color:inherit;
+  transition:border-color .2s,transform .2s}
+.tool-card:hover{border-color:var(--emerald);transform:translateY(-2px)}
+.tool-card b{display:block;font-family:var(--font-display);font-size:18px;font-weight:500;
+  letter-spacing:-.02em;margin:0 0 8px;color:var(--ink);padding-right:28px}
+.tool-card p{margin:0;font-size:14.5px;line-height:1.55;color:var(--muted)}
+.tool-go{position:absolute;right:18px;top:20px;color:var(--emerald)}
+/* a tile caption that has a page behind it */
+.tile-more{display:inline-block;margin-top:10px;font-size:14.5px;color:var(--emerald);text-decoration:none}
+.tile-more:hover{text-decoration:underline;text-underline-offset:3px}
+
 /* --- image-led tiles: the panel IS the tile ------------------- */
 .tiles-sec{padding:var(--s-section) 0 0}
 /* a section that ends the content run keeps its own bottom space, so the
@@ -1989,6 +2024,8 @@ h2.sec-h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,44px);
   .scatter-grid{grid-template-columns:1fr}
   .scatter-tile{min-height:0}
   .intro-turn{margin-top:14px}
+  .tool-grid,.tool-grid-hub{grid-template-columns:1fr}
+  .step{grid-template-columns:34px 1fr;gap:12px}
   /* five still fit: 5×63 + 4×10 = 355 in a 359 panel */
   .v-row{--card:63px;--gap:10px}
   .v-row-card{height:48px;font-size:14.5px;border-radius:9px}

@@ -1,0 +1,134 @@
+---
+/* One intent page per thing a school actually searches for.
+ *
+ * The shape is the same as a role page — banner, the couplet, then the
+ * substance — but the substance here answers a query: how it works, what
+ * stays yours, and the questions people ask, each of which is also emitted
+ * as FAQPage structured data so the answer can appear in the result itself.
+ * Content is src/data/tools.js. Nothing is authored here.
+ */
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import Chat from '../../components/Chat.astro';
+import HouseLetter from '../../components/HouseLetter.astro';
+import { TOOLS, toolBySlug } from '../../data/tools.js';
+
+export function getStaticPaths() {
+  return TOOLS.map(t => ({ params: { slug: t.slug } }));
+}
+const { slug } = Astro.params;
+const t = toolBySlug(slug);
+const url = `https://www.paperhint.com/tools/${t.slug}`;
+const related = (t.related || []).map(toolBySlug).filter(Boolean);
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'FAQPage', '@id': url + '#faq',
+      mainEntity: t.faqs.map(([q, a]) => ({
+        '@type': 'Question', name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    },
+    {
+      '@type': 'SoftwareApplication', '@id': 'https://www.paperhint.com/#app',
+      name: 'Paperhint', url: 'https://www.paperhint.com/',
+      applicationCategory: 'EducationalApplication', operatingSystem: 'Web, Android, iOS',
+      description: t.description,
+      publisher: { '@id': 'https://www.paperhint.com/#org' },
+    },
+  ],
+};
+---
+<Base title={t.title} description={t.description} canonical={url}>
+<Fragment slot="head">
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Fragment>
+<Nav />
+
+<header class="role-hero">
+  <div class="wrap wrap-read">
+    <span class="tagline"><span class="tag">AI FOR SCHOOLS</span> <a href="/tools">All tools</a> <i>·</i></span>
+    {t.h1.length === 3
+      ? <HouseLetter class="display role-h1" parts={t.h1} />
+      : <h1 class="display role-h1">{t.h1[0]}</h1>}
+    <p class="role-sub">{t.description}</p>
+    <div class="role-cta">
+      <a class="btn btn-primary btn-lg" href={`/contact?type=demo&tool=${t.slug}`}>Book a demo</a>
+      <a class="btn btn-ghost btn-lg" href="/product">See the whole product</a>
+    </div>
+  </div>
+</header>
+
+<section class="role-intro">
+  <div class="wrap wrap-read">
+    <p class="intro-statement reveal">{t.intro}</p>
+    <p class="intro-turn reveal">{t.turn}</p>
+    <p class="intro-answer reveal">{t.answer}</p>
+  </div>
+</section>
+
+<section class="steps-sec">
+  <div class="wrap wrap-read">
+    <div class="sechead reveal"><h2 class="sechead-h">{t.stepsTitle}</h2></div>
+    <ol class="steps">
+      {t.steps.map(([label, text], i) => (
+        <li class="step reveal">
+          <span class="step-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div><h3>{label}</h3><p>{text}</p></div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<section class="truths-sec">
+  <div class="wrap wrap-read">
+    <div class="sechead reveal"><h2 class="sechead-h">{t.truthsTitle}</h2></div>
+    <ul class="truths">
+      {t.truths.map(x => <li class="reveal">{x}</li>)}
+    </ul>
+  </div>
+</section>
+
+<section class="faq-sec">
+  <div class="wrap wrap-read">
+    <div class="sechead reveal"><h2 class="sechead-h">Questions schools ask</h2></div>
+    <dl class="faq">
+      {t.faqs.map(([q, a]) => (
+        <div class="faq-item reveal">
+          <dt><h3>{q}</h3></dt>
+          <dd><p>{a}</p></dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+{related.length > 0 && (
+  <section class="related-sec">
+    <div class="wrap wrap-read">
+      <div class="sechead reveal"><h2 class="sechead-h">Related</h2></div>
+      <div class="tool-grid">
+        {related.map(r => (
+          <a class="tool-card reveal" href={`/tools/${r.slug}`}>
+            <b>{r.query}</b>
+            <p>{r.description}</p>
+            <span class="tool-go" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="cta role-cta-band">
+  <div class="wrap wrap-read">
+    <div data-component="cta-banner" data-heading={t.cta.heading} data-sub={t.cta.sub}></div>
+  </div>
+</section>
+
+<Footer />
+<Chat />
+</Base>

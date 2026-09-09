@@ -243,6 +243,7 @@ const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
               <div class="tile-cap">
                 <h3>{it.label}</h3>
                 <p set:html={it.text} />
+                {it.tool && <a class="tile-more" href={`/tools/${it.tool}`}>How it works <span aria-hidden="true">→</span></a>}
               </div>
             </article>
           );

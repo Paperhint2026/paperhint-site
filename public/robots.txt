@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://paperhint.com/sitemap.xml
+Sitemap: https://www.paperhint.com/sitemap.xml
 
 User-agent: *
 Disallow: /pitch/

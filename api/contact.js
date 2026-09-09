@@ -278,7 +278,7 @@ function shell(t) {
   </td></tr>
   <tr><td style="padding:18px 6px 0;font-size:12px;line-height:1.55;color:#68766E">
     ${esc(t.foot)}<br>
-    <span style="color:#14201A;font-weight:600">Teaching is the job.</span> <span style="color:#14201A">Paperwork isn’t.</span> &nbsp;·&nbsp; <a href="https://paperhint.com" style="color:#68766E">paperhint.com</a>
+    <span style="color:#14201A;font-weight:600">Teaching is the job.</span> <span style="color:#14201A">Paperwork isn’t.</span> &nbsp;·&nbsp; <a href="https://www.paperhint.com" style="color:#68766E">paperhint.com</a>
   </td></tr>
 </table></td></tr></table></body></html>`;
 }

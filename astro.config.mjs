@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 // `.html` URLs (about.html, pricing.html, contact.html) that are already
 // indexed and referenced by the canonical tags on each page.
 export default defineConfig({
-  site: 'https://paperhint.com',
+  site: 'https://www.paperhint.com',
   outDir: './site',
   publicDir: './public',
   srcDir: './src',

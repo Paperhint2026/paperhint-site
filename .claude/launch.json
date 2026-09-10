@@ -2,10 +2,22 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "paperhint-site",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4180", "--directory", "site"],
-      "port": 4180
+      "name": "paperhint-astro",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/facilio/Documents/GitHub/paperhint-site", "run", "dev", "--", "--port", "4321"],
+      "port": 4321
+    },
+    {
+      "name": "paperhint-service",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-lc", "source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && cd /Users/facilio/Documents/GitHub/paperhint-service && npm run dev"],
+      "port": 3000
+    },
+    {
+      "name": "paperhint-web",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-lc", "source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && cd /Users/facilio/Documents/GitHub/paperhint-web && npm run dev -- --port 5173 --strictPort"],
+      "port": 5173
     }
   ]
 }

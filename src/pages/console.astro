@@ -1,0 +1,657 @@
+---
+/* Paperhint enquiry console — internal.
+ *
+ * Standalone on purpose: no marketing chrome, no chat widget, no NEAT canvas.
+ * It's a tool, and it should open instantly on a phone in a corridor.
+ *
+ * Getting in: type a Paperhint address, a signed link arrives by mail. See
+ * api/_auth.js. Nothing here is readable without that grant.
+ */
+const v = import.meta.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || 'dev';
+
+/* The favicon only: the rosette in violet, the brand's other colour, so the
+   console's tab is told apart from the site's at a glance. The page itself
+   keeps the plain wordmark — it is a tool, not a second brand. */
+const ROSETTE = 'M13.0084 1.3766C13.7737 2.14565 14.2463 3.15379 14.3544 4.22631C15.3798 2.58856 15.6072 1.73351 15.6072 1.73351C16.6106 2.46619 17.2834 3.56947 17.4774 4.80065C17.6467 5.87486 17.4395 6.96965 16.8996 7.90118C18.6871 7.18196 19.3711 6.62453 19.3711 6.62453C19.7544 7.81004 19.6534 9.10001 19.0903 10.2107C18.599 11.1797 17.791 11.943 16.8095 12.3777C18.6762 12.8518 19.5556 12.8049 19.5556 12.8049C19.1723 13.9904 18.3361 14.9743 17.231 15.5402C16.2668 16.034 15.1667 16.1742 14.1183 15.9461C15.3513 17.4323 16.0902 17.9139 16.0902 17.9139C15.0867 18.6465 13.8348 18.9486 12.6097 18.7536C11.5408 18.5835 10.5688 18.0471 9.85413 17.2432C9.98239 19.1739 10.2985 20 10.2985 20C9.0582 20 7.86867 19.5048 6.99163 18.6234C6.2264 17.8544 5.75375 16.8462 5.64567 15.7737C4.62023 17.4115 4.39286 18.2665 4.39286 18.2665C3.38941 17.5338 2.71668 16.4305 2.52265 15.1994C2.35335 14.1252 2.56059 13.0304 3.10043 12.0989C1.31296 12.8181 0.628921 13.3755 0.628921 13.3755C0.245639 12.19 0.346658 10.9 0.909756 9.78937C1.40106 8.82031 2.20902 8.05702 3.19058 7.6223C1.32385 7.14827 0.444435 7.19517 0.444435 7.19517C0.827718 6.00966 1.66391 5.02572 2.76905 4.45982C3.7333 3.96606 4.83338 3.82582 5.88173 4.05395C4.64875 2.56773 3.90986 2.08618 3.90986 2.08618C4.9133 1.3535 6.16527 1.05143 7.39032 1.24643C8.4592 1.41657 9.4312 1.95295 10.1459 2.75678C10.0177 0.826064 9.70151 0 9.70151 0C10.9418 2.42706e-07 12.1314 0.495178 13.0084 1.3766Z';
+const ACCENT = '#7C5CFF';
+const favicon = 'data:image/svg+xml,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="${ACCENT}" d="${ROSETTE}"/></svg>`
+);
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Console — Paperhint</title>
+<link rel="icon" type="image/svg+xml" href={favicon}>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital@1&display=swap" rel="stylesheet">
+<style is:global>
+/* Global on purpose: the console renders its tables, stat cards and detail
+   sheet from script at runtime, and Astro's scoped styles only attach to
+   elements present in the template. */
+:root{
+  --ink:#14201A; --ink-soft:#3D4F47; --muted:#68766E;
+  --ground:#FAF7F0; --surface:#FFFFFF; --raise:#F6F3EA;
+  --line:#E2DED1; --emerald:#0B8A5C; --emerald-soft:#E6F4EE;
+  --amber:#B4761A; --amber-soft:#FBF1DE;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#F2EEE3; --ink-soft:#C6CFC8; --muted:#8A968F;
+  --ground:#0A0F0C; --surface:#121A15; --raise:#18211B;
+  --line:#26312A; --emerald:#31D492; --emerald-soft:#12261D;
+  --amber:#E8B562; --amber-soft:#241C0E;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font:400 15px/1.55 Geist,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--emerald)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+header.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--ground) 88%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar-in{display:flex;align-items:center;gap:14px;height:60px}
+.mark{font-weight:500;font-size:18px;letter-spacing:-.01em}
+.mark i{color:var(--emerald);font-family:Merriweather,Georgia,serif}
+.bar-in .sp{flex:1}
+.who{font-size:13px;color:var(--muted)}
+.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);
+  padding:7px 14px;border-radius:999px;cursor:pointer}
+.btn:hover{border-color:var(--emerald);color:var(--emerald)}
+.btn-go{background:var(--emerald);border-color:var(--emerald);color:#fff;font-weight:500;padding:11px 20px;font-size:14px}
+.btn-go:hover{color:#fff;filter:brightness(1.06)}
+
+/* the way in */
+.gate{min-height:78vh;display:grid;place-items:center;padding:40px 20px}
+.gate-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:30px}
+.gate h1{margin:14px 0 6px;font-size:22px;font-weight:500;letter-spacing:-.02em}
+.gate p{margin:0 0 20px;color:var(--muted);font-size:14px}
+.gate input{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;
+  background:var(--raise);color:var(--ink);margin-bottom:12px}
+.gate input:focus{outline:none;border-color:var(--emerald)}
+.said{margin:14px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
+.said.bad{color:#B4321A}
+
+/* numbers */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:10px;margin:24px 0 6px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stat b{display:block;font-size:26px;font-weight:500;letter-spacing:-.03em;line-height:1.1}
+.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.places{margin:14px 0 0;font-size:13px;color:var(--muted)}
+.places b{color:var(--ink-soft);font-weight:500}
+
+h2.sec{margin:30px 0 12px;font-size:15px;font-weight:500;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em}
+
+/* tabs: one section at a time */
+.tabs{display:flex;gap:6px;margin:26px 0 14px;border-bottom:1px solid var(--line)}
+.tab{font:inherit;font-size:14px;font-weight:500;color:var(--muted);background:none;border:0;
+  padding:10px 12px 12px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab b{font-weight:500;font-size:12px;margin-left:6px;padding:1px 7px;border-radius:999px;
+  background:var(--raise);color:var(--muted)}
+.tab.on{color:var(--ink);border-bottom-color:var(--emerald)}
+.tab.on b{background:var(--emerald-soft);color:var(--emerald)}
+.tab.bad b{background:#F8E5E0;color:#B4321A}
+/* filters over the visits */
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.filters input,.dd-btn{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:999px;padding:8px 13px}
+.filters input{flex:1 1 240px;min-width:0}
+.filters input:focus,.dd-btn:focus-visible{outline:none;border-color:var(--emerald)}
+/* the dropdown: ours, not the system's */
+.dd{position:relative}
+.dd-btn{display:inline-flex;align-items:center;gap:9px;cursor:pointer;padding-right:12px;white-space:nowrap}
+.dd-btn::after{content:"";width:9px;height:6px;flex:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%2368766E' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition:transform .18s}
+.dd.open .dd-btn{border-color:var(--emerald)}
+.dd.open .dd-btn::after{transform:rotate(180deg)}
+.dd-menu{position:absolute;left:0;top:calc(100% + 6px);z-index:8;min-width:100%;max-height:280px;overflow:auto;
+  margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;box-shadow:0 16px 40px -18px rgba(10,15,12,.35);display:none}
+.dd.open .dd-menu{display:block;animation:dd-in .16s cubic-bezier(.2,.7,.2,1)}
+@keyframes dd-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.dd-menu li{padding:8px 11px;border-radius:9px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+.dd-menu li:hover,.dd-menu li.focus{background:var(--raise);color:var(--ink)}
+.dd-menu li[aria-selected="true"]{color:var(--emerald);font-weight:500}
+.fcount{font-size:12.5px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+/* sessions */
+table{width:100%;border-collapse:collapse;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th{text-align:left;font-size:11.5px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);background:var(--raise)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--raise)}
+.who-cell b{font-weight:500}
+.who-cell small{display:block;color:var(--muted);font-size:12.5px}
+.tag{display:inline-block;font-size:11.5px;padding:3px 9px;border-radius:999px;font-weight:500}
+.tag.call{background:var(--emerald-soft);color:var(--emerald)}
+.tag.ask{background:var(--amber-soft);color:var(--amber)}
+.num{font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.ip{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--muted)}
+.none{padding:40px 20px;text-align:center;color:var(--muted);background:var(--surface);
+  border:1px solid var(--line);border-radius:14px}
+.notice{background:var(--amber-soft);color:var(--amber);border:1px solid transparent;
+  border-radius:12px;padding:12px 16px;font-size:13.5px;margin:20px 0 0}
+
+/* one visit, in full */
+.sheet{position:fixed;inset:0;z-index:20;display:none}
+.sheet.on{display:block}
+.veil{position:absolute;inset:0;background:rgba(10,15,12,.34);backdrop-filter:blur(2px)}
+.panel{position:absolute;top:0;right:0;height:100%;width:min(560px,100%);background:var(--ground);
+  border-left:1px solid var(--line);display:flex;flex-direction:column;
+  animation:slide .26s cubic-bezier(.2,.7,.2,1)}
+@keyframes slide{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}
+.panel-top{display:flex;align-items:flex-start;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.panel-top h3{margin:0;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.panel-top p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.panel-body{overflow:auto;padding:18px 20px 40px;flex:1}
+.facts{display:grid;grid-template-columns:104px 1fr;gap:7px 14px;font-size:13.5px;margin:0 0 22px}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;color:var(--ink-soft);word-break:break-word}
+.turn{margin:0 0 12px;max-width:88%}
+.turn.them{margin-left:auto}
+.turn .b{padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+.turn.them .b{background:var(--emerald-soft);color:var(--ink);border-bottom-right-radius:5px}
+.turn.us .b{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:5px}
+.turn .when{font-size:11px;color:var(--muted);margin:4px 4px 0}
+.turn.them .when{text-align:right}
+.lead{background:var(--surface);border:1px solid var(--emerald);border-radius:14px;padding:14px 16px;margin:0 0 14px}
+.lead h4{margin:0 0 8px;font-size:13px;font-weight:500;color:var(--emerald);
+  text-transform:uppercase;letter-spacing:.06em}
+.foot{padding:26px 0 40px;font-size:12px;color:var(--muted)}
+@media (max-width:640px){
+  .hide-sm{display:none}
+  td,th{padding:10px 11px}
+  .filters input{flex-basis:100%}
+  .fcount{margin-left:0;flex-basis:100%}
+}
+</style>
+</head>
+<body>
+
+<header class="bar"><div class="wrap bar-in">
+  <span class="mark">Paper<i>h</i>int</span>
+  <span class="who" id="who"></span>
+  <span class="sp"></span>
+  <button class="btn" id="refresh" hidden>Refresh</button>
+  <button class="btn" id="out" hidden>Sign out</button>
+</div></header>
+
+<!-- the way in -->
+<section class="gate" id="gate" hidden>
+  <div class="gate-card">
+    <span class="mark">Paper<i>h</i>int</span>
+    <h1>Console</h1>
+    <p>Enquiries, questions and where they came from. A link arrives by mail.</p>
+    <form id="loginForm" novalidate>
+      <input id="email" type="email" autocomplete="email" placeholder="you@paperhint.com" required>
+      <button class="btn btn-go" type="submit" style="width:100%">Send me the link</button>
+    </form>
+    <p class="said" id="said" hidden></p>
+  </div>
+</section>
+
+<!-- the log -->
+<main class="wrap" id="main" hidden>
+  <div class="stats" id="stats"></div>
+  <p class="places" id="places"></p>
+  <div id="notice"></div>
+
+  <nav class="tabs" role="tablist" aria-label="Console sections">
+    <button class="tab on" role="tab" data-tab="visits" aria-selected="true">Visits <b id="nVisits">0</b></button>
+    <button class="tab" role="tab" data-tab="broken" aria-selected="false">Broken things <b id="nFaults">0</b></button>
+  </nav>
+
+  <section id="tab-visits" role="tabpanel">
+    <div class="filters" id="filters">
+      <input id="fq" type="search" placeholder="Search name, email, school, question, place…" aria-label="Search visits">
+      <!-- custom dropdowns, never the system popover: a button and a listbox,
+           keyboard-driven, closing on Escape and on a click outside -->
+      <div class="dd" id="fkind" data-value="">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Kind"><span>All visits</span></button>
+        <ul class="dd-menu" role="listbox">
+          <li role="option" data-value="" aria-selected="true">All visits</li>
+          <li role="option" data-value="callback">Callbacks only</li>
+          <li role="option" data-value="asked">Asked only</li>
+        </ul>
+      </div>
+      <div class="dd" id="fwhen" data-value="">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Period"><span>Any time</span></button>
+        <ul class="dd-menu" role="listbox">
+          <li role="option" data-value="" aria-selected="true">Any time</li>
+          <li role="option" data-value="1">Today</li>
+          <li role="option" data-value="7">Last 7 days</li>
+          <li role="option" data-value="30">Last 30 days</li>
+        </ul>
+      </div>
+      <div class="dd" id="fpage" data-value="" data-first="Any page">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Page"><span>Any page</span></button>
+        <ul class="dd-menu" role="listbox"><li role="option" data-value="" aria-selected="true">Any page</li></ul>
+      </div>
+      <div class="dd" id="fplace" data-value="" data-first="Anywhere">
+        <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Country"><span>Anywhere</span></button>
+        <ul class="dd-menu" role="listbox"><li role="option" data-value="" aria-selected="true">Anywhere</li></ul>
+      </div>
+      <span class="fcount" id="fcount"></span>
+      <button class="btn" id="fclear" type="button" hidden>Clear</button>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <section id="tab-broken" role="tabpanel" hidden>
+    <div id="faults"></div>
+  </section>
+  <p class="foot">Newest first, last 500 events. Addresses are stored as a network, never in full. Build {v}</p>
+</main>
+
+<div class="sheet" id="sheet">
+  <div class="veil" data-close></div>
+  <aside class="panel">
+    <div class="panel-top">
+      <div style="flex:1">
+        <h3 id="sheetName">Visit</h3>
+        <p id="sheetWhere"></p>
+      </div>
+      <button class="btn" data-close>Close</button>
+    </div>
+    <div class="panel-body" id="sheetBody"></div>
+  </aside>
+</div>
+
+<script is:inline>
+(function () {
+  var KEY = 'paperhint.console.k';
+  var $ = function (id) { return document.getElementById(id); };
+
+  function grant(v) {
+    try { if (v === undefined) return localStorage.getItem(KEY) || '';
+          v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); }
+    catch (e) { return ''; }
+    return v || '';
+  }
+
+  /* A grant in the address bar is a grant in someone's history and in every
+     screenshot — take it into storage and clean the URL immediately. */
+  var q = new URLSearchParams(location.search);
+  if (q.get('k')) { grant(q.get('k')); history.replaceState({}, '', location.pathname); }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function when(t) {
+    var d = new Date(t); if (isNaN(d)) return '—';
+    return d.toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+  }
+  function ago(t) {
+    var m = Math.round((Date.now() - Date.parse(t)) / 6e4);
+    if (isNaN(m)) return '';
+    if (m < 1) return 'just now';
+    if (m < 60) return m + 'm ago';
+    if (m < 1440) return Math.round(m / 60) + 'h ago';
+    return Math.round(m / 1440) + 'd ago';
+  }
+  function place(s) {
+    return [s.city, s.region, s.country].filter(Boolean).join(', ') || 'somewhere';
+  }
+
+  /* ---- the way in ---- */
+  function showGate(msg, bad) {
+    $('gate').hidden = false; $('main').hidden = true;
+    $('out').hidden = true; $('refresh').hidden = true; $('who').textContent = '';
+    if (msg) { var p = $('said'); p.hidden = false; p.textContent = msg; p.className = 'said' + (bad ? ' bad' : ''); }
+  }
+
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = $('email').value.trim();
+    if (!email) return;
+    var btn = e.target.querySelector('button');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    fetch('/api/console-login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (j) {
+        var p = $('said'); p.hidden = false;
+        p.className = 'said' + (j && j.error ? ' bad' : '');
+        p.textContent = (j && (j.error || j.sent)) || 'Something went wrong.';
+      })
+      .catch(function () {
+        var p = $('said'); p.hidden = false; p.className = 'said bad';
+        p.textContent = 'Could not reach the server.';
+      })
+      .then(function () { btn.disabled = false; btn.textContent = 'Send me the link'; });
+  });
+
+  $('out').addEventListener('click', function () { grant(''); location.reload(); });
+  $('refresh').addEventListener('click', function () { load(); });
+
+  /* ---- the log ---- */
+  var sessions = [], faults = [];
+
+  function load() {
+    var k = grant();
+    if (!k) return showGate();
+    $('refresh').disabled = true;
+    fetch('/api/console', { headers: { Authorization: 'Bearer ' + k } })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          if (r.status === 401) { grant(''); showGate('That link has expired. Ask for a new one.', true); return null; }
+          if (!r.ok) { showGate((j && j.error) || 'Could not load the log.', true); return null; }
+          return j;
+        });
+      })
+      .then(function (j) { if (j) render(j); })
+      .catch(function () { showGate('Could not reach the server.', true); })
+      .then(function () { $('refresh').disabled = false; });
+  }
+
+  function render(j) {
+    $('gate').hidden = true; $('main').hidden = false;
+    $('out').hidden = false; $('refresh').hidden = false;
+    $('who').textContent = j.who || '';
+    sessions = j.sessions || [];
+    var s = j.summary || {};
+
+    $('stats').innerHTML = [
+      ['Visits', s.sessions], ['Today', s.day], ['This week', s.week],
+      ['Questions', s.questions], ['Callbacks', s.callbacks], ['Faults', s.faults]
+    ].map(function (p) {
+      var bad = p[0] === 'Faults' && p[1];
+      return '<div class="stat"><b' + (bad ? ' style="color:#B4321A"' : '') + '>' +
+        (p[1] || 0) + '</b><span>' + p[0] + '</span></div>';
+    }).join('');
+
+    $('places').innerHTML = (s.places && s.places.length)
+      ? 'From ' + s.places.map(function (p) { return '<b>' + esc(p[0]) + '</b> (' + p[1] + ')'; }).join(' · ')
+      : '';
+
+    $('notice').innerHTML = j.notice ? '<p class="notice">' + esc(j.notice) + '</p>' : '';
+
+    faults = j.faults || [];
+    $('nFaults').textContent = faults.length;
+    $('nVisits').textContent = sessions.length;
+    document.querySelector('[data-tab="broken"]').classList.toggle('bad', faults.length > 0);
+    if (!faults.length) {
+      $('faults').innerHTML = '<div class="none">Nothing broken has been reported.</div>';
+    } else {
+      $('faults').innerHTML = '<table><thead><tr>' +
+        '<th>Fault</th><th class="hide-sm">Where</th><th>Seen</th><th>Last</th>' +
+        '</tr></thead><tbody>' + faults.map(function (f, i) {
+          return '<tr data-f="' + i + '">' +
+            '<td class="who-cell"><b>' + esc(f.message) + '</b>' +
+              '<small>' + esc(f.fault) + (f.file ? ' · ' + esc(shortFile(f.file)) +
+                (f.line ? ':' + f.line : '') : '') + '</small></td>' +
+            '<td class="hide-sm">' + esc((f.pages || []).join(', ') || '—') + '</td>' +
+            '<td class="num">' + f.count + '</td>' +
+            '<td class="num">' + esc(ago(f.last)) + '</td>' +
+          '</tr>';
+        }).join('') + '</tbody></table>';
+      [].forEach.call($('faults').querySelectorAll('tr[data-f]'), function (tr) {
+        tr.addEventListener('click', function () { openFault(faults[+tr.dataset.f]); });
+      });
+    }
+
+    fillOptions();
+    renderList();
+  }
+
+  /* ---- filters over the visits ----
+     Everything is client-side over the rows already loaded (the API returns
+     the latest 500), so a filter is instant and never costs a round trip. */
+  var F = { q: '', kind: '', when: '', page: '', place: '' };
+
+  /* ---- the dropdown: a button and a listbox of our own ----
+     Never the system popover. Arrow keys move, Enter/Space choose, Escape and
+     a click outside close, and the chosen value lives on data-value so the
+     filters read it the same way whatever built the menu. */
+  function ddValue(el) { return el.dataset.value || ''; }
+  function ddSet(el, value, label, silent) {
+    el.dataset.value = value;
+    el.querySelector('.dd-btn span').textContent = label;
+    [].forEach.call(el.querySelectorAll('[role="option"]'), function (li) {
+      li.setAttribute('aria-selected', li.dataset.value === value ? 'true' : 'false');
+    });
+    if (!silent) el.dispatchEvent(new CustomEvent('change'));
+  }
+  function ddClose(el) { el.classList.remove('open'); el.querySelector('.dd-btn').setAttribute('aria-expanded', 'false'); }
+  function initDropdown(el) {
+    var btn = el.querySelector('.dd-btn'), menu = el.querySelector('.dd-menu');
+    function items() { return [].slice.call(menu.querySelectorAll('[role="option"]')); }
+    function open() {
+      [].forEach.call(document.querySelectorAll('.dd.open'), ddClose);
+      el.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
+      var cur = menu.querySelector('[aria-selected="true"]') || items()[0];
+      items().forEach(function (li) { li.classList.toggle('focus', li === cur); });
+    }
+    function choose(li) { ddSet(el, li.dataset.value, li.textContent); ddClose(el); btn.focus(); }
+    btn.addEventListener('click', function () { el.classList.contains('open') ? ddClose(el) : open(); });
+    menu.addEventListener('click', function (e) { var li = e.target.closest('[role="option"]'); if (li) choose(li); });
+    el.addEventListener('keydown', function (e) {
+      var list = items(), i = list.findIndex(function (li) { return li.classList.contains('focus'); });
+      if (e.key === 'Escape') { ddClose(el); btn.focus(); }
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault(); if (!el.classList.contains('open')) open();
+        var n = e.key === 'ArrowDown' ? Math.min(i + 1, list.length - 1) : Math.max(i - 1, 0);
+        list.forEach(function (li, k) { li.classList.toggle('focus', k === n); });
+        list[n].scrollIntoView({ block: 'nearest' });
+      } else if ((e.key === 'Enter' || e.key === ' ') && el.classList.contains('open')) {
+        e.preventDefault(); if (list[i]) choose(list[i]);
+      }
+    });
+  }
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.dd')) [].forEach.call(document.querySelectorAll('.dd.open'), ddClose);
+  });
+  [].forEach.call(document.querySelectorAll('.dd'), initDropdown);
+
+  function fillOptions() {
+    var pages = {}, places = {};
+    sessions.forEach(function (v) {
+      (v.pages || []).forEach(function (p) { pages[p] = (pages[p] || 0) + 1; });
+      if (v.country) places[v.country] = (places[v.country] || 0) + 1;
+    });
+    function opts(el, map) {
+      var keep = ddValue(el), first = el.dataset.first;
+      el.querySelector('.dd-menu').innerHTML = '<li role="option" data-value="">' + esc(first) + '</li>' +
+        Object.keys(map).sort().map(function (k) {
+          return '<li role="option" data-value="' + esc(k) + '">' + esc(k) + ' (' + map[k] + ')</li>';
+        }).join('');
+      var li = el.querySelector('[data-value="' + keep.replace(/"/g, '') + '"]') || el.querySelector('[role="option"]');
+      ddSet(el, li.dataset.value, li.textContent, true);
+    }
+    opts($('fpage'), pages);
+    opts($('fplace'), places);
+  }
+
+  function hay(v) {
+    return [v.name, v.email, v.school, v.role, v.enquiry, v.city, v.region, v.country, v.ip,
+      (v.pages || []).join(' ')].concat((v.events || []).map(function (e) { return e.text || ''; }))
+      .filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function filtered() {
+    var since = F.when ? Date.now() - (+F.when) * 86400000 : 0;
+    var q = F.q.trim().toLowerCase();
+    return sessions.filter(function (v) {
+      if (F.kind === 'callback' && !v.callback) return false;
+      if (F.kind === 'asked' && v.callback) return false;
+      if (since && new Date(v.last).getTime() < since) return false;
+      if (F.page && (v.pages || []).indexOf(F.page) < 0) return false;
+      if (F.place && v.country !== F.place) return false;
+      if (q && hay(v).indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+
+  function renderList() {
+    var rows = filtered();
+    var active = !!(F.q || F.kind || F.when || F.page || F.place);
+    $('fclear').hidden = !active;
+    $('fcount').textContent = sessions.length
+      ? (active ? rows.length + ' of ' + sessions.length : sessions.length + ' visits')
+      : '';
+
+    if (!sessions.length) {
+      $('list').innerHTML = '<div class="none">Nothing yet. Every question asked in the panel and every callback lands here.</div>';
+      return;
+    }
+    if (!rows.length) {
+      $('list').innerHTML = '<div class="none">No visits match those filters.</div>';
+      return;
+    }
+
+    $('list').innerHTML = '<table><thead><tr>' +
+      '<th>Who</th><th>Where</th><th class="hide-sm">Asked</th><th>Last seen</th><th class="hide-sm">Network</th>' +
+      '</tr></thead><tbody>' + rows.map(function (v) {
+        var i = sessions.indexOf(v);
+        var name = v.name || (v.email ? v.email : (v.callback ? 'Callback' : 'Anonymous visit'));
+        var sub = [v.school, v.role, v.enquiry].filter(Boolean).join(' · ');
+        return '<tr data-i="' + i + '">' +
+          '<td class="who-cell"><b>' + esc(name) + '</b>' + (sub ? '<small>' + esc(sub) + '</small>' : '') +
+            ' ' + (v.callback ? '<span class="tag call">callback</span>' : '<span class="tag ask">asked</span>') + '</td>' +
+          '<td>' + esc(place(v)) + '</td>' +
+          '<td class="num hide-sm">' + v.questions + '</td>' +
+          '<td class="num">' + esc(ago(v.last)) + '</td>' +
+          '<td class="ip hide-sm">' + esc(v.ip || '—') + '</td>' +
+        '</tr>';
+      }).join('') + '</tbody></table>';
+
+    [].forEach.call($('list').querySelectorAll('tr[data-i]'), function (tr) {
+      tr.addEventListener('click', function () { open(sessions[+tr.dataset.i]); });
+    });
+  }
+
+  /* ---- one visit ---- */
+  function open(v) {
+    if (!v) return;
+    $('sheetName').textContent = v.name || v.email || (v.callback ? 'Callback' : 'Anonymous visit');
+    $('sheetWhere').textContent = place(v) + ' · ' + when(v.started);
+
+    var out = '';
+    if (v.callback) {
+      out += '<div class="lead"><h4>Reach them</h4><dl class="facts">' +
+        row('Name', v.name) + row('Email', v.email ? '<a href="mailto:' + esc(v.email) + '">' + esc(v.email) + '</a>' : '', true) +
+        row('School', v.school) + row('Role', v.role) + row('Enquiry', v.enquiry) +
+        '</dl></div>';
+    }
+    out += '<dl class="facts">' +
+      row('Visit', v.anon ? 'grouped by network' : v.id) +
+      row('Network', v.ip) + row('Place', place(v)) +
+      row('Started', when(v.started)) + row('Last', when(v.last)) +
+      row('Pages', (v.pages || []).join(', ')) +
+      row('Answered by', (v.models || []).join(', ')) +
+      row('Browser', v.ua) +
+      '</dl>';
+
+    out += '<h2 class="sec">What was said</h2>';
+    (v.events || []).forEach(function (e) {
+      if (e.kind === 'question') {
+        out += bubble('them', e.text, e.at);
+        if (e.reply) out += bubble('us', e.reply, '');
+      } else {
+        var bits = [e.enquiry ? 'Enquiry: ' + e.enquiry : '', e.via ? 'via ' + e.via : '',
+                    (e.reasons && e.reasons.length) ? 'Reasons: ' + [].concat(e.reasons).join(', ') : '',
+                    e.text || ''].filter(Boolean).join('\n');
+        out += '<div class="lead"><h4>' + esc(e.kind) + ' · ' + esc(when(e.at)) + '</h4>' +
+               '<div style="white-space:pre-wrap;font-size:14px;line-height:1.5">' + esc(bits || '—') + '</div>' +
+               (e.transcript ? '<details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px;color:var(--muted)">Transcript sent with it</summary>' +
+                 '<div style="white-space:pre-wrap;font-size:13px;line-height:1.5;margin-top:8px;color:var(--ink-soft)">' +
+                 esc(e.transcript) + '</div></details>' : '') + '</div>';
+      }
+    });
+    if (!(v.events || []).length) out += '<div class="none">No events recorded.</div>';
+
+    $('sheetBody').innerHTML = out;
+    $('sheetBody').scrollTop = 0;
+    $('sheet').classList.add('on');
+  }
+
+  function shortFile(f) { return String(f).replace(/^https?:\/\/[^/]+/, ''); }
+
+  function openFault(f) {
+    if (!f) return;
+    $('sheetName').textContent = f.message;
+    $('sheetWhere').textContent = f.fault + ' · seen ' + f.count +
+      (f.count === 1 ? ' time' : ' times');
+    var out = '<dl class="facts">' +
+      row('Type', f.fault) +
+      row('File', f.file ? shortFile(f.file) + (f.line ? ':' + f.line +
+        (f.column ? ':' + f.column : '') : '') : '') +
+      row('Pages', (f.pages || []).join(', ')) +
+      row('Screens', (f.viewports || []).join(', ')) +
+      row('Places', (f.places || []).join(' · ')) +
+      row('First', when(f.first)) + row('Last', when(f.last)) +
+      '</dl>';
+    if (f.stack) {
+      out += '<h2 class="sec">Stack</h2><pre style="white-space:pre-wrap;font-size:12px;' +
+        'line-height:1.5;background:var(--surface);border:1px solid var(--line);' +
+        'border-radius:12px;padding:14px;overflow-x:auto;color:var(--ink-soft)">' +
+        esc(f.stack) + '</pre>';
+    }
+    $('sheetBody').innerHTML = out;
+    $('sheetBody').scrollTop = 0;
+    $('sheet').classList.add('on');
+  }
+
+  function row(label, value, raw) {
+    if (!value) return '';
+    return '<dt>' + label + '</dt><dd>' + (raw ? value : esc(value)) + '</dd>';
+  }
+  function bubble(side, text, at) {
+    return '<div class="turn ' + side + '"><div class="b">' + esc(text) + '</div>' +
+           (at ? '<div class="when">' + esc(when(at)) + '</div>' : '') + '</div>';
+  }
+
+  /* filters */
+  $('fq').addEventListener('input', function () { F.q = $('fq').value; renderList(); });
+  [['fkind', 'kind'], ['fwhen', 'when'], ['fpage', 'page'], ['fplace', 'place']].forEach(function (w) {
+    $(w[0]).addEventListener('change', function () { F[w[1]] = ddValue($(w[0])); renderList(); });
+  });
+  $('fclear').addEventListener('click', function () {
+    F = { q: '', kind: '', when: '', page: '', place: '' };
+    $('fq').value = '';
+    ['fkind', 'fwhen', 'fpage', 'fplace'].forEach(function (id) {
+      var el = $(id), first = el.querySelector('[role="option"]');
+      ddSet(el, '', first.textContent, true);
+    });
+    renderList();
+  });
+
+  /* tabs — the hash remembers which one, so a refresh lands where you were */
+  function showTab(name) {
+    if (name !== 'broken') name = 'visits';
+    [].forEach.call(document.querySelectorAll('.tab'), function (t) {
+      var on = t.dataset.tab === name;
+      t.classList.toggle('on', on); t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $('tab-visits').hidden = name !== 'visits';
+    $('tab-broken').hidden = name !== 'broken';
+    if (location.hash !== '#' + name) history.replaceState({}, '', location.pathname + '#' + name);
+  }
+  [].forEach.call(document.querySelectorAll('.tab'), function (t) {
+    t.addEventListener('click', function () { showTab(t.dataset.tab); });
+  });
+  showTab(location.hash.replace('#', ''));
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-close]')) $('sheet').classList.remove('on');
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') $('sheet').classList.remove('on');
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

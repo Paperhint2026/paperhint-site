@@ -1,0 +1,254 @@
+---
+/* IMAGE-LED TILES — Mercury's feature grid.
+ *
+ * The important difference from a card: there is no card. The tile IS a large
+ * visual panel, and the label and sentence sit UNDERNEATH it, on the page,
+ * with no border and no fill. Weighting the visual first is what stops a
+ * features section reading as a table of text boxes.
+ *
+ * The panels alternate dark and light ground tile by tile — the contrast
+ * shift the founder asked for, at tile scale rather than section scale.
+ *
+ * Until real product screens exist, each panel is composed from the site's
+ * own mini-UI vocabulary (the same rows, chips and paper textures section 2
+ * of the home page uses), scaled up to lead. Swapping in a screenshot later
+ * means replacing one <Visual> branch, nothing else.
+ */
+import { ESSENTIALS, TILE_VISUAL } from '../data/product.js';
+
+const { only } = Astro.props;
+const sets = only ? ESSENTIALS.filter(s => s.who === only) : ESSENTIALS;
+---
+{sets.map(set => (
+  <section class="tiles-sec" id={`for-${set.who}`}>
+    <div class="wrap wrap-read">
+      <div class="sechead reveal">
+        <h2 class="sechead-h">{set.title}</h2>
+        <p class="sechead-sub">{set.lead}</p>
+      </div>
+
+      <div class="tiles">
+        {set.items.map((it, i) => {
+          const kind = TILE_VISUAL[it.label] || 'chat';
+          return (
+            <article class={`tile reveal ${i === 0 && set.items.length % 2 ? 'tile-wide' : ''}`}
+                     style={`--tint:var(--${it.tint || 'emerald'})`}>
+              <div class={`tile-panel v-${kind}`}>
+                {kind === 'sheets' && (
+                  /* the sheet is photographed, a scan sweeps it, then each
+                     answer is scored in the margin and the total lands */
+                  <div class="v-sheet">
+                    <div class="v-sheet-paper">
+                      <span class="v-scan" aria-hidden="true"></span>
+                      {['Q1','Q2','Q3','Q4'].map((q, n) => (
+                        <div class="v-ans" style={`--n:${n}`}>
+                          <em>{q}</em>
+                          <s class="w1"></s><s class="w2"></s><s class="w3"></s>
+                          <b class={n === 2 ? 'part' : ''}>{['5/5','4/4','3/5','3/3'][n]}</b>
+                        </div>
+                      ))}
+                    </div>
+                    <div class="v-sheet-total"><span>Scored on your rubric</span><b>15/17</b></div>
+                  </div>
+                )}
+                {kind === 'paper' && (
+                  <div class="v-paper">
+                    <div class="v-paper-head"><b>Unit test &middot; Class VIII</b><span>Ch 4&ndash;5 &middot; 40 marks</span></div>
+                    <div class="v-paper-lines"><s></s><s></s><s class="short"></s><s></s><s class="short"></s><s></s></div>
+                    <div class="v-paper-tags"><em>Blueprint</em><em>Answer key</em><em>Rubric</em></div>
+                  </div>
+                )}
+                {kind === 'chat' && (
+                  <div class="v-chat">
+                    <span class="ask">Notes for Ch 4, class VIII</span>
+                    <span class="ans">Draft ready &mdash; 6 sections, 2 diagrams</span>
+                    <span class="ask">Simpler, for the second section</span>
+                    <span class="ans">Rewritten at VII&#8209;B level</span>
+                  </div>
+                )}
+                {kind === 'library' && (
+                  <div class="v-lib">
+                    <figure><div class="np np-ruled"></div><figcaption>Ch 4 &middot; Light</figcaption></figure>
+                    <figure><div class="np np-diagram"></div><figcaption>Ray map</figcaption></figure>
+                    <figure><div class="np np-grid"></div><figcaption>Ch 5 &middot; Cells</figcaption></figure>
+                    <figure><div class="np np-dots"></div><figcaption>Algebra</figcaption></figure>
+                    <figure><div class="np np-ruled np-alt"></div><figcaption>Grammar</figcaption></figure>
+                    <figure><div class="np np-grid np-alt"></div><figcaption>Shared</figcaption></figure>
+                  </div>
+                )}
+                {kind === 'notify' && (
+                  /* THE SCHOOL'S VOICE: a parent's phone, kept alive. The
+                     founder's objection to the phone was never the phone —
+                     it was that this panel and the teacher's homework panel
+                     were the same picture. So the teacher's side got its
+                     own visual (kind 'homework', below) and the receiving
+                     end stays here: the notch, the status bar, and one
+                     message at a time dropping in with our mark on it. */
+                  <div class="v-notch">
+                    <div class="v-notch-top">
+                      <span class="v-notch-time">3:40</span>
+                      <span class="v-notch-pill" aria-hidden="true"></span>
+                      <span class="v-notch-status" aria-hidden="true">
+                        <i></i><i></i><i class="batt"></i>
+                      </span>
+                    </div>
+                    <div class="v-notch-stack">
+                      {[
+                        ['Homework set for VII‑B — Science Ch 5, Q1–4, due Thursday.', 'now'],
+                        ['Aarav was marked absent in period 2 today.', 'now'],
+                        ['Unit test marks are ready — checked and shared by Ms Nair.', 'now'],
+                      ].map(([line, when], n) => (
+                        <div class="v-note" style={`--n:${n}`}>
+                          <span class="v-note-app" aria-hidden="true">
+                            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.0084 1.3766C13.7737 2.14565 14.2463 3.15379 14.3544 4.22631C15.3798 2.58856 15.6072 1.73351 15.6072 1.73351C16.6106 2.46619 17.2834 3.56947 17.4774 4.80065C17.6467 5.87486 17.4395 6.96965 16.8996 7.90118C18.6871 7.18196 19.3711 6.62453 19.3711 6.62453C19.7544 7.81004 19.6534 9.10001 19.0903 10.2107C18.599 11.1797 17.791 11.943 16.8095 12.3777C18.6762 12.8518 19.5556 12.8049 19.5556 12.8049C19.1723 13.9904 18.3361 14.9743 17.231 15.5402C16.2668 16.034 15.1667 16.1742 14.1183 15.9461C15.3513 17.4323 16.0902 17.9139 16.0902 17.9139C15.0867 18.6465 13.8348 18.9486 12.6097 18.7536C11.5408 18.5835 10.5688 18.0471 9.85413 17.2432C9.98239 19.1739 10.2985 20 10.2985 20C9.0582 20 7.86867 19.5048 6.99163 18.6234C6.2264 17.8544 5.75375 16.8462 5.64567 15.7737C4.62023 17.4115 4.39286 18.2665 4.39286 18.2665C3.38941 17.5338 2.71668 16.4305 2.52265 15.1994C2.35335 14.1252 2.56059 13.0304 3.10043 12.0989C1.31296 12.8181 0.628921 13.3755 0.628921 13.3755C0.245639 12.19 0.346658 10.9 0.909756 9.78937C1.40106 8.82031 2.20902 8.05702 3.19058 7.6223C1.32385 7.14827 0.444435 7.19517 0.444435 7.19517C0.827718 6.00966 1.66391 5.02572 2.76905 4.45982C3.7333 3.96606 4.83338 3.82582 5.88173 4.05395C4.64875 2.56773 3.90986 2.08618 3.90986 2.08618C4.9133 1.3535 6.16527 1.05143 7.39032 1.24643C8.4592 1.41657 9.4312 1.95295 10.1459 2.75678C10.0177 0.826064 9.70151 0 9.70151 0C10.9418 2.42706e-07 12.1314 0.495178 13.0084 1.3766Z"/></svg>
+                          </span>
+                          <div class="v-note-body">
+                            <span class="v-note-head"><b>Sunrise Public School</b><em>{when}</em></span>
+                            <span class="v-note-line">{line}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* the lock screen carrying on under the notification,
+                        faded and cropped by the card's bottom edge */}
+                    <div class="v-notch-clock" aria-hidden="true">
+                      <span class="v-clock-day">Thursday, 5 September</span>
+                      <span class="v-clock-time">3:40</span>
+                    </div>
+                  </div>
+                )}
+
+                {kind === 'homework' && (
+                  /* THE TEACHER'S SIDE of the same moment: what she set,
+                     the one tap that sends it, and the confirmation. The
+                     parent's phone above is what this produces. */
+                  <div class="v-hw">
+                    <div class="v-hw-card">
+                      <span class="v-hw-k">Homework &middot; VII&#8209;B &middot; Science</span>
+                      <b class="v-hw-t">Ch 5 &middot; Q1&ndash;4</b>
+                      <span class="v-hw-meta"><i>Due</i>Thursday <i>From</i>Today&rsquo;s class</span>
+                      <span class="v-hw-lines" aria-hidden="true"><s></s><s></s><s class="short"></s></span>
+                    </div>
+                    <div class="v-hw-act">
+                      <span class="v-hw-btn">Assign</span>
+                      <span class="v-hw-done"><i aria-hidden="true">&#10003;</i>Assigned &middot; 44 parents told</span>
+                    </div>
+                  </div>
+                )}
+                {kind === 'portal' && (
+                  <div class="v-rows">
+                    <span><b>&#8594;</b> &ldquo;Create section VI&#8209;C&rdquo;<i>done</i></span>
+                    <span><b>&#8594;</b> &ldquo;Move Ramya to VII&#8209;B&rdquo;<i>done</i></span>
+                    <span><b>&#8594;</b> &ldquo;Add Physics to class IX&rdquo;<i>done</i></span>
+                    <span class="sum"><b>&#8721;</b> No form opened<i>3 asks</i></span>
+                  </div>
+                )}
+                {kind === 'allot' && (
+                  /* the empty section is chosen, a list of teachers opens,
+                     one is picked, and the row fills */
+                  <div class="v-allot">
+                    <div class="v-allot-row"><b>IX&#8209;A</b><span>Physics</span><em>R. Nair</em></div>
+                    <div class="v-allot-row is-open">
+                      <b>VII&#8209;C</b><span>English</span><em class="v-slot">Unassigned</em>
+                      <ul class="v-menu">
+                        <li>K. Rao</li>
+                        <li class="pick">V. Iyer</li>
+                        <li>S. Mehta</li>
+                      </ul>
+                    </div>
+                    <div class="v-allot-row"><b>VI&#8209;B</b><span>Maths</span><em>K. Rao</em></div>
+                  </div>
+                )}
+                {kind === 'timetable' && (
+                  /* four stages on one clock: the class and section are
+                     chosen, the week is configured, Schedule is pressed
+                     once, and a teacher's own calendar fills with the
+                     periods that belong to them */
+                  <div class="v-sched">
+                    <div class="v-sched-pick">
+                      <span class="vs-field">Class <b>IX</b></span>
+                      <span class="vs-field">Section <b>A</b></span>
+                      <span class="vs-field vs-term">Term 2</span>
+                    </div>
+
+                    <div class="v-tt-grid">
+                      <span class="hd"></span>
+                      <span class="hd">Mon</span><span class="hd">Tue</span><span class="hd">Wed</span>
+                      <span class="hd">Thu</span><span class="hd">Fri</span>
+                      {[
+                        ['Phy', 'Mat', 'Eng', 'Phy', 'Bio'],
+                        ['Mat', 'Eng', 'Phy', 'Che', 'Mat'],
+                        ['Eng', 'Bio', 'Mat', 'Eng', 'Phy'],
+                        ['Che', 'Phy', 'Bio', 'Mat', 'Eng'],
+                      ].map((row, p) => (
+                        <>
+                          <span class="pd">P{p + 1}</span>
+                          {row.map((sub, day) => (
+                            <span class={`cell s-${sub.toLowerCase()}`}
+                                  style={`--d:${day};--p:${p}`}>{sub}</span>
+                          ))}
+                        </>
+                      ))}
+                    </div>
+
+                    <div class="v-sched-act">
+                      <span class="vs-btn">Schedule to teachers</span>
+                      <span class="vs-done">Scheduled &middot; 32 calendars updated</span>
+                    </div>
+
+                    {/* what one teacher opens afterwards */}
+                    <div class="v-cal">
+                      <span class="v-cal-head"><b>R. Nair</b><em>Thursday</em></span>
+                      <span class="v-cal-slot" style="--s:0"><i>P1</i>IX&#8209;A &middot; Physics</span>
+                      <span class="v-cal-slot" style="--s:1"><i>P2</i>VIII&#8209;B &middot; Physics</span>
+                      <span class="v-cal-slot free" style="--s:2"><i>P3</i>Free</span>
+                      <span class="v-cal-slot" style="--s:3"><i>P4</i>IX&#8209;A &middot; Physics</span>
+                    </div>
+                  </div>
+                )}
+                {kind === 'register' && (
+                  /* the paper register, scanned: the week's roll fills in
+                     cell by cell, then the one absence goes home */
+                  <div class="v-reg">
+                    <div class="tt-grid">
+                      <s>Mon</s><s>Tue</s><s>Wed</s><s>Thu</s><s>Fri</s>
+                      {['44/44','44/44','43/44','44/44','44/44'].map((v, d) => (
+                        <s class={v === '43/44' ? 'c3' : 'c1'} style={`--d:${d}`}>{v}</s>
+                      ))}
+                    </div>
+                    <span class="v-reg-sent"><i aria-hidden="true">&#10003;</i>Wednesday &middot; 1 absence &middot; parent told</span>
+                  </div>
+                )}
+                {kind === 'year' && (
+                  /* The founder's spec, verbatim: classes move right to left
+                     in a stop-and-move beat; no special highlights; the cards
+                     either side have dull text and the centre one is bright.
+                     Ascending VI to X, so the class at the centre climbs.
+                     Always FIVE visible — an odd count, so the centre is
+                     obvious — and the loop starts pre-rolled two cards in, so
+                     no slot left of the centre is ever empty. --i is the step
+                     at which each card holds the centre. */
+                  <div class="v-row">
+                    <div class="v-row-track">
+                      {/* V-A leads in so the row does not start abruptly; six
+                          classes, so the loop is six beats */}
+                      {['V-A','VI-A','VII-A','VIII-A','IX-A','X-A','V-A','VI-A','VII-A','VIII-A','IX-A','X-A'].map((c, n) => (
+                        <span class="v-row-card" style={`--i:${((n - 2) % 6 + 6) % 6}`}>{c}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div class="tile-cap">
+                <h3>{it.label}</h3>
+                <p set:html={it.text} />
+                {it.tool && <a class="tile-more" href={`/tools/${it.tool}`}>How it works <span aria-hidden="true">→</span></a>}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+))}

@@ -1,0 +1,23 @@
+{
+  "name": "paperhint-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "content-todo": "node scripts/content-todo.mjs",
+    "chat-cases": "node scripts/chat-tests/doc.mjs",
+    "chat-test": "node scripts/chat-tests/run.mjs",
+    "chat-report": "node scripts/chat-tests/report.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.14.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

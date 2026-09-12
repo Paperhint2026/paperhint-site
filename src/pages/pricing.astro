@@ -1,0 +1,194 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Chat from '../components/Chat.astro';
+---
+<Base
+  title="School Management Software Pricing (per student) — Paperhint"
+  description="Paperhint pricing: one licence per enrolled student covering admins, teachers, students and parents, set together with our founding schools."
+  canonical="https://www.paperhint.com/pricing"
+>
+<Fragment slot="head">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Are teachers and parents charged separately?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. Pricing is per enrolled student, and that covers every account the school needs — admins, teachers, students and parent logins included."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can we move our existing data across?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. Student records, staff details, past academics and existing notes can be migrated. On the School and District plans migration is done for you as part of onboarding."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What happens between academic years?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Paperhint rolls a year over rather than resetting it. Sections are promoted, the library and question banks carry forward, and the previous year stays available as a record."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Do parents need to install anything?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. Parent updates on marks, homework and performance arrive by email, triggered by the teacher who shares them."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is there a mid-year start?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes — schools commonly start mid-term with question papers, grading and the shared library first, then move academics across at the term break. Billing is pro-rated to your academic year."
+   }
+  }
+ ]
+}
+</script>
+</Fragment>
+
+<Nav />
+
+<header class="page-hero">
+  <!-- plans ribbon: same brand element, emerald with yellow echo -->
+  <div class="hero-ribbon" data-speed="30" data-drop="430"
+       data-words="priced *per* *student*, per year · set with our *founding* *schools* · one licence for *every* *role* · onboarding included ·"
+       style="--band:var(--emerald);--band-echo:var(--yellow);--band-text:#FAF7F0;--band-kw:#FFD84D"
+       aria-hidden="true">
+    <svg preserveAspectRatio="none" focusable="false">
+      <path class="ribbon-echo"/>
+      <path class="ribbon-line"/>
+      <path class="bowl-line" id="pricing-band" fill="none" stroke="none"/>
+      <text class="bowl-marquee"><textPath href="#pricing-band" data-speed="30"></textPath></text>
+    </svg>
+  </div>
+
+  <svg class="doodle" style="top:170px;left:8vw;width:32px;color:var(--yellow)" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C13 7 17 11 24 12C17 13 13 17 12 24C11 17 7 13 0 12C7 11 11 7 12 0Z" fill="currentColor"/></svg>
+  <svg class="doodle" style="top:250px;right:5vw;width:130px;color:var(--orange)" viewBox="0 0 196 36" fill="none" aria-hidden="true"><path d="M8 22Q26 6 44 22T80 22T116 22T152 22T188 22" stroke="currentColor" stroke-width="10" stroke-linecap="round"/></svg>
+  <div class="wrap hero-content">
+    <a class="tagline" href="/contact?type=pricing"><span class="tag">PLANS</span> Founding-school pricing — set together, per student <i>→</i></a>
+    <h1 class="display">Priced per student, <em>n</em>ot per headache</h1>
+    <p class="hero-sub">
+      One licence covers admins, teachers, students and parents. Every plan
+      includes the full product — plans differ on scale and support.
+    </p>
+  </div>
+</header>
+
+<section class="section-pad" style="padding-top:20px">
+  <div class="wrap">
+    <div class="price-grid">
+
+      <article class="price-card reveal">
+        <h3>Starter</h3>
+        <p class="for">Single school, up to 500 students</p>
+        <div class="price-line"><b>Pilot</b><span>per student / year</span></div>
+        <p class="price-note">Founding-school pricing, set together</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Answer-sheet evaluation — scan from the app</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Question papers, homework &amp; teaching notes</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Your library + the shared library</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Attendance — scan the sheet or mark in-app</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Parent email notifications</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Email support</span></li>
+        </ul>
+        <a class="btn btn-ghost" href="/contact?type=pricing">Talk to us</a>
+      </article>
+
+      <article class="price-card hot reveal">
+        <span class="hot-badge">Most schools</span>
+        <h3>School</h3>
+        <p class="for">Single school, up to 2,500 students</p>
+        <div class="price-line"><b>Pilot</b><span>per student / year</span></div>
+        <p class="price-note">Founding-school pricing · onboarding included</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Everything in Starter</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Per-student results, exam over exam</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Teacher copilot &amp; note editor</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>School portal: classes, sections, subjects</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Data migration &amp; staff training</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Priority support, named contact</span></li>
+        </ul>
+        <a class="btn btn-primary" href="/contact?type=demo">Book a demo</a>
+      </article>
+
+      <article class="price-card reveal">
+        <h3>District</h3>
+        <p class="for">Multi-school trusts &amp; districts</p>
+        <div class="price-line"><b>Custom</b></div>
+        <p class="price-note">Volume pricing across all campuses</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Everything in School</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Cross-campus reporting</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Shared curriculum &amp; library</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>SSO &amp; custom integrations</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Dedicated onboarding team</span></li>
+          <li><svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>SLA-backed support</span></li>
+        </ul>
+        <a class="btn btn-ghost" href="/contact?type=pricing">Get a quote</a>
+      </article>
+
+    </div>
+
+    <div class="faq reveal">
+      <h2 class="title" style="font-size:clamp(26px,3.2vw,38px);margin-bottom:28px">Questions we get asked</h2>
+
+      <details open>
+        <summary>Are teachers and parents charged separately?</summary>
+        <p>No. Pricing is per enrolled student, and that covers every account the school needs — admins, teachers, students and parent logins included.</p>
+      </details>
+      <details>
+        <summary>Can we move our existing data across?</summary>
+        <p>Yes. Student records, staff details, past academics and existing notes can be migrated. On the School and District plans migration is done for you as part of onboarding.</p>
+      </details>
+      <details>
+        <summary>What happens between academic years?</summary>
+        <p>Paperhint rolls a year over rather than resetting it. Sections are promoted, the library and question banks carry forward, and the previous year stays available as a record.</p>
+      </details>
+      <details>
+        <summary>Do parents need to install anything?</summary>
+        <p>No. Parent updates on marks, homework and performance arrive by email, triggered by the teacher who shares them.</p>
+      </details>
+      <details>
+        <summary>What do we need to run Paperhint?</summary>
+        <p>A phone and a browser. Answer sheets and attendance registers are photographed with the mobile app — no scanners, no new hardware, and nothing changes about the paper your school already uses.</p>
+      </details>
+      <details>
+        <summary>Where does the marking rubric come from?</summary>
+        <p>From you. The rubric arrives with the question paper's answer key when Paperhint drafts it, or the teacher sets their own — every sheet is then scored against that rubric, the same way for every student, and the teacher reviews and approves the result.</p>
+      </details>
+      <details>
+        <summary>Where does our school's data live, and who can see it?</summary>
+        <p>Your school's data stays your school's. Marks, student records and parent contacts are scoped to your school's account, and nothing is visible outside accounts on your school's email. We don't sell or share school data.</p>
+      </details>
+      <details>
+        <summary>Is there a mid-year start?</summary>
+        <p>Yes — schools commonly start mid-term with question papers, grading and the shared library first, then move academics across at the term break. Billing is pro-rated to your academic year.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div data-component="cta-banner" data-heading="See it on your own answer sheets" data-sub="Bring one class and one exam — we'll run them through Paperhint in front of you."></div>
+  </div>
+</section>
+
+
+<Footer />
+<Chat />
+</Base>

@@ -1,0 +1,102 @@
+---
+import Consent from '../components/Consent.astro';
+export interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+const {
+  title,
+  description,
+  canonical,
+  ogImage = 'https://www.paperhint.com/assets/img/og-cover.png',
+  noindex = false,
+} = Astro.props;
+/* cache-buster: every deploy gets fresh CSS/JS on phones */
+const v = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || String(Date.now())).slice(0, 7);
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+{noindex && <meta name="robots" content="noindex">}
+<!-- seo -->
+<meta name="google-site-verification" content="Qx5tl-eq_NV9KoT45hyzSW9O3lVBz8UQncRNc">
+<link rel="canonical" href={canonical}>
+{/* Structured data every page gets, so no page is a weaker candidate than
+    another: the page itself, where it sits in the site, and — on the home
+    page only — the WebSite entity that names the brand for branded queries.
+    Page-specific types (Organization, SoftwareApplication, FAQPage) are
+    added by the pages that have them. */}
+<script type="application/ld+json" set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    ...(canonical === 'https://www.paperhint.com/' ? [{
+      '@type': 'WebSite', '@id': 'https://www.paperhint.com/#website',
+      url: 'https://www.paperhint.com/', name: 'Paperhint',
+      alternateName: ['Paper Hint', 'paperhint.com'],
+      description,
+      publisher: { '@id': 'https://www.paperhint.com/#org' },
+      inLanguage: 'en-IN',
+    }] : []),
+    {
+      '@type': 'WebPage', '@id': canonical + '#webpage', url: canonical, name: title,
+      description, isPartOf: { '@id': 'https://www.paperhint.com/#website' },
+      inLanguage: 'en-IN',
+    },
+    ...(canonical !== 'https://www.paperhint.com/' ? [{
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Paperhint', item: 'https://www.paperhint.com/' },
+        ...canonical.replace('https://www.paperhint.com/', '').split('/').filter(Boolean).map((seg, i, arr) => ({
+          '@type': 'ListItem', position: i + 2,
+          name: seg.replace(/-/g, ' ').replace(/^\w/, c => c.toUpperCase()),
+          item: 'https://www.paperhint.com/' + arr.slice(0, i + 1).join('/'),
+        })),
+      ],
+    }] : []),
+  ],
+})} />
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Paperhint">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={ogImage}>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+<meta name="twitter:image" content={ogImage}>
+<meta name="theme-color" content="#FCFBF8">
+<!-- /seo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..500&family=Merriweather:ital,wght@1,500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/assets/img/Logo/favicon.svg">
+<link rel="stylesheet" href={`/assets/css/style.css?v=${v}`}>
+<noscript><style>
+  /* no JS: the bar simply stays open */
+  .nav-inner.nav-shrink{width:min(1180px,92vw);
+    -webkit-mask-position:left center,right center,center;mask-position:left center,right center,center;
+    -webkit-mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%;
+    mask-size:var(--cap) var(--cap),var(--cap) var(--cap),calc(100% - var(--cap)) 74%;
+    pointer-events:auto}
+  .nav-inner.nav-shrink>*{opacity:1;pointer-events:auto}
+  .nav-inner.nav-boot{animation:none}
+</style></noscript>
+<script src={`/assets/js/watchdog.js?v=${v}`} is:inline></script>
+<slot name="head" />
+</head>
+<body>
+<slot />
+<Consent />
+<slot name="scripts">
+  <script src={`/assets/js/main.js?v=${v}`} is:inline></script>
+</slot>
+</body>
+</html>

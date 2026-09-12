@@ -1,0 +1,16 @@
+---
+/* A headline with the house letter in it.
+ *
+ * h1 data is [before, letter, after] and the letter sits INSIDE a word —
+ * "sc" + "h" + "ool". Rendered as three bare text nodes, the browser may
+ * break the line at the <em> boundary and split the word: "sch / ool", which
+ * is what the founder saw on /product. So the fragment of the word on either
+ * side of the letter is wrapped with the letter in a no-break span, and the
+ * word can only wrap as a whole.
+ */
+const { parts, class: cls } = Astro.props;
+const [before = '', letter = '', after = ''] = parts;
+const [, pre, wordStart] = before.match(/^(.*?)(\S*)$/s);
+const [, wordEnd, post] = after.match(/^(\S*)(.*)$/s);
+---
+<h1 class={cls}>{pre}<span class="nb">{wordStart}<em>{letter}</em>{wordEnd}</span>{post}</h1>

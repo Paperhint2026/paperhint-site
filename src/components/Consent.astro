@@ -1,0 +1,22 @@
+---
+/* Asked once, remembered, and never in the way of reading the page. */
+const v = import.meta.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || 'dev';
+---
+<div class="consent" id="consent" role="region" aria-label="Cookie choices" hidden>
+  <div class="consent-in">
+    <picture class="consent-mascot">
+      <source srcset="/assets/img/stickers/cookie.webp" type="image/webp">
+      <img src="/assets/img/stickers/cookie.png" alt="" width="317" height="320"
+           loading="lazy" decoding="async">
+    </picture>
+    <p class="consent-say">
+      <b>Cookies, honestly.</b> We'd like to see which pages actually help.
+      Nothing measures you until you say yes. <a href="/privacy">What we collect</a>
+    </p>
+    <div class="consent-do">
+      <button type="button" class="btn-ghost" data-no>Only essentials</button>
+      <button type="button" class="btn-primary" data-yes>Accept all</button>
+    </div>
+  </div>
+</div>
+<script src={`/assets/js/consent.js?v=${v}`} is:inline></script>
